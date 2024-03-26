@@ -8,6 +8,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import java.time.ZonedDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -53,7 +55,7 @@ public abstract class User {
   @Column(nullable = false)
   protected String email;
 
-  // Hash(password + salt)
+  // Hash(password + salt) (probably not the appropriate datatype)
   @NotNull
   @Column(nullable = false)
   protected String password;
@@ -63,4 +65,10 @@ public abstract class User {
   @Column(nullable = false)
   protected String salt;
 
+  @OneToMany(mappedBy = "user")
+  protected Set<Game> games = new HashSet<>();
+
+  public Set<Game> getGames() {
+    return games;
+  }
 }
