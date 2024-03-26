@@ -62,7 +62,7 @@ public class Game {
   @CreationTimestamp
   protected ZonedDateTime playedOn;
 
-  // missing like, which im not unsure about
+  // missing like, im unsure about what it signifies
 
   @ManyToOne
   @JoinColumn(
