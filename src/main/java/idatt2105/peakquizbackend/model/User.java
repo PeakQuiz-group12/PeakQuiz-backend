@@ -69,7 +69,14 @@ public abstract class User {
   @OneToMany(mappedBy = "user")
   protected Set<Game> games = new HashSet<>();
 
+  @OneToMany(mappedBy = "user")
+  protected Set<Collaboration> collaborations = new HashSet<>();
+
   public Set<Game> getGames() {
     return games;
+  }
+
+  public Set<Collaboration> getCollaborations() {
+    return collaborations;
   }
 }

@@ -2,18 +2,15 @@ package idatt2105.peakquizbackend.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Immutable;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 
 @Entity
-@Immutable
-@NoArgsConstructor
-public class Game {
+public class Collaboration {
+
   @Embeddable
   public static class Id implements Serializable {
     @Column(name = "USER_ID")
@@ -46,23 +43,16 @@ public class Game {
   @EmbeddedId
   protected Id id = new Id();
 
-  @Column(updatable = false)
+  @Column(nullable = false)
   @NotNull
-  protected Integer correctAnswers;
+  CollaboratorType collaboratorType;
 
-  @Column(updatable = false)
-  protected Byte rating;
-
-  @Column(updatable = false)
-  protected String feedback;
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(nullable = false,
           updatable = false)
   @CreationTimestamp
-  protected ZonedDateTime playedOn;
-
-  // missing like, im unsure about what it signifies
+  protected ZonedDateTime joinedOn;
 
   @ManyToOne
   @JoinColumn(
@@ -76,13 +66,4 @@ public class Game {
           insertable = false, updatable = false
   )
   protected Quiz quiz;
-
-  public Game(Integer correctAnswers, Byte rating, String feedback, User user, Quiz quiz) {
-    this.correctAnswers = correctAnswers;
-    this.rating = rating;
-    this.feedback = feedback;
-    this.user = user;
-    this.quiz = quiz;
-    this.user.getGames().add(this);
-  }
 }

@@ -46,4 +46,9 @@ public class Quiz {
   @OneToMany(mappedBy = "quiz")
   protected Set<Game> games = new HashSet<>();
 
+  @OneToMany(mappedBy = "quiz")
+  protected Set<Collaboration> collaborators = new HashSet<>();
+  public Set<Game> getGames() {
+    return games;
+  }
 }
