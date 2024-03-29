@@ -48,6 +48,7 @@ public class Collaboration {
 
   @Column(nullable = false)
   @NotNull
+  @Enumerated(EnumType.STRING)
   private CollaboratorType collaboratorType;
 
 
