@@ -6,18 +6,21 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
+@Table(name = "Collaboration")
 public class Collaboration {
 
   @Embeddable
   public static class Id implements Serializable {
     @Column(name = "USER_ID")
-    protected Long userId;
+    private Long userId;
 
     @Column(name = "QUIZ_ID")
-    protected Long quizId;
+    private Long quizId;
 
     public Id() {
     }
@@ -41,18 +44,18 @@ public class Collaboration {
   }
 
   @EmbeddedId
-  protected Id id = new Id();
+  private Id id = new Id();
 
   @Column(nullable = false)
   @NotNull
-  CollaboratorType collaboratorType;
+  private CollaboratorType collaboratorType;
 
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(nullable = false,
           updatable = false)
   @CreationTimestamp
-  protected ZonedDateTime joinedOn;
+  private ZonedDateTime joinedOn;
 
   @ManyToOne
   @JoinColumn(
@@ -65,5 +68,35 @@ public class Collaboration {
           name = "QUIZ_ID",
           insertable = false, updatable = false
   )
-  protected Quiz quiz;
+  private Quiz quiz;
+
+  // TODO: Unsure if this mapping will work.
+  //  May have to make this mapping @ManyToOne and CascadeType.REMOVE.
+  @ElementCollection
+  @CollectionTable(name = "COMMENT")
+  private Set<Comment> comments = new HashSet<>();
+
+  public Id getId() {
+    return id;
+  }
+
+  public CollaboratorType getCollaboratorType() {
+    return collaboratorType;
+  }
+
+  public ZonedDateTime getJoinedOn() {
+    return joinedOn;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public Quiz getQuiz() {
+    return quiz;
+  }
+
+  public Set<Comment> getComments() {
+    return comments;
+  }
 }
