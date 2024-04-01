@@ -2,8 +2,6 @@ package idatt2105.peakquizbackend.model;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 import org.hibernate.envers.Audited;
 
 import java.sql.Blob;
@@ -15,19 +13,11 @@ import java.util.Set;
 @Audited
 public class Quiz {
   @Id
-  @GenericGenerator(
-          name = "QUIZ_ID_GENERATOR",
-          strategy = "enhanced-sequence",
-          parameters = {
-                  @Parameter(
-                          name = "sequence_name",
-                          value = "QUIZ_SEQUENCE"
-                  ),
-                  @Parameter(
-                          name = "initial_value",
-                          value = "1000"
-                  )
-          })
+  @GeneratedValue(generator = "quiz_id_seq", strategy = GenerationType.SEQUENCE)
+  @SequenceGenerator(
+          name = "quiz_id_seq",
+          sequenceName = "quiz_id_seq"
+  )
   protected Long id;
 
   protected String title;

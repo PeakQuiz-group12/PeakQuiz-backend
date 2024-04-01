@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 import java.time.ZonedDateTime;
 import java.util.HashSet;
@@ -18,19 +16,11 @@ import java.util.Set;
 public abstract class User {
 
   @Id
-  @GenericGenerator(
-          name = "USER_ID_GENERATOR",
-          strategy = "enhanced-sequence",
-          parameters = {
-                 @Parameter(
-                         name = "sequence_name",
-                         value = "USERS_SEQUENCE"
-                 ),
-                 @Parameter(
-                         name = "initial_value",
-                         value = "1000"
-                 )
-          })
+  @GeneratedValue(generator = "user_id_seq", strategy = GenerationType.SEQUENCE)
+  @SequenceGenerator(
+          name = "user_id_seq",
+          sequenceName = "user_id_seq"
+  )
   protected Long id;
 
   @Temporal(TemporalType.TIMESTAMP)
