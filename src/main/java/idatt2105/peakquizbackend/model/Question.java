@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.sql.Blob;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Question {
@@ -20,7 +22,6 @@ public class Question {
   )
   private Long id;
 
-
   @Size(
           min = 2,
           max = 20,
@@ -29,6 +30,11 @@ public class Question {
   @NotNull
   @Column(nullable = false)
   private String text;
+
+  @NotNull
+  @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
+  QuestionType questionType;
 
   @Lob
   private Blob media;
@@ -40,5 +46,7 @@ public class Question {
 
   private String explanation;
 
-
+  @ElementCollection
+  @CollectionTable(name = "COMMENT")
+  private Set<Answer> answers = new HashSet<>();
 }
