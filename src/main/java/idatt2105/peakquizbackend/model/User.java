@@ -1,6 +1,7 @@
 package idatt2105.peakquizbackend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
@@ -38,10 +39,7 @@ public abstract class User {
   @Column(nullable = false)
   protected String username;
 
-  @Size(
-          min = 6,
-          message = "Email is requied, minimum 6 characters."
-  )
+  @Email(message = "Email should be valid")
   @NotNull
   @Column(nullable = false)
   protected String email;
