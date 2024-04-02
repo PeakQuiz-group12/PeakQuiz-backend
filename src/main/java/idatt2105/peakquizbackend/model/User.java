@@ -60,6 +60,13 @@ public abstract class User {
   @OneToMany(mappedBy = "user")
   protected Set<Collaboration> collaborations = new HashSet<>();
 
+  @OneToMany(
+          mappedBy = "user",
+          fetch = FetchType.LAZY,
+          cascade = CascadeType.REMOVE
+  )
+  public Set<Tag> tags = new HashSet<>();
+
   public Set<Game> getGames() {
     return games;
   }
@@ -67,4 +74,5 @@ public abstract class User {
   public Set<Collaboration> getCollaborations() {
     return collaborations;
   }
+
 }
