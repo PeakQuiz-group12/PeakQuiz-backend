@@ -20,6 +20,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 @RestController
 public class UserController {
@@ -35,9 +36,15 @@ public class UserController {
   @CrossOrigin
   public ResponseEntity<?> registerUser(@RequestParam String username, @RequestParam String password) {
     System.out.println(username + password);
+
     if (userService.getUserRepository().findUserByUsername(username) != null) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exists");
     }
+
+    else if (!isPasswordStrong(password)) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password must be at least 8 characters long, include numbers, upper and lower case letters, and at least one special character");
+    }
+
     userService.addUser(new User(username, password));
     System.out.println("New user registered");
 
@@ -50,12 +57,18 @@ public class UserController {
     return ResponseEntity.ok(tokens);
   }
 
+  private boolean isPasswordStrong(String password) {
+    // Example criteria: at least 8 characters, including numbers, letters and at least one special character
+    String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
+    return Pattern.compile(passwordPattern).matcher(password).matches();
+  }
+
   @PostMapping("/login")
   @CrossOrigin
   public ResponseEntity<?> loginUser(@RequestParam String username, @RequestParam String password) {
     User user = userService.getUserRepository().findUserByUsername(username);
     if (user == null) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Username not found");
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Wrong username or password");
     }
     if(Objects.equals(password, user.getPassword())) {
       String accessToken = generateToken(username, Duration.ofMinutes(5));
@@ -67,7 +80,7 @@ public class UserController {
       return ResponseEntity.ok(tokens);
     }
     else {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong password");
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong username or password");
     }
   }
 
