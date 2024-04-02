@@ -51,7 +51,9 @@ public class UserController {
 
     String encodedPassword = bCryptPasswordEncoder.encode(password);
 
-    userService.addUser(new User(username, encodedPassword));
+
+
+    userService.addUser(new User(username, "test@test.com", encodedPassword));
     System.out.println("New user registered");
 
     String accessToken = generateToken(username, Duration.ofMinutes(5));
