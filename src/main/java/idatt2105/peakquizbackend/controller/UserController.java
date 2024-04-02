@@ -10,6 +10,7 @@ import idatt2105.peakquizbackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,6 +33,9 @@ public class UserController {
     this.userService = userService;
   }
 
+  @Autowired
+  private BCryptPasswordEncoder bCryptPasswordEncoder;
+
   @PostMapping("/register")
   @CrossOrigin
   public ResponseEntity<?> registerUser(@RequestParam String username, @RequestParam String password) {
@@ -45,7 +49,9 @@ public class UserController {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password must be at least 8 characters long, include numbers, upper and lower case letters, and at least one special character");
     }
 
-    userService.addUser(new User(username, password));
+    String encodedPassword = bCryptPasswordEncoder.encode(password);
+
+    userService.addUser(new User(username, encodedPassword));
     System.out.println("New user registered");
 
     String accessToken = generateToken(username, Duration.ofMinutes(5));
@@ -70,7 +76,10 @@ public class UserController {
     if (user == null) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Wrong username or password");
     }
-    if(Objects.equals(password, user.getPassword())) {
+
+    String encodedPassword = user.getPassword();
+
+    if(bCryptPasswordEncoder.matches(password, encodedPassword)) {
       String accessToken = generateToken(username, Duration.ofMinutes(5));
       String refreshToken = generateToken(username, Duration.ofMinutes(30));
       Map<String, String> tokens = new HashMap<>();
