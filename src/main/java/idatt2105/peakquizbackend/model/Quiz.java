@@ -36,13 +36,6 @@ public class Quiz {
   @CreationTimestamp
   private ZonedDateTime createdOn;
 
-  @NotAudited
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(
-          name = "TAG_ID",
-          nullable = false
-  )
-  private Tag tag;
 
   @NotAudited
   @OneToMany(mappedBy = "quiz")

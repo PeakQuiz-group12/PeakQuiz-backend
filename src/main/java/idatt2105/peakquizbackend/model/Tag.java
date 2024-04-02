@@ -39,10 +39,11 @@ public class Tag {
   )
   private User user;
 
-  @OneToMany(
-          mappedBy = "tag",
-          fetch = FetchType.LAZY,
-          cascade = CascadeType.DETACH
+  @ManyToMany(cascade = CascadeType.DETACH)
+  @JoinTable(
+          name = "TAG_QUIZ",
+          joinColumns = @JoinColumn(name = "TAG_ID"),
+          inverseJoinColumns = @JoinColumn(name = "QUIZ_ID")
   )
   private Set<Quiz> quizzes = new HashSet<>();
 }
