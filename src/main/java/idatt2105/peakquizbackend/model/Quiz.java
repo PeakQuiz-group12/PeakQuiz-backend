@@ -3,6 +3,7 @@ package idatt2105.peakquizbackend.model;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import java.sql.Blob;
 import java.time.ZonedDateTime;
@@ -35,6 +36,15 @@ public class Quiz {
   @CreationTimestamp
   private ZonedDateTime createdOn;
 
+  @NotAudited
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+          name = "TAG_ID",
+          nullable = false
+  )
+  private Tag tag;
+
+  @NotAudited
   @OneToMany(mappedBy = "quiz")
   private Set<Game> games = new HashSet<>();
 
@@ -46,6 +56,7 @@ public class Quiz {
   )
   private Set<Question> questions = new HashSet<>();
 
+  @NotAudited
   @OneToMany(mappedBy = "quiz")
   private Set<Collaboration> collaborators = new HashSet<>();
   public Set<Game> getGames() {

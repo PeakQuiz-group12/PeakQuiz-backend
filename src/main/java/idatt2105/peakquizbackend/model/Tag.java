@@ -3,6 +3,7 @@ package idatt2105.peakquizbackend.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.hibernate.envers.NotAudited;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,6 +31,13 @@ public class Tag {
           message = "Title is required, maximum 10 characters."
   )
   private String title;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+          name = "USER_ID",
+          nullable = false
+  )
+  private User user;
 
   @OneToMany(
           mappedBy = "tag",

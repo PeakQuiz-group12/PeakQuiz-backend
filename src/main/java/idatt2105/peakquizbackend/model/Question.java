@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.hibernate.envers.Audited;
 
 import java.sql.Blob;
 import java.util.HashSet;
@@ -12,6 +13,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "QUESTION")
+@Audited
 public class Question {
 
   @Id
