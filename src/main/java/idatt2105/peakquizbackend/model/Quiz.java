@@ -36,7 +36,6 @@ public class Quiz {
   @CreationTimestamp
   private ZonedDateTime createdOn;
 
-
   @NotAudited
   @OneToMany(mappedBy = "quiz")
   private Set<Game> games = new HashSet<>();
@@ -48,6 +47,10 @@ public class Quiz {
           joinColumns = @JoinColumn(name = "quiz_id")
   )
   private Set<Question> questions = new HashSet<>();
+
+  @NotAudited
+  @ManyToMany(mappedBy = "quizzes")
+  private Set<Category> categories = new HashSet<>();
 
   @NotAudited
   @OneToMany(mappedBy = "quiz")
