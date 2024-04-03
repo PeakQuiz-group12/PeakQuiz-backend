@@ -9,17 +9,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "TAG")
-public class Tag {
+@Table(name = "CATEGORY")
+public class Category {
 
   @Id
   @GeneratedValue(
-          generator = "tag_id_seq",
+          generator = "category_id_seq",
           strategy = GenerationType.SEQUENCE
   )
   @SequenceGenerator(
-          name = "tag_id_seq",
-          sequenceName = "tag_id_seq"
+          name = "category_id_seq",
+          sequenceName = "category_id_seq"
   )
   Long id;
 
@@ -27,24 +27,16 @@ public class Tag {
   @Column(nullable = false)
   @Size(
           min = 2,
-          max = 10,
-          message = "Title is required, maximum 10 characters."
+          max = 20,
+          message = "Name is required, maximum 20 characters."
   )
-  private String title;
+  private String name;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(
-          name = "USER_ID",
-          nullable = false
-  )
-  private User user;
-
-  // Unidirectional mapping between tag and quiz
-
-  @ManyToMany(cascade = CascadeType.DETACH)
+  // Bidirectional mapping between Category and Quiz
+  @ManyToMany(cascade = CascadeType.PERSIST)
   @JoinTable(
-          name = "TAG_QUIZ",
-          joinColumns = @JoinColumn(name = "TAG_ID"),
+          name = "CATEGORY_QUIZ",
+          joinColumns = @JoinColumn(name = "CATEGORY_ID"),
           inverseJoinColumns = @JoinColumn(name = "QUIZ_ID")
   )
   private Set<Quiz> quizzes = new HashSet<>();

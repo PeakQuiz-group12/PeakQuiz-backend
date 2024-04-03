@@ -1,5 +1,6 @@
-package idatt2105.peakquizbackend.model;
+package idatt2105.peakquizbackend.model.embedded;
 
+import idatt2105.peakquizbackend.model.Collaboration;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Temporal;

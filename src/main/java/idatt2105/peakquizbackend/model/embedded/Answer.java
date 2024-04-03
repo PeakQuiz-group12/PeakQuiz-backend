@@ -1,4 +1,4 @@
-package idatt2105.peakquizbackend.model;
+package idatt2105.peakquizbackend.model.embedded;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

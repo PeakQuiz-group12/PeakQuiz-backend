@@ -1,4 +1,4 @@
-package idatt2105.peakquizbackend.model;
+package idatt2105.peakquizbackend.model.enums;
 
 public enum CollaboratorType {
   CREATOR,
