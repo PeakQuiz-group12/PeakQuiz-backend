@@ -3,7 +3,6 @@ package idatt2105.peakquizbackend.mappers;
 import idatt2105.peakquizbackend.dto.UserDTO;
 import idatt2105.peakquizbackend.model.User;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
