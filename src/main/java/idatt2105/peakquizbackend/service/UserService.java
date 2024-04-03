@@ -2,6 +2,7 @@ package idatt2105.peakquizbackend.service;
 
 import idatt2105.peakquizbackend.model.User;
 import idatt2105.peakquizbackend.repository.UserRepository;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,7 +17,12 @@ public class UserService {
     return userRepository.save(user);
   }
 
-  public UserRepository getUserRepository() {
-    return userRepository;
+  public Optional<User> findUserByUsername(String username) {
+    return userRepository.findByUsername(username);
   }
+
+  public Optional<User> findUserByUserId(Long id) {
+    return userRepository.findById(id);
+  }
+
 }
