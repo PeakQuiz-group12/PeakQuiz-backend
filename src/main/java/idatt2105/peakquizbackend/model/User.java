@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,6 +16,7 @@ import java.util.Set;
 @Entity
 @Table(name = "USERS")
 @NoArgsConstructor
+@Data
 public class User {
   public User(String username, String email, String password) {
     this.username = username;
@@ -35,19 +37,18 @@ public class User {
           updatable = false)
   @CreationTimestamp
   protected ZonedDateTime createdOn;
-
   @Size(
           min = 2,
           max = 20,
           message = "Username is required, maximum 20 characters."
   )
   @NotNull
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   protected String username;
 
   @Email(message = "Email should be valid")
   @NotNull
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   protected String email;
 
   // Hash(password + salt) (probably not the appropriate datatype)
@@ -56,9 +57,11 @@ public class User {
   @Column(nullable = false)
   protected String password;
 
+  @Getter
   @OneToMany(mappedBy = "user")
   protected Set<Game> games = new HashSet<>();
 
+  @Getter
   @OneToMany(mappedBy = "user")
   protected Set<Collaboration> collaborations = new HashSet<>();
 
@@ -68,13 +71,5 @@ public class User {
           cascade = CascadeType.REMOVE
   )
   public Set<Tag> tags = new HashSet<>();
-
-  public Set<Game> getGames() {
-    return games;
-  }
-
-  public Set<Collaboration> getCollaborations() {
-    return collaborations;
-  }
 
 }

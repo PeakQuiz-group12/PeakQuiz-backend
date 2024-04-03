@@ -15,17 +15,17 @@ import java.util.Objects;
 @NoArgsConstructor
 public class Game {
   @Embeddable
-  public static class Id implements Serializable {
+  public static class GameId implements Serializable {
     @Column(name = "USER_ID")
     protected Long userId;
 
     @Column(name = "QUIZ_ID")
     protected Long quizId;
 
-    public Id() {
+    public GameId() {
     }
 
-    public Id(Long userId, Long quizId) {
+    public GameId(Long userId, Long quizId) {
       this.userId = userId;
       this.quizId = quizId;
     }
@@ -33,7 +33,7 @@ public class Game {
     @Override
     public boolean equals(Object o) {
       if (this == o) return true;
-      if (!(o instanceof Id id)) return false;
+      if (!(o instanceof GameId id)) return false;
       return Objects.equals(userId, id.userId) && Objects.equals(quizId, id.quizId);
     }
 
@@ -44,7 +44,7 @@ public class Game {
   }
 
   @EmbeddedId
-  protected Id id = new Id();
+  protected GameId id = new GameId();
 
   @Column(updatable = false)
   @NotNull

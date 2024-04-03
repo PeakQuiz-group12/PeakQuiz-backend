@@ -31,7 +31,6 @@ public class Quiz {
   // alternatively we can use String:filename if we have access to a filesystem
   @Lob
   private Blob image;
-
   @Temporal(TemporalType.TIMESTAMP)
   @Column(nullable = false,
           updatable = false)
