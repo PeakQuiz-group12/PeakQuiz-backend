@@ -7,10 +7,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.envers.Audited;
 
 import java.sql.Blob;
@@ -24,6 +21,7 @@ import java.util.Set;
 @Audited
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class Question {
 
   @Id
@@ -64,6 +62,7 @@ public class Question {
   private Set<Answer> answers = new HashSet<>();
 
   @ManyToOne
-  @NotNull
+  @ToString.Exclude
+  @EqualsAndHashCode.Exclude
   private Quiz quiz;
 }
