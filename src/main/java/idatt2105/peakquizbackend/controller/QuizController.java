@@ -7,9 +7,6 @@ import idatt2105.peakquizbackend.model.Quiz;
 import idatt2105.peakquizbackend.service.CollaborationService;
 import idatt2105.peakquizbackend.service.QuizService;
 import idatt2105.peakquizbackend.service.SortingService;
-
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
