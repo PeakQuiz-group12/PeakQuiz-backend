@@ -1,7 +1,7 @@
 package idatt2105.peakquizbackend.service;
 
 import idatt2105.peakquizbackend.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import idatt2105.peakquizbackend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service

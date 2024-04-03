@@ -1,4 +1,4 @@
-package idatt2105.peakquizbackend.service;
+package idatt2105.peakquizbackend.repository;
 
 import idatt2105.peakquizbackend.model.User;
 import org.springframework.data.repository.CrudRepository;
