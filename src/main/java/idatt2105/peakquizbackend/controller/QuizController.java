@@ -7,6 +7,9 @@ import idatt2105.peakquizbackend.model.Quiz;
 import idatt2105.peakquizbackend.service.CollaborationService;
 import idatt2105.peakquizbackend.service.QuizService;
 import idatt2105.peakquizbackend.service.SortingService;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -53,6 +56,22 @@ public class QuizController {
     LOGGER.info("Successfully found quizzes");
 
     return ResponseEntity.ok(quizzes);
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<?> getQuiz(
+           @PathVariable Long id
+  ) {
+    LOGGER.info("Received request for quiz with id: " + id);
+    Optional<Quiz> _quiz = quizService.findQuizById(id);
+
+    if (_quiz.isEmpty()) {
+      LOGGER.error("Could not find quiz with id: " + id);
+      return ResponseEntity.notFound().build();
+    }
+
+    LOGGER.info("Successfully returned quiz");
+    return ResponseEntity.ok(_quiz.get());
   }
 
   @PostMapping("/")
