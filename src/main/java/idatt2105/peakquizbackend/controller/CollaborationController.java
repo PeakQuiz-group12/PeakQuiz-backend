@@ -2,7 +2,6 @@ package idatt2105.peakquizbackend.controller;
 
 import idatt2105.peakquizbackend.dto.QuizResponseDTO;
 import idatt2105.peakquizbackend.dto.UserDTO;
-import idatt2105.peakquizbackend.mappers.UserMapper;
 import idatt2105.peakquizbackend.model.Collaboration;
 import idatt2105.peakquizbackend.model.Quiz;
 import idatt2105.peakquizbackend.model.User;
@@ -11,11 +10,7 @@ import idatt2105.peakquizbackend.service.CollaborationService;
 import idatt2105.peakquizbackend.service.QuizService;
 import idatt2105.peakquizbackend.service.SortingService;
 import idatt2105.peakquizbackend.service.UserService;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -33,13 +28,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin
 @RequestMapping("/collaborations")
-@AllArgsConstructor
 public class CollaborationController {
 
   private final CollaborationService collaborationService;
   private final UserService userService;
   private final QuizService quizService;
   private final static Logger LOGGER = LoggerFactory.getLogger(QuizController.class);
+
+  public CollaborationController(CollaborationService collaborationService, UserService userService,
+      QuizService quizService) {
+    this.collaborationService = collaborationService;
+    this.userService = userService;
+    this.quizService = quizService;
+  }
 
   @PostMapping("/")
   public ResponseEntity<?> createCollaboration(
