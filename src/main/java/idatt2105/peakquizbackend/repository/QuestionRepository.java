@@ -1,7 +1,6 @@
 package idatt2105.peakquizbackend.repository;
 
 import idatt2105.peakquizbackend.model.Question;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
