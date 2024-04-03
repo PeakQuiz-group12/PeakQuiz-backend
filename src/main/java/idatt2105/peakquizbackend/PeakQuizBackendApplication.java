@@ -9,5 +9,4 @@ public class PeakQuizBackendApplication {
   public static void main(String[] args) {
     SpringApplication.run(PeakQuizBackendApplication.class, args);
   }
-
 }

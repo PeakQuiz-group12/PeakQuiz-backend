@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.ZonedDateTime;
@@ -12,9 +14,13 @@ import java.util.Set;
 
 @Entity
 @Table(name = "USERS")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "USER_TYPE")
-public abstract class User {
+@NoArgsConstructor
+public class User {
+  public User(String username, String email, String password) {
+    this.username = username;
+    this.email = email;
+    this.password = password;
+  }
 
   @Id
   @GeneratedValue(generator = "user_id_seq", strategy = GenerationType.SEQUENCE)
@@ -45,14 +51,10 @@ public abstract class User {
   protected String email;
 
   // Hash(password + salt) (probably not the appropriate datatype)
+  @Getter
   @NotNull
   @Column(nullable = false)
   protected String password;
-
-  // Probably not the appropriate datatype
-  @NotNull
-  @Column(nullable = false)
-  protected String salt;
 
   @OneToMany(mappedBy = "user")
   protected Set<Game> games = new HashSet<>();
