@@ -1,5 +1,6 @@
 package idatt2105.peakquizbackend.model;
 
+import idatt2105.peakquizbackend.dto.QuestionDTO;
 import idatt2105.peakquizbackend.model.embedded.Answer;
 import idatt2105.peakquizbackend.model.enums.QuestionType;
 import jakarta.persistence.*;
@@ -62,4 +63,8 @@ public class Question {
   @ElementCollection
   @CollectionTable(name = "COMMENT")
   private Set<Answer> answers = new HashSet<>();
+
+  @ManyToOne
+  @NotNull
+  private Quiz quiz;
 }
