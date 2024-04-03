@@ -39,25 +39,18 @@ public class Quiz {
   private ZonedDateTime createdOn;
 
   @NotAudited
-  @OneToMany(mappedBy = "quiz")
+  @OneToMany(mappedBy = "quiz", fetch = FetchType.EAGER)
   private Set<Game> games = new HashSet<>();
 
   // Unidirectional mapping between quizzes and questions
-  @ManyToMany(cascade = CascadeType.PERSIST)
-  @JoinTable(
-          name = "QUIZ_QUESTION",
-          joinColumns = @JoinColumn(name = "quiz_id")
-  )
+  @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
   private Set<Question> questions = new HashSet<>();
 
   @NotAudited
-  @ManyToMany(mappedBy = "quizzes")
+  @ManyToMany(mappedBy = "quizzes", fetch = FetchType.EAGER)
   private Set<Category> categories = new HashSet<>();
 
   @NotAudited
-  @OneToMany(mappedBy = "quiz")
+  @OneToMany(mappedBy = "quiz", fetch = FetchType.EAGER)
   private Set<Collaboration> collaborators = new HashSet<>();
-  public Set<Game> getGames() {
-    return games;
-  }
 }
