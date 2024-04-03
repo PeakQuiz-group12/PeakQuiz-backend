@@ -55,6 +55,22 @@ public class QuizController {
     return ResponseEntity.ok(quizzes);
   }
 
+  @GetMapping("/{id}")
+  public ResponseEntity<?> getQuiz(
+           @PathVariable Long id
+  ) {
+    LOGGER.info("Received request for quiz with id: " + id);
+    Optional<Quiz> _quiz = quizService.findQuizById(id);
+
+    if (_quiz.isEmpty()) {
+      LOGGER.error("Could not find quiz with id: " + id);
+      return ResponseEntity.notFound().build();
+    }
+
+    LOGGER.info("Successfully returned quiz");
+    return ResponseEntity.ok(_quiz.get());
+  }
+
   @PostMapping("/")
   public ResponseEntity<?> createQuiz(
       @RequestBody @NonNull QuizCreateDTO quizCreateDTO
