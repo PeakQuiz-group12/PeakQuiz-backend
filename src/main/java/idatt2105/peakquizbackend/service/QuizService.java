@@ -4,6 +4,8 @@ import idatt2105.peakquizbackend.model.Quiz;
 import idatt2105.peakquizbackend.repository.QuizRepository;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,5 +20,13 @@ public class QuizService {
 
   public Optional<Quiz> findQuizById(Long quizId) {
     return quizRepository.findById(quizId);
+  }
+
+  public Page<Quiz> findAllQuizzes(Pageable pageable) {
+    return quizRepository.findAll(pageable);
+  }
+
+  public void deleteQuizById(Long id) {
+    quizRepository.deleteById(id);
   }
 }
