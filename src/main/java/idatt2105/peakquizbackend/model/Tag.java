@@ -40,6 +40,7 @@ public class Tag {
   private User user;
 
   // Unidirectional mapping between tag and quiz
+
   @ManyToMany(cascade = CascadeType.DETACH)
   @JoinTable(
           name = "TAG_QUIZ",
