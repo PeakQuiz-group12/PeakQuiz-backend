@@ -1,6 +1,7 @@
 package idatt2105.peakquizbackend.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -12,6 +13,7 @@ import java.util.Set;
 
 @Entity
 @Audited
+@Data
 public class Quiz {
   @Id
   @GeneratedValue(generator = "quiz_id_seq", strategy = GenerationType.SEQUENCE)

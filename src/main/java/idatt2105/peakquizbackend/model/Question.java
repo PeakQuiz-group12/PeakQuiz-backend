@@ -7,6 +7,10 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.envers.Audited;
 
 import java.sql.Blob;
@@ -15,7 +19,11 @@ import java.util.Set;
 
 @Entity
 @Table(name = "QUESTION")
+@Builder
+@Data
 @Audited
+@NoArgsConstructor
+@AllArgsConstructor
 public class Question {
 
   @Id
@@ -30,7 +38,7 @@ public class Question {
   @Size(
           min = 2,
           max = 20,
-          message = "Username is required, maximum 20 characters."
+          message = "Text is required, maximum 20 characters."
   )
   @NotNull
   @Column(nullable = false)
@@ -39,7 +47,7 @@ public class Question {
   @NotNull
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
-  QuestionType questionType;
+  private QuestionType questionType;
 
   @Lob
   private Blob media;
