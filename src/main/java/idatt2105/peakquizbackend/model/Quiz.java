@@ -3,6 +3,7 @@ package idatt2105.peakquizbackend.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Formula;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 
@@ -36,6 +37,12 @@ public class Quiz {
           updatable = false)
   @CreationTimestamp
   private ZonedDateTime createdOn;
+
+  @NotAudited
+  @Formula(
+      "(SELECT COUNT(*) FROM GAME G WHERE G.QUIZ_ID = ID)"
+  )
+  private Integer playCount;
 
   @NotAudited
   @OneToMany(mappedBy = "quiz", fetch = FetchType.EAGER)
