@@ -1,5 +1,7 @@
 package idatt2105.peakquizbackend.model;
 
+import idatt2105.peakquizbackend.model.embedded.Answer;
+import idatt2105.peakquizbackend.model.enums.QuestionType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

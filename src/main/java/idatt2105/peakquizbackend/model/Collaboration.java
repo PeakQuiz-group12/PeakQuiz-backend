@@ -1,5 +1,7 @@
 package idatt2105.peakquizbackend.model;
 
+import idatt2105.peakquizbackend.model.embedded.Comment;
+import idatt2105.peakquizbackend.model.enums.CollaboratorType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
