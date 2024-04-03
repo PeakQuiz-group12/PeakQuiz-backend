@@ -19,8 +19,6 @@ import org.springframework.stereotype.Service;
 public class CollaborationService {
 
   private final CollaborationRepository collaborationRepository;
-  private final UserMapper userMapper;
-  private final QuizMapper quizMapper;
 
   public Collaboration saveCollaboration(User user,
       Quiz quiz,
@@ -31,11 +29,11 @@ public class CollaborationService {
 
   public Page<UserDTO> findCollaboratorsByQuizId(Long quizId, Pageable pageable) {
     return collaborationRepository.findAllByQuizId(quizId, pageable)
-        .map(collaboration -> userMapper.toDTO(collaboration.getUser()));
+        .map(collaboration -> UserMapper.INSTANCE.toDTO(collaboration.getUser()));
   }
 
   public Page<QuizResponseDTO> findQuizzesByUserId(Long userId, CollaboratorType collaboratorType, Pageable pageable) {
     return collaborationRepository.findAllByUserIdAndCollaboratorType(userId, collaboratorType, pageable)
-        .map(collaboration -> quizMapper.toDTO(collaboration.getQuiz()));
+        .map(collaboration -> QuizMapper.INSTANCE.toDTO(collaboration.getQuiz()));
   }
 }

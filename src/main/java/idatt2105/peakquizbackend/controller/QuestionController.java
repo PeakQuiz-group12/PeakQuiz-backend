@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class QuestionController {
 
-  private final QuestionMapper questionMapper;
   private final QuestionService questionService;
   private static final Logger LOGGER = LoggerFactory.getLogger(QuestionController.class);
 
@@ -52,7 +51,7 @@ public class QuestionController {
       errorResponse.put("error", "Could not find parent quiz");
       return ResponseEntity.badRequest().body(errorResponse);
     }
-    Question question = questionMapper.fromQuestionCreateDTOtoEntity(questionCreateDTO);
+    Question question = QuestionMapper.INSTANCE.fromQuestionCreateDTOtoEntity(questionCreateDTO);
     question.setQuiz(quiz.get());
 
     LOGGER.info("Saving question");
@@ -61,7 +60,7 @@ public class QuestionController {
 
     LOGGER.info("Successfully saved question");
 
-    return ResponseEntity.ok().body(questionMapper.toDTO(savedQuestion));
+    return ResponseEntity.ok().body(QuestionMapper.INSTANCE.toDTO(savedQuestion));
   }
 
   @PutMapping("/{id}")
@@ -79,7 +78,7 @@ public class QuestionController {
 
     Question question = _question.get();
     LOGGER.info("Updating question");
-    questionMapper.updateQuestionFromDTO(questionResponseDTO, question);
+    QuestionMapper.INSTANCE.updateQuestionFromDTO(questionResponseDTO, question);
 
     LOGGER.info("Saving question");
     questionService.saveQuestion(question);

@@ -36,7 +36,6 @@ public class QuizController {
 
   private final QuizService quizService;
   private final CollaborationService collaborationService;
-  private final QuizMapper quizMapper;
 
   private final static Logger LOGGER = LoggerFactory.getLogger(QuizController.class);
 
@@ -62,8 +61,8 @@ public class QuizController {
   )
   {
     LOGGER.info("Received post request for quiz: " + quizCreateDTO);
-    Quiz quiz = quizMapper.fromQuizCreateDTOtoEntity(quizCreateDTO);
-    QuizResponseDTO quizResponseDTO = quizMapper.toDTO(quizService.saveQuiz(quiz));
+    Quiz quiz = QuizMapper.INSTANCE.fromQuizCreateDTOtoEntity(quizCreateDTO);
+    QuizResponseDTO quizResponseDTO = QuizMapper.INSTANCE.toDTO(quizService.saveQuiz(quiz));
 
     LOGGER.info("Successfully saved quiz");
     return ResponseEntity.ok(quizResponseDTO);
@@ -79,7 +78,7 @@ public class QuizController {
     Optional<Quiz> _quiz = quizService.findQuizById(id);
     if (_quiz.isPresent()) {
       Quiz quiz = _quiz.get();
-      quizMapper.updateQuizFromDTO(quizResponseDTO, quiz);
+      QuizMapper.INSTANCE.updateQuizFromDTO(quizResponseDTO, quiz);
       quizService.saveQuiz(quiz);
       LOGGER.info("Successfully updated quiz");
       return ResponseEntity.ok(quizResponseDTO);

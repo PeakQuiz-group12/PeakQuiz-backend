@@ -60,7 +60,8 @@ public class CollaborationController {
     return ResponseEntity.ok(collaboration);
   }
 
-  @GetMapping("/")
+  // TODO: Change
+  @GetMapping("/user")
   public ResponseEntity<?> getCollaborators(
       @RequestParam Long quizId,
       @RequestParam(defaultValue = "0", required = false) int page,
@@ -82,7 +83,7 @@ public class CollaborationController {
     return ResponseEntity.ok(collaborators);
   }
 
-  @GetMapping("/")
+  @GetMapping("/quiz")
   public ResponseEntity<?> getUserQuizzes(
       @RequestParam Long userId,
       @RequestParam CollaboratorType collaboratorType,
