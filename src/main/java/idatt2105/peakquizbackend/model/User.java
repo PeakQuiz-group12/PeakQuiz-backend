@@ -58,16 +58,18 @@ public class User {
   protected String password;
 
   @Getter
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
   protected Set<Game> games = new HashSet<>();
 
   @Getter
-  @OneToMany(mappedBy = "user")
+  @OneToMany(
+      mappedBy = "user",
+      fetch = FetchType.EAGER)
   protected Set<Collaboration> collaborations = new HashSet<>();
 
   @OneToMany(
           mappedBy = "user",
-          fetch = FetchType.LAZY,
+          fetch = FetchType.EAGER,
           cascade = CascadeType.REMOVE
   )
   public Set<Tag> tags = new HashSet<>();

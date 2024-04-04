@@ -36,6 +36,7 @@ public class Collaboration {
     quiz.getCollaborators().add(this);
   }
   @Embeddable
+  @EqualsAndHashCode
   public static class CollaborationId implements Serializable {
     @Column(name = "USER_ID")
     private Long userId;
@@ -50,18 +51,9 @@ public class Collaboration {
       this.userId = userId;
       this.quizId = quizId;
     }
-
     @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof CollaborationId id)) return false;
-      return Objects.equals(userId, id.userId) && Objects.equals(quizId, id.quizId);
-    }
+    public String toString() { return "{userId: " + userId + "; quizId: " + quizId + "}"; }
 
-    @Override
-    public int hashCode() {
-      return Objects.hash(userId, quizId);
-    }
   }
 
   @EmbeddedId
