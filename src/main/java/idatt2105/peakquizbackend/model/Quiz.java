@@ -40,6 +40,7 @@ public class Quiz {
   @CreationTimestamp
   private ZonedDateTime createdOn;
 
+  // TODO: Denne kan være games.size()?
   @NotAudited
   @Formula(
       "(SELECT COUNT(*) FROM GAME G WHERE G.QUIZ_ID = ID)"
