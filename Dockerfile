@@ -4,7 +4,6 @@ WORKDIR /app
 
 COPY target/peakQuiz-backend-0.0.1-SNAPSHOT.jar /app/peakQuiz-backend.jar
 
-# To run:
-    # - docker build -t peakquiz-backend .
-    # -  docker run -d -p 8080:8080 peakquiz-backend
+EXPOSE 8080
+
 CMD ["java", "-jar", "peakQuiz-backend.jar"]
