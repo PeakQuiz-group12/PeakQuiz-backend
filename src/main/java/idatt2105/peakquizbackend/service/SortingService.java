@@ -1,6 +1,5 @@
 package idatt2105.peakquizbackend.service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

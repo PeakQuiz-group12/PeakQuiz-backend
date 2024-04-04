@@ -123,7 +123,7 @@ public class AuthenticationController {
 
   public String generateToken(final String userId, final Duration validMinutes) {
     final Instant now = Instant.now();
-    final Algorithm hmac512 = Algorithm.HMAC512(keyStr);;
+    final Algorithm hmac512 = Algorithm.HMAC512(keyStr);
     final JWTVerifier verifier = JWT.require(hmac512).build();
     return JWT.create()
         .withSubject(userId)
