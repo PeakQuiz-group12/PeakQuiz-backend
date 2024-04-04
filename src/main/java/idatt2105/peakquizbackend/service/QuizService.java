@@ -1,5 +1,7 @@
 package idatt2105.peakquizbackend.service;
 
+import idatt2105.peakquizbackend.exceptions.QuizAlreadyExistsException;
+import idatt2105.peakquizbackend.exceptions.QuizNotFoundException;
 import idatt2105.peakquizbackend.model.Quiz;
 import idatt2105.peakquizbackend.repository.QuizRepository;
 import lombok.AllArgsConstructor;
@@ -20,8 +22,8 @@ public class QuizService {
     return quizRepository.save(quiz);
   }
 
-  public Optional<Quiz> findQuizById(Long quizId) {
-    return quizRepository.findById(quizId);
+  public Quiz findQuizById(Long quizId) {
+    return quizRepository.findById(quizId).orElseThrow(QuizNotFoundException::new);
   }
 
 
