@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
@@ -32,7 +34,6 @@ public class Collaboration {
     this.id.quizId = quiz.getId();
     user.getCollaborations().add(this);
     quiz.getCollaborators().add(this);
-
   }
   @Embeddable
   public static class CollaborationId implements Serializable {
@@ -82,6 +83,8 @@ public class Collaboration {
   @JoinColumn(
           name = "USER_ID",
           insertable = false, updatable = false)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
   protected User user;
 
   @ManyToOne
@@ -89,11 +92,16 @@ public class Collaboration {
           name = "QUIZ_ID",
           insertable = false, updatable = false
   )
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
   private Quiz quiz;
 
   // TODO: Unsure if this mapping will work.
   //  May have to make this mapping @ManyToOne and CascadeType.REMOVE.
   @ElementCollection
   @CollectionTable(name = "COMMENT")
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
   private Set<Comment> comments = new HashSet<>();
 }
+

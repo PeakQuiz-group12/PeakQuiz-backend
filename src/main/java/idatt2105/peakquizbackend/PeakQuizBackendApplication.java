@@ -1,10 +1,15 @@
 package idatt2105.peakquizbackend;
 
+import idatt2105.peakquizbackend.model.Collaboration;
 import idatt2105.peakquizbackend.model.Question;
 import idatt2105.peakquizbackend.model.Quiz;
+import idatt2105.peakquizbackend.model.User;
+import idatt2105.peakquizbackend.model.enums.CollaboratorType;
 import idatt2105.peakquizbackend.model.enums.QuestionType;
+import idatt2105.peakquizbackend.repository.CollaborationRepository;
 import idatt2105.peakquizbackend.repository.QuestionRepository;
 import idatt2105.peakquizbackend.repository.QuizRepository;
+import idatt2105.peakquizbackend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 
 import org.slf4j.Logger;
@@ -24,7 +29,8 @@ public class PeakQuizBackendApplication {
   Logger LOGGER = LoggerFactory.getLogger(PeakQuizBackendApplication.class);
   @Transactional
   @Bean
-  public CommandLineRunner run (QuizRepository quizRepository, QuestionRepository questionRepository) {
+  public CommandLineRunner run (QuizRepository quizRepository, QuestionRepository questionRepository,
+      UserRepository userRepository, CollaborationRepository collaborationRepository) {
     return (args -> {
       Quiz quiz = new Quiz();
       Question question = Question.builder()
@@ -52,7 +58,24 @@ public class PeakQuizBackendApplication {
       questionRepository.save(newQuestion);
       quiz.addQuestion(newQuestion);
       System.out.println(quiz);
-      quizRepository.saveAndFlush(quiz);
+
+      quizRepository.save(quiz);
+
+      LOGGER.info("Saving user");
+
+      User user = new User("username", "xulr@hotmail.com", "password");
+      userRepository.save(user);
+
+      LOGGER.info("Saved user");
+      System.out.println(userRepository.findByUsername("username"));
+      Collaboration collaboration = new Collaboration(user, quiz, CollaboratorType.CREATOR);
+
+      LOGGER.info("Saving collab");
+      collaborationRepository.save(collaboration);
+
+      System.out.println(collaborationRepository.findAll());
+
+      LOGGER.info("saved collab");
     });
   }
 }

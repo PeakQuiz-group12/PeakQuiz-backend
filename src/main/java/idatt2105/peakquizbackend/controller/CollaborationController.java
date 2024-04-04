@@ -55,12 +55,14 @@ public class CollaborationController {
       return ResponseEntity.notFound().build();
     }
 
+    // TODO: Sjekk at hashset size av quizzes = 0 hvis man ønsker å create og at size > 0 for coauthor
+
     // TODO: convert to DTO if possible
     Collaboration collaboration = collaborationService.saveCollaboration(_user.get(), _quiz.get(), collaborationType);
     return ResponseEntity.ok(collaboration);
   }
 
-  // TODO: Change
+  // TODO: Consider to user quiz endpoint: /quizzes/{id}/collaborators
   @GetMapping("/user")
   public ResponseEntity<?> getCollaborators(
       @RequestParam Long quizId,
@@ -83,6 +85,7 @@ public class CollaborationController {
     return ResponseEntity.ok(collaborators);
   }
 
+  // TODO: Consider move to user endpoint: user/{id}/collaborations
   @GetMapping("/quiz")
   public ResponseEntity<?> getUserQuizzes(
       @RequestParam Long userId,
