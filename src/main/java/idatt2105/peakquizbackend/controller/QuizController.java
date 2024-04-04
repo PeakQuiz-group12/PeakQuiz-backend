@@ -56,23 +56,18 @@ public class QuizController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<?> getQuiz(
+  public ResponseEntity<Quiz> getQuiz(
            @PathVariable Long id
   ) {
     LOGGER.info("Received request for quiz with id: " + id);
-    Optional<Quiz> _quiz = quizService.findQuizById(id);
-
-    if (_quiz.isEmpty()) {
-      LOGGER.error("Could not find quiz with id: " + id);
-      return ResponseEntity.notFound().build();
-    }
+    Quiz quiz = quizService.findQuizById(id);
 
     LOGGER.info("Successfully returned quiz");
-    return ResponseEntity.ok(_quiz.get());
+    return ResponseEntity.ok(quiz);
   }
 
   @PostMapping("/")
-  public ResponseEntity<?> createQuiz(
+  public ResponseEntity<QuizResponseDTO> createQuiz(
       @RequestBody @NonNull QuizCreateDTO quizCreateDTO
   )
   {
@@ -91,25 +86,22 @@ public class QuizController {
   )
   {
     LOGGER.info("Received put request for quiz with id: " + id);
-    Optional<Quiz> _quiz = quizService.findQuizById(id);
-    if (_quiz.isPresent()) {
-      Quiz quiz = _quiz.get();
-      QuizMapper.INSTANCE.updateQuizFromDTO(quizResponseDTO, quiz);
-      quizService.saveQuiz(quiz);
-      LOGGER.info("Successfully updated quiz");
-      return ResponseEntity.ok(quizResponseDTO);
-    }
-
-    LOGGER.error("Could not find quiz");
-    return ResponseEntity.notFound().build();
+    Quiz quiz = quizService.findQuizById(id);
+    quizService.saveQuiz(quiz);
+    QuizMapper.INSTANCE.updateQuizFromDTO(quizResponseDTO, quiz);
+    LOGGER.info("Successfully updated quiz");
+    return ResponseEntity.ok(quizResponseDTO);
   }
 
 
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<?> deleteQuiz(
+  public ResponseEntity<Void> deleteQuiz(
       @PathVariable Long id) {
     LOGGER.info("Received delete request for quiz_id: " + id);
+
+    quizService.deleteQuizById(id);
+
     return ResponseEntity.noContent().build();
   }
 }

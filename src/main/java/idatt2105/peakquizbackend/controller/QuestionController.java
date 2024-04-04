@@ -7,8 +7,6 @@ import idatt2105.peakquizbackend.model.Question;
 import idatt2105.peakquizbackend.model.Quiz;
 import idatt2105.peakquizbackend.service.QuestionService;
 import idatt2105.peakquizbackend.service.QuizService;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -37,22 +35,14 @@ public class QuestionController {
 
   //Quiz-iden får vi fra å lage en tom quiz
   @PostMapping("/")
-  public ResponseEntity<?> createQuestion(
+  public ResponseEntity<QuestionResponseDTO> createQuestion(
       @RequestBody @NonNull QuestionCreateDTO questionCreateDTO) {
-    Optional<Quiz> quiz = quizService.findQuizById(questionCreateDTO.getQuizId());
+    Quiz quiz = quizService.findQuizById(questionCreateDTO.getQuizId());
 
     LOGGER.info("Got request to create question: " + questionCreateDTO);
 
-    if (quiz.isEmpty()) {
-
-      LOGGER.error("Could not find quiz with id: " + questionCreateDTO.getQuizId());
-
-      Map<String, String> errorResponse = new HashMap<>();
-      errorResponse.put("error", "Could not find parent quiz");
-      return ResponseEntity.badRequest().body(errorResponse);
-    }
     Question question = QuestionMapper.INSTANCE.fromQuestionCreateDTOtoEntity(questionCreateDTO);
-    question.setQuiz(quiz.get());
+    question.setQuiz(quiz);
 
     LOGGER.info("Saving question");
 

@@ -43,11 +43,11 @@ public class AuthenticationController {
   public ResponseEntity<?> registerUser(@RequestParam String username, @RequestParam String password) {
     System.out.println(username + password);
 
-    Optional<User> _user = userService.findUserByUsername(username);
+    User user = userService.findUserByUsername(username);
 
-    if (_user.isPresent()) {
+    /*if (_user.isPresent()) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exists");
-    }
+    }*/
 
     if (!isPasswordStrong(password)) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password must be at least 8 characters long, include numbers, upper and lower case letters, and at least one special character");
@@ -80,12 +80,7 @@ public class AuthenticationController {
   public ResponseEntity<?> loginUser(@RequestParam String username, @RequestParam String password) {
 
 
-    Optional<User> _user = userService.findUserByUsername(username);
-    if (_user.isEmpty()) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Wrong username or password");
-    }
-
-    User user = _user.get();
+    User user = userService.checkIfUserExistByUsername(username);
 
     String encodedPassword = user.getPassword();
 
