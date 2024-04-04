@@ -43,7 +43,7 @@ public class CollaborationController {
     this.quizService = quizService;
   }
 
-  @PostMapping("/")
+  @PostMapping
   public ResponseEntity<CollaborationDTO> createCollaboration(
       @RequestParam Long userId,
       @RequestParam Long quizId,
@@ -64,7 +64,7 @@ public class CollaborationController {
       @RequestParam Long quizId,
       @RequestParam(defaultValue = "0", required = false) int page,
       @RequestParam(defaultValue = "5", required = false) int size,
-      @RequestParam(defaultValue = "username,asc", required = false) String[] sort
+      @RequestParam(defaultValue = "username:asc", required = false) String[] sort
   )
   {
     LOGGER.info("Received get request for collaborators of quiz: " + quizId);
@@ -88,7 +88,7 @@ public class CollaborationController {
       @RequestParam CollaboratorType collaboratorType,
       @RequestParam(defaultValue = "0", required = false) int page,
       @RequestParam(defaultValue = "5", required = false) int size,
-      @RequestParam(defaultValue = "createdOn,desc") String[] sort
+      @RequestParam(defaultValue = "createdOn:desc") String[] sort
   ) {
     LOGGER.info("Received get request for quizzes of: " + userId + " with type: " + collaboratorType.toString());
 

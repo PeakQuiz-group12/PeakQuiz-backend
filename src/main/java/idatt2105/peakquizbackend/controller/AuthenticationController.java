@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import idatt2105.peakquizbackend.exceptions.UserAlreadyExistsException;
 import idatt2105.peakquizbackend.model.User;
 import idatt2105.peakquizbackend.service.UserService;
 import java.time.Duration;
@@ -42,8 +43,9 @@ public class AuthenticationController {
   public ResponseEntity<?> registerUser(@RequestParam String username, @RequestParam String password) {
     System.out.println(username + password);
 
-    User user = userService.findUserByUsername(username);
-
+    if (userService.usernameExists(username)) {
+      throw new UserAlreadyExistsException();
+    }
     /*if (_user.isPresent()) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exists");
     }*/
@@ -79,7 +81,7 @@ public class AuthenticationController {
   public ResponseEntity<?> loginUser(@RequestParam String username, @RequestParam String password) {
 
 
-    User user = userService.usernameExists(username);
+    User user = userService.findUserByUsername(username);
 
     String encodedPassword = user.getPassword();
 
@@ -121,7 +123,7 @@ public class AuthenticationController {
 
   public String generateToken(final String userId, final Duration validMinutes) {
     final Instant now = Instant.now();
-    final Algorithm hmac512 = Algorithm.HMAC512(keyStr);;
+    final Algorithm hmac512 = Algorithm.HMAC512(keyStr);
     final JWTVerifier verifier = JWT.require(hmac512).build();
     return JWT.create()
         .withSubject(userId)

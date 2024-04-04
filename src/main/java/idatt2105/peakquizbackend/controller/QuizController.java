@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
+
 @RestController
 @AllArgsConstructor
 @CrossOrigin
@@ -38,13 +40,14 @@ public class QuizController {
 
   private final static Logger LOGGER = LoggerFactory.getLogger(QuizController.class);
 
-  @GetMapping("/")
+  @GetMapping
   public ResponseEntity<Page<Quiz>> getQuizzes(
       @RequestParam(defaultValue = "0", required = false) int page,
       @RequestParam(defaultValue = "6", required = false) int size,
-      @RequestParam(defaultValue = "id,asc", required = false) String[] sort
+      @RequestParam(defaultValue = "id:asc", required = false) String[] sort
   ) {
     LOGGER.info("Received get-request for quizzes");
+    System.out.println(Arrays.toString(sort));
     Sort sortCriteria = Sort.by(SortingService.convertToOrder(sort));
     Pageable pageable = PageRequest.of(page, size, sortCriteria);
     Page<Quiz> quizzes = quizService.findAllQuizzes(pageable);
@@ -64,7 +67,7 @@ public class QuizController {
     return ResponseEntity.ok(quiz);
   }
 
-  @PostMapping("/")
+  @PostMapping
   public ResponseEntity<QuizResponseDTO> createQuiz(
       @RequestBody @NonNull QuizCreateDTO quizCreateDTO
   )

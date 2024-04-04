@@ -34,7 +34,7 @@ public class QuestionController {
   private final QuizService quizService;
 
   //Quiz-iden får vi fra å lage en tom quiz
-  @PostMapping("/")
+  @PostMapping
   public ResponseEntity<QuestionResponseDTO> createQuestion(
       @RequestBody @NonNull QuestionCreateDTO questionCreateDTO) {
     Quiz quiz = quizService.findQuizById(questionCreateDTO.getQuizId());

@@ -11,8 +11,8 @@ public class SortingService {
   public static List<Order> convertToOrder(String[] sort) {
     return Stream.of(sort)
         .map(s -> {
-          String[] split = s.split(",");
-          return new Sort.Order(Sort.Direction.fromString(split[1]), split[0]);
+          String[] split = s.split(":");
+          return new Order(Sort.Direction.fromString(split[1]), split[0]);
         })
         .collect(Collectors.toList());
   }
