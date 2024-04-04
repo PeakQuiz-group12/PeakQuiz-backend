@@ -1,7 +1,9 @@
 package idatt2105.peakquizbackend.controller;
 
+import idatt2105.peakquizbackend.dto.CollaborationDTO;
 import idatt2105.peakquizbackend.dto.QuizResponseDTO;
 import idatt2105.peakquizbackend.dto.UserDTO;
+import idatt2105.peakquizbackend.mappers.CollaborationMapper;
 import idatt2105.peakquizbackend.model.Collaboration;
 import idatt2105.peakquizbackend.model.Quiz;
 import idatt2105.peakquizbackend.model.User;
@@ -43,23 +45,18 @@ public class CollaborationController {
   }
 
   @PostMapping("/")
-  public ResponseEntity<?> createCollaboration(
+  public ResponseEntity<CollaborationDTO> createCollaboration(
       @RequestParam Long userId,
       @RequestParam Long quizId,
       @RequestParam CollaboratorType collaborationType
   ) {
-    Optional<User> _user = userService.findUserByUserId(userId);
-    Optional<Quiz> _quiz = quizService.findQuizById(quizId);
+    User user = userService.findUserByUserId(userId);
+    Quiz quiz = quizService.findQuizById(quizId);
 
-    if (_user.isEmpty() || _quiz.isEmpty()) {
-      return ResponseEntity.notFound().build();
-    }
-
-    // TODO: Sjekk at hashset size av quizzes = 0 hvis man ønsker å create og at size > 0 for coauthor
-
-    // TODO: convert to DTO if possible
-    Collaboration collaboration = collaborationService.saveCollaboration(_user.get(), _quiz.get(), collaborationType);
-    return ResponseEntity.ok(collaboration);
+    Collaboration collaboration = collaborationService
+        .saveCollaboration(user, quiz, collaborationType);
+    CollaborationDTO dto = CollaborationMapper.INSTANCE.toDTO(collaboration);
+    return ResponseEntity.ok(dto);
   }
 
   // TODO: Consider to user quiz endpoint: /quizzes/{id}/collaborators
