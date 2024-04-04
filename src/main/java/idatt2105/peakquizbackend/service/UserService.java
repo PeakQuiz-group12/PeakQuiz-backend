@@ -7,6 +7,8 @@ import idatt2105.peakquizbackend.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class UserService {
@@ -21,9 +23,9 @@ public class UserService {
         .orElseThrow(UserNotFoundException::new);
   }
 
-  public User usernameExists(String username) {
-    return userRepository.findByUsername(username)
-        .orElseThrow(UserAlreadyExistsException::new);
+  public boolean usernameExists(String username) {
+    Optional<User> existingUser = userRepository.findByUsername(username);
+      return existingUser.isPresent();
   }
 
   public User findUserByUserId(Long id) {
