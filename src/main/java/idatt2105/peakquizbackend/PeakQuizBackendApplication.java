@@ -29,8 +29,8 @@ public class PeakQuizBackendApplication {
   Logger LOGGER = LoggerFactory.getLogger(PeakQuizBackendApplication.class);
   @Transactional
   @Bean
-  public CommandLineRunner run (QuizRepository quizRepository, QuestionRepository questionRepository,
-      UserRepository userRepository, CollaborationRepository collaborationRepository) {
+  public CommandLineRunner run (/*QuizRepository quizRepository, QuestionRepository questionRepository,
+      UserRepository userRepository, CollaborationRepository collaborationRepository*/) {
     return (args -> {
       /*Quiz quiz = new Quiz();
       Question question = Question.builder()
@@ -47,7 +47,7 @@ public class PeakQuizBackendApplication {
 
       LOGGER.info("Creating questing");
       Question newQuestion = Question.builder()
-          .text("text1")
+          .text("text2")
           .questionType(QuestionType.FILL_IN_BLANK)
           .difficulty((byte) 1)
           .quiz(quizRepository.findById(1L).get()).build();
@@ -55,13 +55,14 @@ public class PeakQuizBackendApplication {
       // New question is not cascaded as intended.
       // I suspect its because of too many things being done in a single transaction.
       // Temp fix: Manually save the new question.
-      questionRepository.save(newQuestion);
+      //questionRepository.save(newQuestion);
       quiz.addQuestion(newQuestion);
-      System.out.println(quiz);
 
       quizRepository.save(quiz);
 
       LOGGER.info("Saving user");
+
+      System.out.println(quizRepository.findAll());
 
       User user = new User("username", "xulr@hotmail.com", "password");
       userRepository.save(user);
@@ -75,7 +76,7 @@ public class PeakQuizBackendApplication {
 
       System.out.println(collaborationRepository.findAll());
 
-      LOGGER.info("saved collab");
+      LOGGER.info("saved collab");*/
     });
   }
 }

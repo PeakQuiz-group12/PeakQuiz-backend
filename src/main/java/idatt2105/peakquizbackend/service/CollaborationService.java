@@ -2,8 +2,8 @@ package idatt2105.peakquizbackend.service;
 
 import idatt2105.peakquizbackend.dto.QuizResponseDTO;
 import idatt2105.peakquizbackend.dto.UserDTO;
-import idatt2105.peakquizbackend.mappers.QuizMapper;
-import idatt2105.peakquizbackend.mappers.UserMapper;
+import idatt2105.peakquizbackend.mapper.QuizMapper;
+import idatt2105.peakquizbackend.mapper.UserMapper;
 import idatt2105.peakquizbackend.model.Collaboration;
 import idatt2105.peakquizbackend.model.Quiz;
 import idatt2105.peakquizbackend.model.User;

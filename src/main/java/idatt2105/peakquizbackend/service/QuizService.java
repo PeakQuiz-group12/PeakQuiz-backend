@@ -16,9 +16,6 @@ public class QuizService {
   private final QuizRepository quizRepository;
 
   public Quiz saveQuiz(Quiz quiz) {
-    if (quiz.getId() != null) {
-      throw new QuizAlreadyExistsException();
-    }
     return quizRepository.save(quiz);
   }
 
@@ -26,12 +23,13 @@ public class QuizService {
     return quizRepository.findById(quizId).orElseThrow(QuizNotFoundException::new);
   }
 
-
   public Page<Quiz> findAllQuizzes(Pageable pageable) {
     return quizRepository.findAll(pageable);
   }
 
   public void deleteQuizById(Long id) {
-    quizRepository.deleteById(id);
+    Quiz quiz = findQuizById(id);
+
+    quizRepository.deleteById(quiz.getId());
   }
 }

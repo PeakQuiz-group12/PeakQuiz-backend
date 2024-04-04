@@ -1,4 +1,4 @@
-package idatt2105.peakquizbackend.mappers;
+package idatt2105.peakquizbackend.mapper;
 
 import idatt2105.peakquizbackend.dto.UserDTO;
 import idatt2105.peakquizbackend.model.User;

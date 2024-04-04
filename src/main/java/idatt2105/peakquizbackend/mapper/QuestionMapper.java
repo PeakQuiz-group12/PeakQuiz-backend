@@ -1,4 +1,4 @@
-package idatt2105.peakquizbackend.mappers;
+package idatt2105.peakquizbackend.mapper;
 
 import idatt2105.peakquizbackend.dto.QuestionCreateDTO;
 import idatt2105.peakquizbackend.dto.QuestionResponseDTO;
@@ -8,7 +8,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface QuestionMapper {
 
   QuestionMapper INSTANCE = Mappers.getMapper(QuestionMapper.class);

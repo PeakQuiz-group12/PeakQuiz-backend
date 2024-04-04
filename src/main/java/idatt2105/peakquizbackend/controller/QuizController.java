@@ -2,12 +2,11 @@ package idatt2105.peakquizbackend.controller;
 
 import idatt2105.peakquizbackend.dto.QuizCreateDTO;
 import idatt2105.peakquizbackend.dto.QuizResponseDTO;
-import idatt2105.peakquizbackend.mappers.QuizMapper;
+import idatt2105.peakquizbackend.mapper.QuizMapper;
 import idatt2105.peakquizbackend.model.Quiz;
 import idatt2105.peakquizbackend.service.CollaborationService;
 import idatt2105.peakquizbackend.service.QuizService;
 import idatt2105.peakquizbackend.service.SortingService;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.slf4j.Logger;

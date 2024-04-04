@@ -2,7 +2,7 @@ package idatt2105.peakquizbackend.controller;
 
 import idatt2105.peakquizbackend.dto.QuestionCreateDTO;
 import idatt2105.peakquizbackend.dto.QuestionResponseDTO;
-import idatt2105.peakquizbackend.mappers.QuestionMapper;
+import idatt2105.peakquizbackend.mapper.QuestionMapper;
 import idatt2105.peakquizbackend.model.Question;
 import idatt2105.peakquizbackend.model.Quiz;
 import idatt2105.peakquizbackend.service.QuestionService;
