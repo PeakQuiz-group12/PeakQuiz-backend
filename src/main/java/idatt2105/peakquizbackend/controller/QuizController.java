@@ -40,7 +40,7 @@ public class QuizController {
   private final static Logger LOGGER = LoggerFactory.getLogger(QuizController.class);
 
   @GetMapping("/")
-  public ResponseEntity<?> getQuizzes(
+  public ResponseEntity<Page<Quiz>> getQuizzes(
       @RequestParam(defaultValue = "0", required = false) int page,
       @RequestParam(defaultValue = "6", required = false) int size,
       @RequestParam(defaultValue = "id,asc", required = false) String[] sort
@@ -48,8 +48,7 @@ public class QuizController {
     LOGGER.info("Received get-request for quizzes");
     Sort sortCriteria = Sort.by(SortingService.convertToOrder(sort));
     Pageable pageable = PageRequest.of(page, size, sortCriteria);
-    Page<Quiz> quizzes = quizService.findAllQuizzes(pageable)
-        ;
+    Page<Quiz> quizzes = quizService.findAllQuizzes(pageable);
     LOGGER.info("Successfully found quizzes");
 
     return ResponseEntity.ok(quizzes);
@@ -80,7 +79,7 @@ public class QuizController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<?> editQuiz(
+  public ResponseEntity<QuizResponseDTO> editQuiz(
       @PathVariable Long id,
       @RequestBody QuizResponseDTO quizResponseDTO
   )

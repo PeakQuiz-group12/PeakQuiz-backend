@@ -11,7 +11,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,7 +56,7 @@ public class AuthenticationController {
 
 
 
-    userService.addUser(new User(username, "test@test.com", encodedPassword));
+    userService.saveUser(new User(username, "test@test.com", encodedPassword));
     System.out.println("New user registered");
 
     String accessToken = generateToken(username, Duration.ofMinutes(5));
@@ -80,7 +79,7 @@ public class AuthenticationController {
   public ResponseEntity<?> loginUser(@RequestParam String username, @RequestParam String password) {
 
 
-    User user = userService.checkIfUserExistByUsername(username);
+    User user = userService.usernameExists(username);
 
     String encodedPassword = user.getPassword();
 

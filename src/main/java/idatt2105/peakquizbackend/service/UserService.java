@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
   private final UserRepository userRepository;
 
-  public User addUser(User user) {
+  public User saveUser(User user) {
     return userRepository.save(user);
   }
 
@@ -21,7 +21,7 @@ public class UserService {
         .orElseThrow(UserNotFoundException::new);
   }
 
-  public User checkIfUserExistByUsername(String username) {
+  public User usernameExists(String username) {
     return userRepository.findByUsername(username)
         .orElseThrow(UserAlreadyExistsException::new);
   }

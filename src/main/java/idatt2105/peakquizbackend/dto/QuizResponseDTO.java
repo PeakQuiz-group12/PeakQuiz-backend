@@ -23,5 +23,5 @@ public class QuizResponseDTO {
   private ZonedDateTime createdON;
   private Integer playCount;
   private Set<Long> questionIds;
-  private Set<Category> categories;
+  private Set<Long> categoryIds;
 }

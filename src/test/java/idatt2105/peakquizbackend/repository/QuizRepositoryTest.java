@@ -24,7 +24,7 @@ public class QuizRepositoryTest {
 
   }
   @Test
-  void testFindById() {
+  public void testFindById() {
     Quiz quiz = new Quiz();
     quiz.setDescription("hi");
 
@@ -35,10 +35,5 @@ public class QuizRepositoryTest {
 
     assertEquals(quiz.getDescription(), foundQuiz.getDescription());
     assertEquals(0, foundQuiz.getQuestions().size());
-  }
-
-  @Test
-  void testCascadePersist() {
-
   }
 }
