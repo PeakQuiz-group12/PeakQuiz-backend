@@ -52,7 +52,7 @@ public class Quiz {
   private Set<Game> games = new HashSet<>();
 
   // Unidirectional mapping between quizzes and questions
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "quiz")
+  @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "quiz")
   private Set<Question> questions = new HashSet<>();
 
   @NotAudited

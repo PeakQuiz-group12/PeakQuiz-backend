@@ -32,7 +32,7 @@ public class PeakQuizBackendApplication {
   public CommandLineRunner run (QuizRepository quizRepository, QuestionRepository questionRepository,
       UserRepository userRepository, CollaborationRepository collaborationRepository) {
     return (args -> {
-      Quiz quiz = new Quiz();
+      /*Quiz quiz = new Quiz();
       Question question = Question.builder()
               .text("text")
               .questionType(QuestionType.FILL_IN_BLANK)
