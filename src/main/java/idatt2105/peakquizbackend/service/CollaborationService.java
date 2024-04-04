@@ -28,6 +28,7 @@ public class CollaborationService {
   }
 
   public Page<UserDTO> findCollaboratorsByQuizId(Long quizId, Pageable pageable) {
+    System.out.println(collaborationRepository.findAllByQuizId(quizId, pageable).getContent());
     return collaborationRepository.findAllByQuizId(quizId, pageable)
         .map(collaboration -> UserMapper.INSTANCE.toDTO(collaboration.getUser()));
   }

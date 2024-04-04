@@ -68,7 +68,7 @@ public class CollaborationServiceTest {
                 existingCollaboration
                     .getQuiz().getId(),
                 PageRequest.of(0,3)))
-        .thenReturn(new PageImpl<>(List.of(existingCollaboration),PageRequest.of(0,3), 1)
+        .thenReturn(new PageImpl<>(List.of(existingCollaboration), PageRequest.of(0,3), 1)
         );
     when(
         collaborationRepository
@@ -100,6 +100,7 @@ public class CollaborationServiceTest {
 
   @Test
   public void testFindCollaboratorsByQuizId() {
+    System.out.println(existingCollaboration.getQuiz().getId());
     assertEquals(1, collaborationService
         .findCollaboratorsByQuizId(
             existingCollaboration.getQuiz().getId(),

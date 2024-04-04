@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "Collaboration")
+@Table(name = "COLLABORATION")
 @Data
 @NoArgsConstructor
 public class Collaboration {
