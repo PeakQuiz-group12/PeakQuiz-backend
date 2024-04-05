@@ -21,4 +21,12 @@ public class CategoryService {
   public Category findCategoryByName(String name) {
     return categoryRepository.findCategoryByName(name).orElseThrow(CategoryNotFoundException::new);
   }
+
+  public boolean categoryExists(String name) {
+    return categoryRepository.findCategoryByName(name).isPresent();
+  }
+
+  public Category saveCategory(Category category) {
+    return categoryRepository.save(category);
+  }
 }
