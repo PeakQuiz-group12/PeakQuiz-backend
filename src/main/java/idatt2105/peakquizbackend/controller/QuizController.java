@@ -88,8 +88,8 @@ public class QuizController {
   {
     LOGGER.info("Received put request for quiz with id: " + id);
     Quiz quiz = quizService.findQuizById(id);
-    quizService.saveQuiz(quiz);
     QuizMapper.INSTANCE.updateQuizFromDTO(quizResponseDTO, quiz);
+    quizService.saveQuiz(quiz);
     LOGGER.info("Successfully updated quiz");
     return ResponseEntity.ok(quizResponseDTO);
   }
