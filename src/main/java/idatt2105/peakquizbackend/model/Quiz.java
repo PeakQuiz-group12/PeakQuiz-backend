@@ -11,6 +11,7 @@ import java.sql.Blob;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import org.hibernate.validator.constraints.URL;
 
 @Entity
 @Audited
@@ -30,8 +31,9 @@ public class Quiz {
 
   // Blob is a class containing a stream of bytes. In this case the bytes represent an image.
   // alternatively we can use String:filename if we have access to a filesystem
-  @Lob
-  private Blob image;
+  @URL(regexp = "^(http|https).*\\.(jpg|png)")
+  private String imageUrl;
+
   @Temporal(TemporalType.TIMESTAMP)
   @Column(nullable = false,
           updatable = false)
