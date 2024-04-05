@@ -15,6 +15,9 @@ import idatt2105.peakquizbackend.service.QuizService;
 import idatt2105.peakquizbackend.service.SortingService;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.slf4j.Logger;
@@ -57,10 +60,19 @@ public class QuizController {
 
   private final static Logger LOGGER = LoggerFactory.getLogger(QuizController.class);
 
+  @Operation(
+      summary = "Get quizzes",
+      description = "Gets all quizzes, allowing for pagination and sorting"
+  )
   @GetMapping
   public ResponseEntity<Page<QuizResponseDTO>> getQuizzes(
+      @Parameter(description = "Page number")
       @RequestParam(defaultValue = "0", required = false) int page,
+
+      @Parameter(description = "Page size")
       @RequestParam(defaultValue = "6", required = false) int size,
+
+      @Parameter(description = "Sorting column and ordering direction")
       @RequestParam(defaultValue = "id:asc", required = false) String[] sort
   ) {
     LOGGER.info("Received get-request for quizzes");
@@ -75,6 +87,10 @@ public class QuizController {
     return ResponseEntity.ok(quizResponseDTOS);
   }
 
+  @Operation(
+          summary = "Get quiz",
+          description = "Get quiz based on its id"
+  )
   @GetMapping("/{id}")
   public ResponseEntity<Quiz> getQuiz(
            @PathVariable Long id
@@ -86,6 +102,10 @@ public class QuizController {
     return ResponseEntity.ok(quiz);
   }
 
+    @Operation(
+          summary = "Get quiz",
+          description = "Get quiz based on its id"
+  )
   @PostMapping
   public ResponseEntity<QuizResponseDTO> createQuiz(
       @RequestBody @NonNull QuizCreateDTO quizCreateDTO
@@ -100,6 +120,7 @@ public class QuizController {
     LOGGER.info("Successfully saved quiz");
     return ResponseEntity.ok(quizResponseDTO);
   }
+
 
   @PutMapping("/{id}")
   public ResponseEntity<QuizResponseDTO> editQuiz(
