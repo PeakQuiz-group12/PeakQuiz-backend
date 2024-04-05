@@ -22,6 +22,6 @@ public class QuizResponseDTO {
   private ZonedDateTime createdOn;
   private Integer playCount;
   private Set<QuestionDTO> questions;
-  private Set<String> categoryNames;
+  private Set<String> categories;
   private Set<String> collaboratorUsernames;
 }

@@ -106,7 +106,7 @@ public abstract class QuizMapper {
 
 
   @Mapping(target = "collaboratorUsernames", source = "collaborators", qualifiedByName = "mapCollaborators")
-  @Mapping(target = "categoryNames", source = "categories", qualifiedByName = "mapCategoriesToNames")
+  @Mapping(target = "categories", source = "categories", qualifiedByName = "mapCategoriesToNames")
   public abstract QuizResponseDTO toDTO(Quiz quiz);
 
 
