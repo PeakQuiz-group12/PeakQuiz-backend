@@ -11,7 +11,7 @@ import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public abstract class QuestionMapper {
 
   @Autowired

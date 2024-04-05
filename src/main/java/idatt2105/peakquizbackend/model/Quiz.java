@@ -70,4 +70,15 @@ public class Quiz {
   public void removeQuestion(Question question) {
     this.questions.remove(question);
   }
+
+  /**
+   * Removes all associating categories from the quiz before deleting it
+   * to prevent integrity errors
+   */
+  @PreRemove
+  private void removeCategoryAssociations() {
+    for (Category category: this.categories) {
+      category.getQuizzes().remove(this);
+    }
+  }
 }

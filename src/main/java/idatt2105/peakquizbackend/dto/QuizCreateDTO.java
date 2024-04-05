@@ -18,6 +18,5 @@ public class QuizCreateDTO {
   private String title;
   private String description;
   private String imageUrl;
-  private ZonedDateTime createdOn;
   private Set<String> categories;
 }
