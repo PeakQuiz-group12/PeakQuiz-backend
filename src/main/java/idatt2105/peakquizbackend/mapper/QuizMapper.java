@@ -7,7 +7,6 @@ import idatt2105.peakquizbackend.model.Collaboration;
 import idatt2105.peakquizbackend.model.Question;
 import idatt2105.peakquizbackend.model.Quiz;
 import idatt2105.peakquizbackend.service.*;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
