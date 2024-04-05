@@ -1,13 +1,11 @@
 package idatt2105.peakquizbackend.controller;
 
-import idatt2105.peakquizbackend.dto.QuestionCreateDTO;
-import idatt2105.peakquizbackend.dto.QuestionResponseDTO;
+import idatt2105.peakquizbackend.dto.QuestionDTO;
 import idatt2105.peakquizbackend.mapper.QuestionMapper;
 import idatt2105.peakquizbackend.model.Question;
 import idatt2105.peakquizbackend.model.Quiz;
 import idatt2105.peakquizbackend.service.QuestionService;
 import idatt2105.peakquizbackend.service.QuizService;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.slf4j.Logger;
@@ -35,7 +33,7 @@ public class QuestionController {
 
   //Quiz-iden får vi fra å lage en tom quiz
   @PostMapping
-  public ResponseEntity<QuestionResponseDTO> createQuestion(
+  public ResponseEntity<QuestionDTO> createQuestion(
       @RequestBody @NonNull QuestionCreateDTO questionCreateDTO) {
     Quiz quiz = quizService.findQuizById(questionCreateDTO.getQuizId());
 
@@ -56,26 +54,20 @@ public class QuestionController {
   @PutMapping("/{id}")
   public ResponseEntity<?> editQuestion(
       @PathVariable Long id,
-      @RequestBody @NonNull QuestionResponseDTO questionResponseDTO)
+      @RequestBody @NonNull QuestionDTO questionDTO)
   {
-    LOGGER.info("Received put request for question with id: " + id + " - " + questionResponseDTO);
-    Optional<Question> _question = questionService.findQuestionById(id);
+    LOGGER.info("Received put request for question with id: " + id + " - " + questionDTO);
+    Question question = questionService.findQuestionById(id);
 
-    if (_question.isEmpty()) {
-      LOGGER.error("Could not find question");
-      return ResponseEntity.notFound().build();
-    }
-
-    Question question = _question.get();
     LOGGER.info("Updating question");
-    QuestionMapper.INSTANCE.updateQuestionFromDTO(questionResponseDTO, question);
+    QuestionMapper.INSTANCE.updateQuestionFromDTO(questionDTO, question);
 
     LOGGER.info("Saving question");
     questionService.saveQuestion(question);
 
     LOGGER.info("Successfully updated question");
 
-    return ResponseEntity.ok().body(questionResponseDTO);
+    return ResponseEntity.ok().body(questionDTO);
   }
 
   @DeleteMapping("/{id}")

@@ -1,5 +1,7 @@
 package idatt2105.peakquizbackend.service;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -69,10 +71,8 @@ public class UserServiceTest {
 
   @Test
   public void testUsernameExistsBadUsername() {
-    assertThrows(UserAlreadyExistsException.class, () -> {
-      userService.usernameExists(nonExistentUser.getUsername());
-      fail();
-    });
+    boolean result = userService.usernameExists(existingUser.getUsername());
+    assertTrue(result);
   }
 
   @Test

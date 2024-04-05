@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.envers.Audited;
+import org.hibernate.validator.constraints.URL;
 
 import java.sql.Blob;
 import java.util.HashSet;
@@ -47,8 +48,8 @@ public class Question {
   @Enumerated(EnumType.STRING)
   private QuestionType questionType;
 
-  @Lob
-  private Blob media;
+  @URL(regexp = "^(http|https).*)")
+  private String media;
 
   @Min(value = 0, message = "Difficulty should not be less than 0")
   @Max(value = 5, message = "Difficulty should not be greater than 5")

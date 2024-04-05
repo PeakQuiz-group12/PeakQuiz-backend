@@ -3,6 +3,7 @@ package idatt2105.peakquizbackend.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 import org.hibernate.envers.NotAudited;
 
 import java.util.HashSet;
@@ -10,6 +11,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "CATEGORY")
+@Data
 public class Category {
 
   @Id

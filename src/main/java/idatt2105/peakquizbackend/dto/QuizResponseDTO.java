@@ -21,6 +21,6 @@ public class QuizResponseDTO {
   private String imageUrl;
   private ZonedDateTime createdON;
   private Integer playCount;
-  private Set<Question> questions;
-  private Set<String> categoryName;
+  private Set<QuestionDTO> questions;
+  private Set<String> categoryNames;
 }

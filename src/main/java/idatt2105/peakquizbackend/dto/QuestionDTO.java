@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuestionResponseDTO {
+public class QuestionDTO {
 
   private Long id;
 
@@ -23,7 +23,7 @@ public class QuestionResponseDTO {
 
   private QuestionType questionType;
 
-  private Blob media;
+  private String media;
 
   private Byte difficulty;
 

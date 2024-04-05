@@ -1,5 +1,6 @@
 package idatt2105.peakquizbackend.service;
 
+import idatt2105.peakquizbackend.exceptions.QuestionNotFoundException;
 import idatt2105.peakquizbackend.model.Question;
 import idatt2105.peakquizbackend.repository.QuestionRepository;
 import java.util.Optional;
@@ -19,8 +20,8 @@ public class QuestionService {
     return questionRepository.findAllByQuizId(quizId, pageable);
   }
 
-  public Optional<Question> findQuestionById(Long questionId) {
-    return questionRepository.findById(questionId);
+  public Question findQuestionById(Long questionId) {
+    return questionRepository.findById(questionId).orElseThrow(QuestionNotFoundException::new);
   }
 
   public Question saveQuestion(Question question) {

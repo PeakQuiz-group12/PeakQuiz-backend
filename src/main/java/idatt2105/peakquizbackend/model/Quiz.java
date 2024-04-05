@@ -51,7 +51,7 @@ public class Quiz {
   @OneToMany(mappedBy = "quiz", fetch = FetchType.EAGER)
   private Set<Game> games = new HashSet<>();
 
-  // Unidirectional mapping between quizzes and questions
+  // Bidirectional mapping between quizzes and questions
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "quiz")
   private Set<Question> questions = new HashSet<>();
 
