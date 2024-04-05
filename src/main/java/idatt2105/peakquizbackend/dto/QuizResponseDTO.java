@@ -19,8 +19,9 @@ public class QuizResponseDTO {
   private String title;
   private String description;
   private String imageUrl;
-  private ZonedDateTime createdON;
+  private ZonedDateTime createdOn;
   private Integer playCount;
   private Set<QuestionDTO> questions;
   private Set<String> categoryNames;
+  private Set<String> collaboratorUsernames;
 }

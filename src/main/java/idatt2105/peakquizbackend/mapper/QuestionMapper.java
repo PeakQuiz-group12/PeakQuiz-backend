@@ -17,19 +17,19 @@ public abstract class QuestionMapper {
   @Autowired
   private QuizService quizService;
 
-  QuestionMapper INSTANCE = Mappers.getMapper(QuestionMapper.class);
+  public static QuestionMapper INSTANCE = Mappers.getMapper(QuestionMapper.class);
 
+  @Mapping(target = "quiz", source = "quizId", qualifiedByName = "mapQuiz")
+  public abstract Question fromQuestionDTOtoEntity(QuestionDTO questionDTO);
 
-  @Mapping(target = "quiz", source = "quizId", qualifiedByName = "getQuiz")
-  public abstract Question fromQuestionCreateDTOtoEntity(QuestionDTO questionDTO);
-
-  @Named("getQuiz")
-  Quiz getQuiz(QuestionDTO questionDTO) {
-    return quizService.findQuizById(questionDTO.getQuizId());
+  @Named("mapQuiz")
+  Quiz mapQuiz(Long quizId) {
+    return quizService.findQuizById(quizId);
   }
 
   @Mapping(target = "quiz", ignore = true)
   public abstract Question fromQuestionResponseDTOtoEntity(QuestionDTO questionDTO);
+
   @Mapping(target = "quiz", ignore = true)
   @Mapping(target = "id", ignore = true)
   public abstract void updateQuestionFromDTO(QuestionDTO questionDTO, @MappingTarget Question question);

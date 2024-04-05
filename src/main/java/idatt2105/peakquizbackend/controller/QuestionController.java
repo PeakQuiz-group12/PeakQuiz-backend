@@ -34,12 +34,12 @@ public class QuestionController {
   //Quiz-iden får vi fra å lage en tom quiz
   @PostMapping
   public ResponseEntity<QuestionDTO> createQuestion(
-      @RequestBody @NonNull QuestionCreateDTO questionCreateDTO) {
-    Quiz quiz = quizService.findQuizById(questionCreateDTO.getQuizId());
+      @RequestBody @NonNull QuestionDTO questionDTO) {
+    Quiz quiz = quizService.findQuizById(questionDTO.getQuizId());
 
-    LOGGER.info("Got request to create question: " + questionCreateDTO);
+    LOGGER.info("Got request to create question: " + questionDTO);
 
-    Question question = QuestionMapper.INSTANCE.fromQuestionCreateDTOtoEntity(questionCreateDTO);
+    Question question = QuestionMapper.INSTANCE.fromQuestionDTOtoEntity(questionDTO);
     question.setQuiz(quiz);
 
     LOGGER.info("Saving question");

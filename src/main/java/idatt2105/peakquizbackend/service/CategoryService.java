@@ -18,7 +18,7 @@ public class CategoryService {
     return categoryRepository.findCategoriesByQuizId(quizId);
   }
 
-  Category findCategoryByName(String name) {
+  public Category findCategoryByName(String name) {
     return categoryRepository.findCategoryByName(name).orElseThrow(CategoryNotFoundException::new);
   }
 }
