@@ -48,7 +48,7 @@ public class Question {
   @Enumerated(EnumType.STRING)
   private QuestionType questionType;
 
-  @URL(regexp = "^(http|https).*)")
+  @URL(regexp = "^(http|https).*")
   private String media;
 
   @Min(value = 0, message = "Difficulty should not be less than 0")
