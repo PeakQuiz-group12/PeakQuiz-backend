@@ -1,7 +1,6 @@
 package idatt2105.peakquizbackend.dto;
 
-import idatt2105.peakquizbackend.model.Category;
-import java.sql.Blob;
+import idatt2105.peakquizbackend.model.Question;
 import java.time.ZonedDateTime;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -16,9 +15,9 @@ import lombok.NoArgsConstructor;
 public class QuizCreateDTO {
   private String title;
   private String description;
-  private Blob image;
+  private String imageUrl;
   private ZonedDateTime createdON;
   private Integer playCount;
-  private Set<Long> questionIds;
-  private Set<Category> categories;
+  private Set<Question> questions;
+  private Set<String> categoryName;
 }
