@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +38,9 @@ public class QuizController {
 
   private final QuizService quizService;
   private final CollaborationService collaborationService;
+
+  @Autowired
+  private final QuizMapper quizMapper;
 
   private final static Logger LOGGER = LoggerFactory.getLogger(QuizController.class);
 
@@ -73,8 +77,8 @@ public class QuizController {
   )
   {
     LOGGER.info("Received post request for quiz: " + quizCreateDTO);
-    Quiz quiz = QuizMapper.INSTANCE.fromQuizCreateDTOtoEntity(quizCreateDTO);
-    QuizResponseDTO quizResponseDTO = QuizMapper.INSTANCE.toDTO(quizService.saveQuiz(quiz));
+    Quiz quiz = quizMapper.fromQuizCreateDTOtoEntity(quizCreateDTO);
+    QuizResponseDTO quizResponseDTO = quizMapper.toDTO(quizService.saveQuiz(quiz));
 
     LOGGER.info("Successfully saved quiz");
     return ResponseEntity.ok(quizResponseDTO);
