@@ -51,6 +51,7 @@ public abstract class QuizMapper {
   @Mapping(target = "createdOn", ignore = true)
   @Mapping(target = "collaborators", ignore = true)
   @Mapping(target = "categories", ignore = true)
+  @Mapping(target = "questions", ignore = true)
   @Mapping(target = "id", ignore = true)
   public abstract void updateQuizFromDTO(QuizResponseDTO quizResponseDTO, @MappingTarget Quiz quiz);
 

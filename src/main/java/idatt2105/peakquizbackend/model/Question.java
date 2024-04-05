@@ -22,10 +22,10 @@ import java.util.Set;
 @Audited
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 public class Question {
 
   @Id
+  @EqualsAndHashCode.Exclude
   @GeneratedValue(generator = "question_id_seq",
           strategy = GenerationType.SEQUENCE)
   @SequenceGenerator(
@@ -59,7 +59,7 @@ public class Question {
   private String explanation;
 
   @ElementCollection
-  @CollectionTable(name = "COMMENT")
+  @CollectionTable(name = "ANSWER")
   private Set<Answer> answers = new HashSet<>();
 
   @ManyToOne

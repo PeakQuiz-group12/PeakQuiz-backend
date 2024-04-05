@@ -1,12 +1,16 @@
 package idatt2105.peakquizbackend.controller;
 
+import idatt2105.peakquizbackend.dto.QuestionDTO;
 import idatt2105.peakquizbackend.dto.QuizCreateDTO;
 import idatt2105.peakquizbackend.dto.QuizResponseDTO;
+import idatt2105.peakquizbackend.mapper.QuestionMapper;
 import idatt2105.peakquizbackend.mapper.QuizMapper;
 import idatt2105.peakquizbackend.model.Category;
+import idatt2105.peakquizbackend.model.Question;
 import idatt2105.peakquizbackend.model.Quiz;
 import idatt2105.peakquizbackend.service.CategoryService;
 import idatt2105.peakquizbackend.service.CollaborationService;
+import idatt2105.peakquizbackend.service.QuestionService;
 import idatt2105.peakquizbackend.service.QuizService;
 import idatt2105.peakquizbackend.service.SortingService;
 import java.util.Set;
@@ -43,9 +47,13 @@ public class QuizController {
   private final QuizService quizService;
   private final CategoryService categoryService;
   private final CollaborationService collaborationService;
+  private final QuestionService questionService;
 
   @Autowired
   private final QuizMapper quizMapper;
+
+  @Autowired
+  private final QuestionMapper questionMapper;
 
   private final static Logger LOGGER = LoggerFactory.getLogger(QuizController.class);
 
@@ -105,7 +113,12 @@ public class QuizController {
 
     updateQuizCategories(quiz, quizResponseDTO.getCategories());
 
-    quizService.saveQuiz(quiz);
+    updateQuestions(quiz, quizResponseDTO.getQuestions());
+
+    System.out.println(quiz.getQuestions());
+
+    Quiz newQuiz = (quizService.saveQuiz(quiz));
+    System.out.println(newQuiz);
 
     LOGGER.info("Successfully updated quiz");
     return ResponseEntity.ok(quizResponseDTO);
@@ -150,4 +163,25 @@ public class QuizController {
           category.addQuiz(quiz);
         });
   }
+  private void updateQuestions(Quiz quiz, Set<QuestionDTO> questionDTOs) {
+    if (questionDTOs == null) return;
+
+    Set<Question> questions = questionDTOs.stream().map(questionMapper::fromQuestionDTOtoEntity).collect(
+        Collectors.toSet());
+    Set<Question> existingQuestions = quiz.getQuestions();
+    existingQuestions.stream()
+        .filter(question -> !questions.contains(question))
+        .forEach(question -> {
+          quiz.removeQuestion(question);
+          questionService.deleteQuestion(question.getId());
+        });
+
+    questions.stream()
+        .filter(question-> !existingQuestions.contains(question))
+        .forEach(question -> {
+          questionService.saveQuestion(question);
+          quiz.addQuestion(question);
+        });
+  }
 }
+

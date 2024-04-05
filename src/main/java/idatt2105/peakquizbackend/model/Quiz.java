@@ -52,7 +52,7 @@ public class Quiz {
   private Set<Game> games = new HashSet<>();
 
   // Bidirectional mapping between quizzes and questions
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "quiz")
+  @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REFRESH }, orphanRemoval = true, fetch = FetchType.EAGER, mappedBy = "quiz")
   private Set<Question> questions = new HashSet<>();
 
   @NotAudited
@@ -65,6 +65,7 @@ public class Quiz {
 
   public void addQuestion(Question question) {
     this.questions.add(question);
+    question.setQuiz(this);
   }
 
   public void removeQuestion(Question question) {
