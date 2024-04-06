@@ -2,14 +2,17 @@ package idatt2105.peakquizbackend.controller;
 
 import idatt2105.peakquizbackend.dto.GameDTO;
 import idatt2105.peakquizbackend.dto.TagDTO;
+import idatt2105.peakquizbackend.dto.UserDTO;
+import idatt2105.peakquizbackend.exceptions.BadInputException;
 import idatt2105.peakquizbackend.mapper.GameMapper;
 import idatt2105.peakquizbackend.mapper.TagMapper;
+import idatt2105.peakquizbackend.mapper.UserMapper;
 import idatt2105.peakquizbackend.model.Game;
-import idatt2105.peakquizbackend.model.Tag;
 import idatt2105.peakquizbackend.model.User;
 import idatt2105.peakquizbackend.service.GameService;
 import idatt2105.peakquizbackend.service.QuizService;
 import idatt2105.peakquizbackend.service.UserService;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.slf4j.Logger;
@@ -18,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 @CrossOrigin
 @RequestMapping("/users")
 public class UserController {
+
   private final UserService userService;
   private final GameService gameService;
   private final QuizService quizService;
@@ -35,6 +38,12 @@ public class UserController {
   GameMapper gameMapper;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
+  @GetMapping
+  public ResponseEntity<List<User>> getUsers() {
+    List<User> users = userService.findAllUsers();
+    return ResponseEntity.ok(users);
+  }
 
   @GetMapping("/games/{username}")
   public ResponseEntity<Set<GameDTO>> getGames(
@@ -54,18 +63,26 @@ public class UserController {
 
   @PostMapping("/games/{username}")
   public ResponseEntity<GameDTO> createGame(
-          @RequestBody @NonNull GameDTO gameDTO
+      @PathVariable String username,
+      @RequestBody @NonNull GameDTO gameDTO
   )
   {
     LOGGER.info("Received post request for game: {}", gameDTO);
+
+    if (!username.equals(gameDTO.getUsername())) throw new BadInputException("Username mismatch");
+
     Game game = gameMapper.fromGameDTOtoEntity(gameDTO);
-    gameService.saveGame(game);
+    System.out.println("---------------------");
+    System.out.println(game);
+    System.out.println("saving game");
+    System.out.println("saved game");
     game.getUser().getGames().add(game);
     game.getQuiz().getGames().add(game);
-    userService.saveUser(game.getUser());
-    quizService.saveQuiz(game.getQuiz());
+    System.out.println(game);
+    Game createdGame = gameService.saveGame(game);
+    System.out.println(gameService.findAllGames());
     LOGGER.info("Successfully saved game");
-    return ResponseEntity.ok(gameMapper.toDTO(game));
+    return ResponseEntity.ok(gameMapper.toDTO(createdGame));
   }
 
   @GetMapping("/tags/{username}")
