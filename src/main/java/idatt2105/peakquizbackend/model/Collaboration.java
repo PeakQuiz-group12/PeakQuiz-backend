@@ -4,6 +4,11 @@ import idatt2105.peakquizbackend.model.embedded.Comment;
 import idatt2105.peakquizbackend.model.enums.CollaboratorType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
@@ -13,40 +18,46 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "Collaboration")
+@Table(name = "COLLABORATION")
+@Data
+@NoArgsConstructor
 public class Collaboration {
 
+  public Collaboration(
+      User user,
+      Quiz quiz,
+      CollaboratorType collaboratorType) {
+    this.collaboratorType = collaboratorType;
+    this.user = user;
+    this.quiz = quiz;
+    this.id.userId = user.getId();
+    this.id.quizId = quiz.getId();
+    user.getCollaborations().add(this);
+    quiz.getCollaborators().add(this);
+  }
   @Embeddable
-  public static class Id implements Serializable {
+  @EqualsAndHashCode
+  public static class CollaborationId implements Serializable {
     @Column(name = "USER_ID")
     private Long userId;
 
     @Column(name = "QUIZ_ID")
     private Long quizId;
 
-    public Id() {
+    public CollaborationId() {
     }
 
-    public Id(Long userId, Long quizId) {
+    public CollaborationId(Long userId, Long quizId) {
       this.userId = userId;
       this.quizId = quizId;
     }
-
     @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof Id id)) return false;
-      return Objects.equals(userId, id.userId) && Objects.equals(quizId, id.quizId);
-    }
+    public String toString() { return "{userId: " + userId + "; quizId: " + quizId + "}"; }
 
-    @Override
-    public int hashCode() {
-      return Objects.hash(userId, quizId);
-    }
   }
 
   @EmbeddedId
-  private Id id = new Id();
+  private CollaborationId id = new CollaborationId();
 
   @Column(nullable = false)
   @NotNull
@@ -64,6 +75,8 @@ public class Collaboration {
   @JoinColumn(
           name = "USER_ID",
           insertable = false, updatable = false)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
   protected User user;
 
   @ManyToOne
@@ -71,35 +84,16 @@ public class Collaboration {
           name = "QUIZ_ID",
           insertable = false, updatable = false
   )
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
   private Quiz quiz;
 
   // TODO: Unsure if this mapping will work.
   //  May have to make this mapping @ManyToOne and CascadeType.REMOVE.
   @ElementCollection
   @CollectionTable(name = "COMMENT")
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
   private Set<Comment> comments = new HashSet<>();
-
-  public Id getId() {
-    return id;
-  }
-
-  public CollaboratorType getCollaboratorType() {
-    return collaboratorType;
-  }
-
-  public ZonedDateTime getJoinedOn() {
-    return joinedOn;
-  }
-
-  public User getUser() {
-    return user;
-  }
-
-  public Quiz getQuiz() {
-    return quiz;
-  }
-
-  public Set<Comment> getComments() {
-    return comments;
-  }
 }
+

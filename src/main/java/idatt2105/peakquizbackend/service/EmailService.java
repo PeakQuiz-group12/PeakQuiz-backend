@@ -1,6 +1,7 @@
 package idatt2105.peakquizbackend.service;
 
 import idatt2105.peakquizbackend.model.User;
+import idatt2105.peakquizbackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,7 @@ public class EmailService {
       message.setFrom(new InternetAddress(username));
       message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("peakquizgruppe12@gmail.com"));
       message.setSubject(subject);
-      message.setText("Sent from user with email: " + userRepository.findUserByUsername(fromUsername).getEmail() + "\nMessage: " + messageToSend);
+      message.setText("Sent from user with email: " + userRepository.findUserByUsername(fromUsername).get().getEmail() + "\nMessage: " + messageToSend);
 
       Transport.send(message);
     } catch (MessagingException e) {

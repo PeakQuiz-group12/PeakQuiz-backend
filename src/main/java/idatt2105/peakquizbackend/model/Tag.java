@@ -3,6 +3,7 @@ package idatt2105.peakquizbackend.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 import org.hibernate.envers.NotAudited;
 
 import java.util.HashSet;
@@ -10,6 +11,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "TAG")
+@Data
 public class Tag {
 
   @Id
@@ -39,13 +41,13 @@ public class Tag {
   )
   private User user;
 
-  // Unidirectional mapping between tag and quiz
+  // Unidirectional mapping between tag and question
 
   @ManyToMany(cascade = CascadeType.DETACH)
   @JoinTable(
-          name = "TAG_QUIZ",
+          name = "TAG_QUESTION",
           joinColumns = @JoinColumn(name = "TAG_ID"),
-          inverseJoinColumns = @JoinColumn(name = "QUIZ_ID")
+          inverseJoinColumns = @JoinColumn(name = "QUESTION_ID")
   )
-  private Set<Quiz> quizzes = new HashSet<>();
+  private Set<Question> questions = new HashSet<>();
 }

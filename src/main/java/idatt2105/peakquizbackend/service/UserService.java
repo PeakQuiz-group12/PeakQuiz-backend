@@ -1,22 +1,35 @@
 package idatt2105.peakquizbackend.service;
 
+import idatt2105.peakquizbackend.exceptions.UserNotFoundException;
 import idatt2105.peakquizbackend.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import idatt2105.peakquizbackend.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
+@AllArgsConstructor
 public class UserService {
   private final UserRepository userRepository;
 
-  public UserService(UserRepository userRepository) {
-    this.userRepository = userRepository;
-  }
-
-  public User addUser(User user) {
+  public User saveUser(User user) {
     return userRepository.save(user);
   }
 
-  public UserRepository getUserRepository() {
-    return userRepository;
+  public User findUserByUsername(String username) {
+    return userRepository.findUserByUsername(username)
+        .orElseThrow(UserNotFoundException::new);
   }
+
+  public boolean usernameExists(String username) {
+    Optional<User> existingUser = userRepository.findUserByUsername(username);
+      return existingUser.isPresent();
+  }
+
+  public User findUserByUserId(Long id) {
+    return userRepository.findById(id)
+        .orElseThrow(UserNotFoundException::new);
+  }
+
 }

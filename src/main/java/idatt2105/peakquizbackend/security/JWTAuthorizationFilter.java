@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import idatt2105.peakquizbackend.controller.AuthenticationController;
 import idatt2105.peakquizbackend.controller.UserController;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -66,7 +67,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
   public String validateTokenAndGetUserId(final String token) {
     try {
-      final Algorithm hmac512 = Algorithm.HMAC512(UserController.keyStr);;
+      final Algorithm hmac512 = Algorithm.HMAC512(AuthenticationController.keyStr);;
       final JWTVerifier verifier = JWT.require(hmac512).build();
       return verifier.verify(token).getSubject();
     } catch (final JWTVerificationException verificationEx) {

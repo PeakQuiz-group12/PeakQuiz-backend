@@ -2,65 +2,54 @@ package idatt2105.peakquizbackend.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Immutable;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.Objects;
 
 @Entity
-@Immutable
+@Getter
+@Builder
 @NoArgsConstructor
+@Immutable
+@AllArgsConstructor
 public class Game {
   @Embeddable
-  public static class Id implements Serializable {
+  @EqualsAndHashCode
+  @NoArgsConstructor
+  public static class GameId implements Serializable {
     @Column(name = "USER_ID")
-    protected Long userId;
+    private Long userId;
 
     @Column(name = "QUIZ_ID")
-    protected Long quizId;
+    private Long quizId;
 
-    public Id() {
-    }
-
-    public Id(Long userId, Long quizId) {
+    public GameId(Long userId, Long quizId) {
       this.userId = userId;
       this.quizId = quizId;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof Id id)) return false;
-      return Objects.equals(userId, id.userId) && Objects.equals(quizId, id.quizId);
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(userId, quizId);
     }
   }
 
   @EmbeddedId
-  protected Id id = new Id();
+  private final GameId id = new GameId();
 
   @Column(updatable = false)
   @NotNull
-  protected Integer correctAnswers;
+  private Integer correctAnswers;
 
   @Column(updatable = false)
-  protected Byte rating;
+  private Byte rating;
 
   @Column(updatable = false)
-  protected String feedback;
+  private String feedback;
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(nullable = false,
           updatable = false)
   @CreationTimestamp
-  protected ZonedDateTime playedOn;
+  private ZonedDateTime playedOn;
 
   // missing like, im unsure about what it signifies
 
@@ -68,14 +57,14 @@ public class Game {
   @JoinColumn(
           name = "USER_ID",
           insertable = false, updatable = false)
-  protected User user;
+  private User user;
 
   @ManyToOne
   @JoinColumn(
           name = "QUIZ_ID",
           insertable = false, updatable = false
   )
-  protected Quiz quiz;
+  private Quiz quiz;
 
   public Game(Integer correctAnswers, Byte rating, String feedback, User user, Quiz quiz) {
     this.correctAnswers = correctAnswers;
