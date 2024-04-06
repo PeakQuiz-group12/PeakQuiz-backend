@@ -24,4 +24,8 @@ public class GameService {
   public List<Game> findGamesByQuizId(Long quizId) {
     return gameRepository.findByQuizId(quizId);
   }
+
+  public List<Game> findAllGames() {
+    return gameRepository.findAll();
+  }
 }

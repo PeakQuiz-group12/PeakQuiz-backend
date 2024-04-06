@@ -12,6 +12,8 @@ import idatt2105.peakquizbackend.model.User;
 import idatt2105.peakquizbackend.service.GameService;
 import idatt2105.peakquizbackend.service.QuizService;
 import idatt2105.peakquizbackend.service.UserService;
+import java.time.ZonedDateTime;
+import java.util.HashSet;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -45,6 +47,12 @@ public class UserController {
     return ResponseEntity.ok(users);
   }
 
+  @GetMapping("/games")
+  public ResponseEntity<?> getAllGames() {
+    Set<GameDTO> games = gameMapper.toDTOs(new HashSet<>(gameService.findAllGames()));
+    return ResponseEntity.ok(games);
+  }
+
   @GetMapping("/games/{username}")
   public ResponseEntity<Set<GameDTO>> getGames(
           @PathVariable String username
@@ -72,17 +80,18 @@ public class UserController {
     if (!username.equals(gameDTO.getUsername())) throw new BadInputException("Username mismatch");
 
     Game game = gameMapper.fromGameDTOtoEntity(gameDTO);
-    System.out.println("---------------------");
-    System.out.println(game);
-    System.out.println("saving game");
-    System.out.println("saved game");
+    game.getId().setUserId(game.getUser().getId());
+    game.getId().setQuizId(game.getQuiz().getId());
+
     game.getUser().getGames().add(game);
     game.getQuiz().getGames().add(game);
-    System.out.println(game);
-    Game createdGame = gameService.saveGame(game);
-    System.out.println(gameService.findAllGames());
+
+    Game savedGame = gameService.saveGame(game);
+
+    System.out.println("Added game to quiz and user");
+
     LOGGER.info("Successfully saved game");
-    return ResponseEntity.ok(gameMapper.toDTO(createdGame));
+    return ResponseEntity.ok(gameMapper.toDTO(savedGame));
   }
 
   @GetMapping("/tags/{username}")

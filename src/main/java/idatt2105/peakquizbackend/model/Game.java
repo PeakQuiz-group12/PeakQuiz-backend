@@ -10,15 +10,15 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 @Entity
-@Getter
 @Builder
-@NoArgsConstructor
-@Immutable
 @AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@ToString
 public class Game {
   @Embeddable
-  @EqualsAndHashCode
   @NoArgsConstructor
+  @Data
   public static class GameId implements Serializable {
     @Column(name = "USER_ID")
     private Long userId;
@@ -30,10 +30,12 @@ public class Game {
       this.userId = userId;
       this.quizId = quizId;
     }
+    @Override
+    public String toString() { return "{userId: " + userId + "; quizId: " + quizId + "}"; }
   }
 
   @EmbeddedId
-  private final GameId id = new GameId();
+  private GameId id = new GameId();
 
   @Column(updatable = false)
   @NotNull
@@ -72,6 +74,5 @@ public class Game {
     this.feedback = feedback;
     this.user = user;
     this.quiz = quiz;
-    this.user.getGames().add(this);
   }
 }

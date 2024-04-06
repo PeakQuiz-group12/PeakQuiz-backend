@@ -67,10 +67,6 @@ public class QuizController {
   private final GameMapper gameMapper;
 
   private final static Logger LOGGER = LoggerFactory.getLogger(QuizController.class);
-  @Autowired
-  private GameService gameService;
-  @Autowired
-  private UserService userService;
 
   @Operation(
       summary = "Get quizzes",
