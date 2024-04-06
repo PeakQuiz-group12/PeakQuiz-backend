@@ -2,6 +2,8 @@ package idatt2105.peakquizbackend.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Formula;
 import org.hibernate.envers.Audited;
@@ -48,7 +50,9 @@ public class Quiz {
   private Integer playCount;
 
   @NotAudited
-  @OneToMany(mappedBy = "quiz", fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+  @ToString.Exclude
+  @EqualsAndHashCode.Exclude
+  @OneToMany(mappedBy = "quiz", fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
   private Set<Game> games = new HashSet<>();
 
   // Bidirectional mapping between quizzes and questions
