@@ -1,7 +1,6 @@
 package idatt2105.peakquizbackend.mapper;
 
 import idatt2105.peakquizbackend.dto.GameDTO;
-import idatt2105.peakquizbackend.dto.UserDTO;
 import idatt2105.peakquizbackend.model.Game;
 import idatt2105.peakquizbackend.model.Quiz;
 import idatt2105.peakquizbackend.model.User;
@@ -10,7 +9,6 @@ import idatt2105.peakquizbackend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +19,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public abstract class GameMapper {
 
-  @Autowired
   private UserService userService;
   @Autowired
   private QuizService quizService;

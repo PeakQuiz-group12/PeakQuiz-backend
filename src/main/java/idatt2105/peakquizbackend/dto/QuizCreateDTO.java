@@ -11,9 +11,6 @@ import lombok.NoArgsConstructor;
  * DTO received from frontend when creating quiz.
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class QuizCreateDTO {
   private String title;
   private String description;

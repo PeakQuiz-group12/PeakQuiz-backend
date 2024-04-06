@@ -10,9 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class QuizResponseDTO {
 
   private Long id;

@@ -2,20 +2,19 @@ package idatt2105.peakquizbackend.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Immutable;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.Objects;
 
 @Entity
-@Immutable
 @Getter
+@Builder
 @NoArgsConstructor
+@Immutable
+@AllArgsConstructor
 public class Game {
   @Embeddable
   @EqualsAndHashCode
@@ -34,7 +33,7 @@ public class Game {
   }
 
   @EmbeddedId
-  private GameId id = new GameId();
+  private final GameId id = new GameId();
 
   @Column(updatable = false)
   @NotNull

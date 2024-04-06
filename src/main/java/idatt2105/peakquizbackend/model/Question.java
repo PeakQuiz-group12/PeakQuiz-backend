@@ -17,7 +17,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "QUESTION")
-@Builder
 @Data
 @Audited
 @NoArgsConstructor
