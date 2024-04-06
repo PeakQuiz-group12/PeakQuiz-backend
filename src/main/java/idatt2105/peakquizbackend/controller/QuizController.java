@@ -1,18 +1,19 @@
 package idatt2105.peakquizbackend.controller;
 
+import idatt2105.peakquizbackend.dto.GameDTO;
 import idatt2105.peakquizbackend.dto.QuestionDTO;
 import idatt2105.peakquizbackend.dto.QuizCreateDTO;
 import idatt2105.peakquizbackend.dto.QuizResponseDTO;
+import idatt2105.peakquizbackend.mapper.GameMapper;
 import idatt2105.peakquizbackend.mapper.QuestionMapper;
 import idatt2105.peakquizbackend.mapper.QuizMapper;
 import idatt2105.peakquizbackend.model.Category;
+import idatt2105.peakquizbackend.model.Game;
 import idatt2105.peakquizbackend.model.Question;
 import idatt2105.peakquizbackend.model.Quiz;
-import idatt2105.peakquizbackend.service.CategoryService;
-import idatt2105.peakquizbackend.service.CollaborationService;
-import idatt2105.peakquizbackend.service.QuestionService;
-import idatt2105.peakquizbackend.service.QuizService;
-import idatt2105.peakquizbackend.service.SortingService;
+import idatt2105.peakquizbackend.service.*;
+
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -58,7 +59,12 @@ public class QuizController {
   @Autowired
   private final QuestionMapper questionMapper;
 
+  @Autowired
+  private final GameMapper gameMapper;
+
   private final static Logger LOGGER = LoggerFactory.getLogger(QuizController.class);
+  @Autowired
+  private GameService gameService;
 
   @Operation(
       summary = "Get quizzes",
@@ -145,6 +151,21 @@ public class QuizController {
     return ResponseEntity.ok(quizResponseDTO);
   }
 
+  @GetMapping("/games/{id}")
+  public ResponseEntity<List<GameDTO>> getGames(
+          @PathVariable Long id
+  )
+  {
+    LOGGER.info("Received request fo games by quiz with id: " + id);
+    List<Game> games = gameService.findGamesByQuizId(id);
+
+    LOGGER.info("Successfully found games");
+
+    List<GameDTO> gameDTOs = gameMapper.toDTOs(games);
+
+
+    return ResponseEntity.ok(gameDTOs);
+  }
 
 
   @DeleteMapping("/{id}")
