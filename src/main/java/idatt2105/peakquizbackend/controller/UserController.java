@@ -6,9 +6,10 @@ import idatt2105.peakquizbackend.exceptions.BadInputException;
 import idatt2105.peakquizbackend.mapper.GameMapper;
 import idatt2105.peakquizbackend.mapper.TagMapper;
 import idatt2105.peakquizbackend.model.Game;
+import idatt2105.peakquizbackend.model.Tag;
 import idatt2105.peakquizbackend.model.User;
 import idatt2105.peakquizbackend.service.GameService;
-import idatt2105.peakquizbackend.service.QuizService;
+import idatt2105.peakquizbackend.service.TagService;
 import idatt2105.peakquizbackend.service.UserService;
 import java.util.HashSet;
 import java.util.List;
@@ -31,11 +32,13 @@ public class UserController {
 
   private final UserService userService;
   private final GameService gameService;
-  private final QuizService quizService;
+  private final TagService tagService;
+
+  @Autowired
+  private final TagMapper tagMapper;
 
   @Autowired
   GameMapper gameMapper;
-
   private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
   @GetMapping
@@ -97,16 +100,24 @@ public class UserController {
   ) {
     LOGGER.info("Received request for tags by user: " + username);
     User user = userService.findUserByUsername(username);
-    Set<TagDTO> tags = user.getTags().stream().map(tag -> TagMapper.INSTANCE.toDTO(tag)).collect(Collectors.toSet());
+    Set<TagDTO> tags = user.getTags().stream().map(tagMapper::toDTO).collect(Collectors.toSet());
     return ResponseEntity.ok(tags);
   }
 
-  /*@PostMapping
+  @PostMapping("/{username}/tags")
   public ResponseEntity<TagDTO> createTag(
-          @RequestBody @NonNull TagDTO tagDTO
+      @PathVariable String username,
+      @RequestBody @NonNull TagDTO tagDTO
   )
   {
-  }*/
+    LOGGER.info("Received post request for tag: " + tagDTO);
+    User user = userService.findUserByUsername(username);
+    Tag tag = tagMapper.fromTagDTOtoEntity(tagDTO);
 
+    Tag createdTag = tagService.saveTag(tag);
+    user.getTags().add(createdTag);
+    //userService.saveUser(user);
 
+    return ResponseEntity.ok(tagMapper.toDTO(createdTag));
+  }
 }
