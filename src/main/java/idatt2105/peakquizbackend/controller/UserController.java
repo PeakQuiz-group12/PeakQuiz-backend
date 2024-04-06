@@ -53,7 +53,7 @@ public class UserController {
     return ResponseEntity.ok(games);
   }
 
-  @GetMapping("/games/{username}")
+  @GetMapping("/{username}/games")
   public ResponseEntity<Set<GameDTO>> getGames(
           @PathVariable String username
   )
@@ -69,7 +69,7 @@ public class UserController {
     return ResponseEntity.ok(gameDTOs);
   }
 
-  @PostMapping("/games/{username}")
+  @PostMapping("/{username}/games")
   public ResponseEntity<GameDTO> createGame(
       @PathVariable String username,
       @RequestBody @NonNull GameDTO gameDTO
@@ -94,7 +94,7 @@ public class UserController {
     return ResponseEntity.ok(gameMapper.toDTO(savedGame));
   }
 
-  @GetMapping("/tags/{username}")
+  @GetMapping("/{username}/tags")
   public ResponseEntity<Set<TagDTO>> getTags(
           @PathVariable String username
   ) {
