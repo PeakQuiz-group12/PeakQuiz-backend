@@ -49,7 +49,6 @@ public class QuizController {
 
   private final QuizService quizService;
   private final CategoryService categoryService;
-  private final CollaborationService collaborationService;
   private final QuestionService questionService;
 
   @Autowired
@@ -76,7 +75,6 @@ public class QuizController {
       @RequestParam(defaultValue = "id:asc", required = false) String[] sort
   ) {
     LOGGER.info("Received get-request for quizzes");
-    System.out.println(Arrays.toString(sort));
     Sort sortCriteria = Sort.by(SortingService.convertToOrder(sort));
     Pageable pageable = PageRequest.of(page, size, sortCriteria);
     Page<Quiz> quizzes = quizService.findAllQuizzes(pageable);
