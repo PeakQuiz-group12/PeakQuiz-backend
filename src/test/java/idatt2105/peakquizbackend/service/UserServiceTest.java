@@ -1,6 +1,5 @@
 package idatt2105.peakquizbackend.service;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -9,7 +8,6 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import idatt2105.peakquizbackend.exceptions.UserAlreadyExistsException;
 import idatt2105.peakquizbackend.exceptions.UserNotFoundException;
 import idatt2105.peakquizbackend.model.User;
 import idatt2105.peakquizbackend.repository.UserRepository;
@@ -85,9 +83,7 @@ public class UserServiceTest {
 
   @Test
   public void testFindUserByUsernameBadUsername() {
-    assertThrows(UserNotFoundException.class, () -> {
-      userService.findUserByUsername(nonExistentUser.getUsername());
-    });
+    assertThrows(UserNotFoundException.class, () -> userService.findUserByUsername(nonExistentUser.getUsername()));
   }
   @Test
   public void testSaveUser() {
@@ -96,7 +92,6 @@ public class UserServiceTest {
     try {
       newUser = userService.saveUser(nonExistentUser);
     } catch (RuntimeException e) {
-      e.printStackTrace();
       fail();
       return;
     }
