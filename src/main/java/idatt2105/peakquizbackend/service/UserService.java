@@ -18,12 +18,12 @@ public class UserService {
   }
 
   public User findUserByUsername(String username) {
-    return userRepository.findByUsername(username)
+    return userRepository.findUserByUsername(username)
         .orElseThrow(UserNotFoundException::new);
   }
 
   public boolean usernameExists(String username) {
-    Optional<User> existingUser = userRepository.findByUsername(username);
+    Optional<User> existingUser = userRepository.findUserByUsername(username);
       return existingUser.isPresent();
   }
 

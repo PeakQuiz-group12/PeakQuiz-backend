@@ -37,11 +37,11 @@ public class UserRepositoryTest {
   }
 
   @Test
-  public void testFindByUsername() {
+  public void testfindUserByUsername() {
     User user = new User("testUser", "test@example.com", "password");
     entityManager.persist(user);
     entityManager.flush();
-    User detected = userRepository.findByUsername(user.getUsername()).get();
+    User detected = userRepository.findUserByUsername(user.getUsername()).get();
 
     assertEquals(user.getId(), detected.getId());
   }

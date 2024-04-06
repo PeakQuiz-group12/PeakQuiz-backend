@@ -47,16 +47,16 @@ public class UserServiceTest {
   public void setup() {
     existingUser = new User("name", "example@mail.com", "password");
 
-    when(userRepository.findByUsername(existingUser.getUsername())).thenReturn(Optional.of(existingUser));
+    when(userRepository.findUserByUsername(existingUser.getUsername())).thenReturn(Optional.of(existingUser));
     when(userRepository.existsById(existingUser.getId())).thenReturn(true);
-    when(userRepository.findByUsername(existingUser.getUsername())).thenReturn(Optional.of(existingUser));
+    when(userRepository.findUserByUsername(existingUser.getUsername())).thenReturn(Optional.of(existingUser));
     when(userRepository.save(existingUser)).thenReturn(existingUser);
     doNothing().when(userRepository).delete(existingUser);
     when(userRepository.findAll()).thenReturn(List.of(existingUser));
 
     nonExistentUser = new User("novel", "novel@novel.com", "novel");
 
-    when(userRepository.findByUsername(nonExistentUser.getUsername())).thenReturn(Optional.empty());
+    when(userRepository.findUserByUsername(nonExistentUser.getUsername())).thenReturn(Optional.empty());
     when(userRepository.findById(nonExistentUser.getId())).thenReturn(Optional.empty());
     when(userRepository.save(nonExistentUser)).thenReturn(nonExistentUser);
     doNothing().when(userRepository).delete(nonExistentUser);
