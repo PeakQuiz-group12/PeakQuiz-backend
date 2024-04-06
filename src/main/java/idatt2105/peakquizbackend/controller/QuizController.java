@@ -11,8 +11,13 @@ import idatt2105.peakquizbackend.model.Category;
 import idatt2105.peakquizbackend.model.Game;
 import idatt2105.peakquizbackend.model.Question;
 import idatt2105.peakquizbackend.model.Quiz;
+import idatt2105.peakquizbackend.service.CategoryService;
+import idatt2105.peakquizbackend.service.QuestionService;
+import idatt2105.peakquizbackend.service.QuizService;
+import idatt2105.peakquizbackend.service.SortingService;
 import idatt2105.peakquizbackend.service.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,7 +45,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 
 @RestController
 @AllArgsConstructor
@@ -50,7 +54,6 @@ public class QuizController {
 
   private final QuizService quizService;
   private final CategoryService categoryService;
-  private final CollaborationService collaborationService;
   private final QuestionService questionService;
 
   @Autowired

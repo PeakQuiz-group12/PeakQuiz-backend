@@ -25,16 +25,11 @@ import java.util.stream.Collectors;
 public abstract class QuizMapper {
 
   @Autowired
-  private QuizService quizService;
-  @Autowired
   private CategoryService categoryService;
   @Autowired
   private QuestionService questionService;
   @Autowired
   private QuestionMapper questionMapper;
-  @Autowired
-  private CollaborationService collaborationService;
-
   public static QuizMapper INSTANCE = Mappers.getMapper(QuizMapper.class);
 
 
