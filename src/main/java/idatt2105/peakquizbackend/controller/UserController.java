@@ -2,17 +2,14 @@ package idatt2105.peakquizbackend.controller;
 
 import idatt2105.peakquizbackend.dto.GameDTO;
 import idatt2105.peakquizbackend.dto.TagDTO;
-import idatt2105.peakquizbackend.dto.UserDTO;
 import idatt2105.peakquizbackend.exceptions.BadInputException;
 import idatt2105.peakquizbackend.mapper.GameMapper;
 import idatt2105.peakquizbackend.mapper.TagMapper;
-import idatt2105.peakquizbackend.mapper.UserMapper;
 import idatt2105.peakquizbackend.model.Game;
 import idatt2105.peakquizbackend.model.User;
 import idatt2105.peakquizbackend.service.GameService;
 import idatt2105.peakquizbackend.service.QuizService;
 import idatt2105.peakquizbackend.service.UserService;
-import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.List;
 import lombok.AllArgsConstructor;

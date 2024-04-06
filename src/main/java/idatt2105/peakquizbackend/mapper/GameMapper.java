@@ -7,14 +7,12 @@ import idatt2105.peakquizbackend.model.Quiz;
 import idatt2105.peakquizbackend.model.User;
 import idatt2105.peakquizbackend.service.QuizService;
 import idatt2105.peakquizbackend.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
 import java.util.Set;
 
 @Mapper(componentModel = "spring")

@@ -15,7 +15,6 @@ import idatt2105.peakquizbackend.service.CategoryService;
 import idatt2105.peakquizbackend.service.QuestionService;
 import idatt2105.peakquizbackend.service.QuizService;
 import idatt2105.peakquizbackend.service.SortingService;
-import idatt2105.peakquizbackend.service.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
