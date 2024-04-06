@@ -1,5 +1,6 @@
 package idatt2105.peakquizbackend.mapper;
 
+import idatt2105.peakquizbackend.dto.QuestionDTO;
 import idatt2105.peakquizbackend.dto.QuizCreateDTO;
 import idatt2105.peakquizbackend.dto.QuizResponseDTO;
 import idatt2105.peakquizbackend.model.Category;
@@ -101,10 +102,15 @@ public abstract class QuizMapper {
             .collect(Collectors.toSet());
   }
 
+  @Named("mapToQuestionDTOs")
+  public Set<QuestionDTO> mapToQuestionDTOs(Set<Question> questions) {
+    return questions.stream()
+        .map(question -> QuestionMapper.INSTANCE.toDTO(question))
+        .collect(Collectors.toSet());
+  }
 
   @Mapping(target = "collaboratorUsernames", source = "collaborators", qualifiedByName = "mapCollaborators")
   @Mapping(target = "categories", source = "categories", qualifiedByName = "mapCategoriesToNames")
+  @Mapping(target = "questions", source = "questions", qualifiedByName = "mapToQuestionDTOs")
   public abstract QuizResponseDTO toDTO(Quiz quiz);
-
-
 }

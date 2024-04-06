@@ -17,6 +17,7 @@ import idatt2105.peakquizbackend.service.QuizService;
 import idatt2105.peakquizbackend.service.SortingService;
 import idatt2105.peakquizbackend.service.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -143,17 +144,21 @@ public class QuizController {
     Quiz quiz = quizService.findQuizById(id);
     QuizMapper.INSTANCE.updateQuizFromDTO(quizResponseDTO, quiz);
 
+    // Does nothing to categories and questions if you don't send it
+    System.out.println("updating categoreis");
     updateQuizCategories(quiz, quizResponseDTO.getCategories());
 
+    System.out.println("updating updateing question");
     updateQuestions(quiz, quizResponseDTO.getQuestions());
 
+    System.out.println("Done");
     System.out.println(quiz.getQuestions());
 
     Quiz newQuiz = (quizService.saveQuiz(quiz));
     System.out.println(newQuiz);
 
     LOGGER.info("Successfully updated quiz");
-    return ResponseEntity.ok(quizResponseDTO);
+    return ResponseEntity.ok(QuizMapper.INSTANCE.toDTO(quiz));
   }
 
   @GetMapping("/games/{id}")
@@ -217,12 +222,15 @@ public class QuizController {
     Set<Question> questions = questionDTOs.stream().map(questionMapper::fromQuestionDTOtoEntity).collect(
         Collectors.toSet());
     Set<Question> existingQuestions = quiz.getQuestions();
+    List<Question> omittedQuestions = new ArrayList<>();
     existingQuestions.stream()
         .filter(question -> !questions.contains(question))
         .forEach(question -> {
-          quiz.removeQuestion(question);
+          omittedQuestions.add(question);
           questionService.deleteQuestion(question.getId());
         });
+
+    omittedQuestions.forEach(quiz.getQuestions()::remove);
 
     questions.stream()
         .filter(question-> !existingQuestions.contains(question))
