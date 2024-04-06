@@ -34,5 +34,11 @@ public abstract class QuestionMapper {
   @Mapping(target = "id", ignore = true)
   public abstract void updateQuestionFromDTO(QuestionDTO questionDTO, @MappingTarget Question question);
 
+  @Mapping(target = "quizId", source = "quiz", qualifiedByName = "mapToQuizId")
   public abstract QuestionDTO toDTO(Question question);
+
+  @Named("mapToQuizId")
+  public Long mapToQuizId(Quiz quiz) {
+    return quiz.getId();
+  }
 }
