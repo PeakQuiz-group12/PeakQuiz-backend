@@ -142,6 +142,7 @@ public class QuizController {
     Quiz quiz = quizService.findQuizById(id);
     QuizMapper.INSTANCE.updateQuizFromDTO(quizResponseDTO, quiz);
 
+    // Does nothing to categories and questions if you don't send it
     System.out.println("updating categoreis");
     updateQuizCategories(quiz, quizResponseDTO.getCategories());
 
@@ -155,7 +156,7 @@ public class QuizController {
     System.out.println(newQuiz);
 
     LOGGER.info("Successfully updated quiz");
-    return ResponseEntity.ok(quizResponseDTO);
+    return ResponseEntity.ok(QuizMapper.INSTANCE.toDTO(quiz));
   }
 
   @GetMapping("/games/{id}")
