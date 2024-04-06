@@ -23,7 +23,7 @@ public class SecurityConfig {
       .csrf().disable()
       .cors().and()
       .authorizeHttpRequests()
-      .requestMatchers("/login", "/register", "/refreshToken").permitAll()
+      .requestMatchers("/login", "/register", "/refreshToken", "/forgotPassword").permitAll()
       .anyRequest().authenticated().and()
       .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
       .addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
