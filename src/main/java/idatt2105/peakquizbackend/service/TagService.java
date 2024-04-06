@@ -18,5 +18,4 @@ public class TagService {
   public Tag saveTag(Tag tag) {
     return tagRepository.save(tag);
   }
-
 }

@@ -120,4 +120,17 @@ public class UserController {
 
     return ResponseEntity.ok(tagMapper.toDTO(createdTag));
   }
+
+  @PutMapping("tags/{username}")
+  public ResponseEntity<TagDTO> updateTag(
+          @PathVariable String username,
+          @RequestBody TagDTO tagDTO
+  )
+  {
+    LOGGER.info("Received put request for tag: {}", tagDTO);
+    Tag tag = tagService.findTagById(tagDTO.getId());
+    TagMapper.INSTANCE.updateTagFromDTO(tagDTO, tag);
+    tagService.saveTag(tag);
+    return ResponseEntity.ok(TagMapper.INSTANCE.toDTO(tag));
+  }
 }

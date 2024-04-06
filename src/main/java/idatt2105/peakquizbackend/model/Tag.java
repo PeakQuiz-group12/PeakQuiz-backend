@@ -43,7 +43,10 @@ public class Tag {
 
   // Unidirectional mapping between tag and question
 
-  @ManyToMany(cascade = CascadeType.DETACH)
+  @ManyToMany(cascade = {
+          CascadeType.DETACH,
+          CascadeType.PERSIST
+  })
   @JoinTable(
           name = "TAG_QUESTION",
           joinColumns = @JoinColumn(name = "TAG_ID"),
