@@ -69,6 +69,13 @@ public class User {
   )
   public Set<Tag> tags = new HashSet<>();
 
+  public String getUsername() {
+    return username;
+  }
+
+  public String getEmail () {
+    return email;
+  }
   public Set<Game> getGames() {
     return games;
   }

@@ -38,7 +38,7 @@ public class UserController {
 
   @PostMapping("/register")
   @CrossOrigin
-  public ResponseEntity<?> registerUser(@RequestParam String username, @RequestParam String password) {
+  public ResponseEntity<?> registerUser(@RequestParam String username, @RequestParam String email, @RequestParam String password) {
     System.out.println(username + password);
 
     if (userService.getUserRepository().findUserByUsername(username) != null) {
@@ -53,7 +53,7 @@ public class UserController {
 
 
 
-    userService.addUser(new User(username, "test@test.com", encodedPassword));
+    userService.addUser(new User(username, email, encodedPassword));
     System.out.println("New user registered");
 
     String accessToken = generateToken(username, Duration.ofMinutes(5));
