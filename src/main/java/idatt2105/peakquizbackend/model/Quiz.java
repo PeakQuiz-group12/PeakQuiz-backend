@@ -48,7 +48,7 @@ public class Quiz {
   private Integer playCount;
 
   @NotAudited
-  @OneToMany(mappedBy = "quiz", fetch = FetchType.EAGER)
+  @OneToMany(mappedBy = "quiz", fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
   private Set<Game> games = new HashSet<>();
 
   // Bidirectional mapping between quizzes and questions

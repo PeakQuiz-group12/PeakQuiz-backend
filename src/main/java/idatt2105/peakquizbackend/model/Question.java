@@ -21,6 +21,7 @@ import java.util.Set;
 @Audited
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Question {
 
   @Id

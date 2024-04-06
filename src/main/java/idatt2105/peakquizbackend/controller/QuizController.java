@@ -168,7 +168,7 @@ public class QuizController {
   {
     LOGGER.info("Received request fo games by quiz with id: " + id);
     // List<Game> games = gameService.findGamesByQuizId(id);
-    Set<Game> games = userService.findUserByUserId(id).getGames();
+    Set<Game> games = quizService.findQuizById(id).getGames();
 
     LOGGER.info("Successfully found games");
 
