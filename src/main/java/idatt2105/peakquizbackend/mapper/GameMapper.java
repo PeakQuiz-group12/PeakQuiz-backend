@@ -14,6 +14,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Mapper(componentModel = "spring")
@@ -33,7 +34,7 @@ public abstract class GameMapper {
   @Mapping(source = "user", target = "username", qualifiedByName = "mapUser")
   public abstract GameDTO toDTO(Game game);
 
-  public abstract List<GameDTO> toDTOs(List<Game> games);
+  public abstract Set<GameDTO> toDTOs(Set<Game> games);
 
   @Named("mapUserToUsername")
   public User mapUser(String username) {

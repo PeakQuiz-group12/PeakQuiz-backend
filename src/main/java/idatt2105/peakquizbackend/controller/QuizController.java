@@ -68,6 +68,8 @@ public class QuizController {
   private final static Logger LOGGER = LoggerFactory.getLogger(QuizController.class);
   @Autowired
   private GameService gameService;
+  @Autowired
+  private UserService userService;
 
   @Operation(
       summary = "Get quizzes",
@@ -120,7 +122,7 @@ public class QuizController {
       @RequestBody @NonNull QuizCreateDTO quizCreateDTO
   )
   {
-    LOGGER.info("Received post request for quiz: " + quizCreateDTO);
+    LOGGER.info("Received post request for quiz: {}", quizCreateDTO);
     Quiz quiz = quizMapper.fromQuizCreateDTOtoEntity(quizCreateDTO);
     quiz.getCategories().forEach(c -> c.addQuiz(quiz));
     QuizResponseDTO quizResponseDTO = quizMapper.toDTO(quizService.saveQuiz(quiz));
@@ -155,16 +157,17 @@ public class QuizController {
   }
 
   @GetMapping("/games/{id}")
-  public ResponseEntity<List<GameDTO>> getGames(
+  public ResponseEntity<Set<GameDTO>> getGames(
           @PathVariable Long id
   )
   {
     LOGGER.info("Received request fo games by quiz with id: " + id);
-    List<Game> games = gameService.findGamesByQuizId(id);
+    // List<Game> games = gameService.findGamesByQuizId(id);
+    Set<Game> games = userService.findUserByUserId(id).getGames();
 
     LOGGER.info("Successfully found games");
 
-    List<GameDTO> gameDTOs = gameMapper.toDTOs(games);
+    Set<GameDTO> gameDTOs = gameMapper.toDTOs(games);
 
 
     return ResponseEntity.ok(gameDTOs);
