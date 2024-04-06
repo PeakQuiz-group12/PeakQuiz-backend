@@ -1,8 +1,12 @@
 package idatt2105.peakquizbackend.controller;
 
 import idatt2105.peakquizbackend.dto.GameDTO;
+import idatt2105.peakquizbackend.dto.TagDTO;
 import idatt2105.peakquizbackend.mapper.GameMapper;
+import idatt2105.peakquizbackend.mapper.TagMapper;
 import idatt2105.peakquizbackend.model.Game;
+import idatt2105.peakquizbackend.model.Tag;
+import idatt2105.peakquizbackend.model.User;
 import idatt2105.peakquizbackend.service.GameService;
 import idatt2105.peakquizbackend.service.QuizService;
 import idatt2105.peakquizbackend.service.UserService;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
@@ -62,5 +67,23 @@ public class UserController {
     LOGGER.info("Successfully saved game");
     return ResponseEntity.ok(gameMapper.toDTO(game));
   }
+
+  @GetMapping("/tags/{username}")
+  public ResponseEntity<Set<TagDTO>> getTags(
+          @PathVariable String username
+  ) {
+    LOGGER.info("Received request for tags by user: " + username);
+    User user = userService.findUserByUsername(username);
+    Set<TagDTO> tags = user.getTags().stream().map(tag -> TagMapper.INSTANCE.toDTO(tag)).collect(Collectors.toSet());
+    return ResponseEntity.ok(tags);
+  }
+
+  /*@PostMapping
+  public ResponseEntity<TagDTO> createTag(
+          @RequestBody @NonNull TagDTO tagDTO
+  )
+  {
+  }*/
+
 
 }
