@@ -20,7 +20,8 @@ public interface CollaborationMapper {
     /**
      * Converts a Collaboration entity to a CollaborationDTO.
      *
-     * @param collaboration The Collaboration entity to convert
+     * @param collaboration
+     *            The Collaboration entity to convert
      * @return The corresponding CollaborationDTO
      */
     @Mapping(target = "userId", source = "collaboration.user.id")

@@ -64,19 +64,22 @@ public class QuizController {
     /**
      * Gets all quizzes, allowing for pagination and sorting.
      *
-     * @param page          Page number
-     * @param size          Page size
-     * @param sort          Sorting column and ordering direction
-     * @param isTemplate    Boolean that decides whether to filter by templates
-     * @param difficulty    Quiz difficulty
-     * @param categoryNames Categories
+     * @param page
+     *            Page number
+     * @param size
+     *            Page size
+     * @param sort
+     *            Sorting column and ordering direction
+     * @param isTemplate
+     *            Boolean that decides whether to filter by templates
+     * @param difficulty
+     *            Quiz difficulty
+     * @param categoryNames
+     *            Categories
      * @return ResponseEntity containing the page of quizzes
      */
-    @Operation(summary = "Get quizzes",
-            description = "Gets all quizzes, allowing for pagination and sorting")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved quizzes")
-    })
+    @Operation(summary = "Get quizzes", description = "Gets all quizzes, allowing for pagination and sorting")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully retrieved quizzes") })
     @GetMapping
     public ResponseEntity<Page<QuizResponseDTO>> getQuizzes(
             @Parameter(description = "Page number") @RequestParam(defaultValue = "0", required = false) int page,
@@ -110,15 +113,13 @@ public class QuizController {
     /**
      * Get quiz based on its id.
      *
-     * @param id ID of the quiz to be retrieved
+     * @param id
+     *            ID of the quiz to be retrieved
      * @return ResponseEntity containing the quiz
      */
-    @Operation(summary = "Get quiz",
-            description = "Get quiz based on its id")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved quiz"),
-            @ApiResponse(responseCode = "404", description = "Quiz not found")
-    })
+    @Operation(summary = "Get quiz", description = "Get quiz based on its id")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully retrieved quiz"),
+            @ApiResponse(responseCode = "404", description = "Quiz not found") })
     @GetMapping("/{id}")
     public ResponseEntity<QuizResponseDTO> getQuiz(
             @Parameter(description = "ID of the quiz to be retrieved", required = true) @PathVariable Long id) {
@@ -132,19 +133,17 @@ public class QuizController {
     /**
      * Create a new quiz.
      *
-     * @param quizCreateDTO Quiz data to create
+     * @param quizCreateDTO
+     *            Quiz data to create
      * @return ResponseEntity containing the created quiz
      */
-    @Operation(summary = "Create quiz",
-            description = "Create a new quiz")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully created quiz")
-    })
+    @Operation(summary = "Create quiz", description = "Create a new quiz")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully created quiz") })
     @PostMapping
     public ResponseEntity<QuizResponseDTO> createQuiz(
             @Parameter(description = "Quiz data to create", required = true) @RequestBody @
 
-NonNull QuizCreateDTO quizCreateDTO) {
+            NonNull QuizCreateDTO quizCreateDTO) {
         LOGGER.info("Received post request for quiz: {}", quizCreateDTO);
         Quiz quiz = quizMapper.fromQuizCreateDTOtoEntity(quizCreateDTO);
         quiz.getCategories().forEach(c -> c.addQuiz(quiz));
@@ -158,16 +157,15 @@ NonNull QuizCreateDTO quizCreateDTO) {
     /**
      * Edit an existing quiz.
      *
-     * @param id             ID of the quiz to be edited
-     * @param quizResponseDTO Updated quiz data
+     * @param id
+     *            ID of the quiz to be edited
+     * @param quizResponseDTO
+     *            Updated quiz data
      * @return ResponseEntity containing the updated quiz
      */
-    @Operation(summary = "Edit quiz",
-            description = "Edit an existing quiz")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully updated quiz"),
-            @ApiResponse(responseCode = "404", description = "Quiz not found")
-    })
+    @Operation(summary = "Edit quiz", description = "Edit an existing quiz")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully updated quiz"),
+            @ApiResponse(responseCode = "404", description = "Quiz not found") })
     @PutMapping("/{id}")
     public ResponseEntity<QuizResponseDTO> editQuiz(
             @Parameter(description = "ID of the quiz to be edited", required = true) @PathVariable Long id,
@@ -196,15 +194,13 @@ NonNull QuizCreateDTO quizCreateDTO) {
     /**
      * Get all games associated with a quiz by its ID.
      *
-     * @param id ID of the quiz to retrieve games for
+     * @param id
+     *            ID of the quiz to retrieve games for
      * @return ResponseEntity containing the set of games
      */
-    @Operation(summary = "Get games by quiz ID",
-            description = "Get all games associated with a quiz by its ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved games"),
-            @ApiResponse(responseCode = "404", description = "Quiz not found")
-    })
+    @Operation(summary = "Get games by quiz ID", description = "Get all games associated with a quiz by its ID")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully retrieved games"),
+            @ApiResponse(responseCode = "404", description = "Quiz not found") })
     @GetMapping("/games/{id}")
     public ResponseEntity<Set<GameDTO>> getGames(
             @Parameter(description = "ID of the quiz to retrieve games for", required = true) @PathVariable Long id) {
@@ -221,15 +217,13 @@ NonNull QuizCreateDTO quizCreateDTO) {
     /**
      * Delete a quiz by its ID.
      *
-     * @param id ID of the quiz to be deleted
+     * @param id
+     *            ID of the quiz to be deleted
      * @return ResponseEntity indicating the result of the deletion
      */
-    @Operation(summary = "Delete quiz",
-            description = "Delete a quiz by its ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Successfully deleted quiz"),
-            @ApiResponse(responseCode = "404", description = "Quiz not found")
-    })
+    @Operation(summary = "Delete quiz", description = "Delete a quiz by its ID")
+    @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Successfully deleted quiz"),
+            @ApiResponse(responseCode = "404", description = "Quiz not found") })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteQuiz(
             @Parameter(description = "ID of the quiz to be deleted", required = true) @PathVariable Long id) {
@@ -282,27 +276,27 @@ NonNull QuizCreateDTO quizCreateDTO) {
         });
     }
 
-/*
-
-    @Operation(summary = "Get collaborators", description = "Get collaborators of a quiz")
-    @GetMapping("/user")
-    public ResponseEntity<?> getCollaborators(
-            @Parameter(description = "Quiz ID") @RequestParam Long quizId,
-            @Parameter(description = "Page number") @RequestParam(defaultValue = "0", required = false) int page,
-            @Parameter(description = "Page size") @RequestParam(defaultValue = "5", required = false) int size,
-            @Parameter(description = "Sorting criteria") @RequestParam(defaultValue = "username:asc", required = false) String[] sort) {
-        LOGGER.info("Received get request for collaborators of quiz: " + quizId);
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by(SortingService.convertToOrder(sort)));
-        Page<UserDTO> collaborators = collaborationService.findCollaboratorsByQuizId(quizId, pageable);
-
-        if (collaborators.isEmpty()) {
-            LOGGER.error("Could not find quiz with id: " + quizId);
-            return ResponseEntity.notFound().build();
-        }
-
-        LOGGER.info("Successfully returned collaborators.");
-        return ResponseEntity.ok(collaborators);
-    }
-*/
+    /*
+     * 
+     * @Operation(summary = "Get collaborators", description = "Get collaborators of a quiz")
+     * 
+     * @GetMapping("/user") public ResponseEntity<?> getCollaborators(
+     * 
+     * @Parameter(description = "Quiz ID") @RequestParam Long quizId,
+     * 
+     * @Parameter(description = "Page number") @RequestParam(defaultValue = "0", required = false) int page,
+     * 
+     * @Parameter(description = "Page size") @RequestParam(defaultValue = "5", required = false) int size,
+     * 
+     * @Parameter(description = "Sorting criteria") @RequestParam(defaultValue = "username:asc", required = false)
+     * String[] sort) { LOGGER.info("Received get request for collaborators of quiz: " + quizId);
+     * 
+     * Pageable pageable = PageRequest.of(page, size, Sort.by(SortingService.convertToOrder(sort))); Page<UserDTO>
+     * collaborators = collaborationService.findCollaboratorsByQuizId(quizId, pageable);
+     * 
+     * if (collaborators.isEmpty()) { LOGGER.error("Could not find quiz with id: " + quizId); return
+     * ResponseEntity.notFound().build(); }
+     * 
+     * LOGGER.info("Successfully returned collaborators."); return ResponseEntity.ok(collaborators); }
+     */
 }

@@ -69,7 +69,8 @@ public class UserController {
     /**
      * Retrieves games associated with a user.
      *
-     * @param username Username of the user.
+     * @param username
+     *            Username of the user.
      * @return ResponseEntity containing a set of GameDTOs.
      */
     @Operation(summary = "Get user's games", description = "Retrieves games associated with a user.")
@@ -88,8 +89,10 @@ public class UserController {
     /**
      * Creates a new game for a user.
      *
-     * @param username Username of the user.
-     * @param gameDTO  Game data to create.
+     * @param username
+     *            Username of the user.
+     * @param gameDTO
+     *            Game data to create.
      * @return ResponseEntity containing the created GameDTO.
      */
     @Operation(summary = "Create game for user", description = "Creates a new game for a user.")
@@ -120,7 +123,8 @@ public class UserController {
     /**
      * Retrieves tags associated with a user.
      *
-     * @param username Username of the user.
+     * @param username
+     *            Username of the user.
      * @return ResponseEntity containing a set of TagDTOs.
      */
     @Operation(summary = "Get user's tags", description = "Retrieves tags associated with a user.")
@@ -136,15 +140,15 @@ public class UserController {
     /**
      * Creates a new tag for a user.
      *
-     * @param username Username of the user.
-     * @param tagDTO   Tag data to create.
+     * @param username
+     *            Username of the user.
+     * @param tagDTO
+     *            Tag data to create.
      * @return ResponseEntity containing the created TagDTO.
      */
     @Operation(summary = "Create tag for user", description = "Creates a new tag for a user.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Tag created successfully"),
-            @ApiResponse(responseCode = "400", description = "Bad request")
-    })
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Tag created successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request") })
     @PostMapping("/{username}/tags")
     public ResponseEntity<TagDTO> createTag(
             @Parameter(description = "Username of the user to create a tag for", required = true) @PathVariable String username,
@@ -162,8 +166,10 @@ public class UserController {
     /**
      * Updates an existing tag for a user.
      *
-     * @param username Username of the user.
-     * @param tagDTO   Updated tag data.
+     * @param username
+     *            Username of the user.
+     * @param tagDTO
+     *            Updated tag data.
      * @return ResponseEntity containing the updated TagDTO.
      */
     @Operation(summary = "Update tag for user", description = "Updates an existing tag for a user.")

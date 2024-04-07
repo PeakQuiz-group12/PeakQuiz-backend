@@ -40,17 +40,18 @@ public class AuthenticationController {
     /**
      * Registers a new user with a username, password, and email.
      *
-     * @param username The username of the new user
-     * @param password The password of the new user
-     * @param mail     The email of the new user
+     * @param username
+     *            The username of the new user
+     * @param password
+     *            The password of the new user
+     * @param mail
+     *            The email of the new user
      * @return ResponseEntity containing access and refresh tokens upon successful registration
      */
-    @Operation(summary = "Register user",
-            description = "Register a new user with a username, password, and email",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Successfully registered user"),
-                    @ApiResponse(responseCode = "400", description = "Invalid email format or weak password"),
-                    @ApiResponse(responseCode = "409", description = "Username already exists") })
+    @Operation(summary = "Register user", description = "Register a new user with a username, password, and email", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully registered user"),
+            @ApiResponse(responseCode = "400", description = "Invalid email format or weak password"),
+            @ApiResponse(responseCode = "409", description = "Username already exists") })
     @PostMapping("/register")
     @CrossOrigin
     public ResponseEntity<?> registerUser(
@@ -88,15 +89,15 @@ public class AuthenticationController {
     /**
      * Logs in an existing user with username and password.
      *
-     * @param username The username of the user
-     * @param password The password of the user
+     * @param username
+     *            The username of the user
+     * @param password
+     *            The password of the user
      * @return ResponseEntity containing access and refresh tokens upon successful login
      */
-    @Operation(summary = "Login user",
-            description = "Login an existing user with username and password",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Successfully logged in"),
-                    @ApiResponse(responseCode = "401", description = "Wrong username or password") })
+    @Operation(summary = "Login user", description = "Login an existing user with username and password", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully logged in"),
+            @ApiResponse(responseCode = "401", description = "Wrong username or password") })
     @PostMapping("/login")
     @CrossOrigin
     public ResponseEntity<?> loginUser(
@@ -123,17 +124,17 @@ public class AuthenticationController {
     /**
      * Refreshes the access token using a valid refresh token.
      *
-     * @param refreshToken The refresh token to be used for refreshing the access token
+     * @param refreshToken
+     *            The refresh token to be used for refreshing the access token
      * @return ResponseEntity containing a new access token
      */
-    @Operation(summary = "Refresh token",
-            description = "Refresh the access token using a valid refresh token",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Successfully refreshed access token"),
-                    @ApiResponse(responseCode = "401", description = "Invalid refresh token") })
+    @Operation(summary = "Refresh token", description = "Refresh the access token using a valid refresh token", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully refreshed access token"),
+            @ApiResponse(responseCode = "401", description = "Invalid refresh token") })
     @PostMapping("/refreshToken")
     @CrossOrigin
-    public ResponseEntity<?> refreshToken(@Parameter(description = "Refresh token", example = "your_refresh_token") @RequestParam String refreshToken) {
+    public ResponseEntity<?> refreshToken(
+            @Parameter(description = "Refresh token", example = "your_refresh_token") @RequestParam String refreshToken) {
         try {
             Algorithm algorithm = Algorithm.HMAC512(keyStr);
             JWTVerifier verifier = JWT.require(algorithm).build(); // Reuse the JWTVerifier
@@ -157,11 +158,9 @@ public class AuthenticationController {
      *
      * @return ResponseEntity indicating whether the token is valid or not
      */
-    @Operation(summary = "Validate token",
-            description = "Validate the JWT access token",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Token is valid"),
-                    @ApiResponse(responseCode = "401", description = "Token is not valid") })
+    @Operation(summary = "Validate token", description = "Validate the JWT access token", responses = {
+            @ApiResponse(responseCode = "200", description = "Token is valid"),
+            @ApiResponse(responseCode = "401", description = "Token is not valid") })
     @GetMapping("/validate-token")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> validateToken() {

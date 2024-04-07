@@ -41,14 +41,12 @@ public class PrivateUserController {
     /**
      * Retrieves information about the currently authenticated user.
      *
-     * @param authentication Authentication object representing the current user
+     * @param authentication
+     *            Authentication object representing the current user
      * @return ResponseEntity containing user information
      */
-    @Operation(summary = "Get current user",
-            description = "Retrieve information about the currently authenticated user",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Successfully retrieved current user")
-            })
+    @Operation(summary = "Get current user", description = "Retrieve information about the currently authenticated user", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved current user") })
     @GetMapping
     public ResponseEntity<UserDTO> getMe(
             @Parameter(description = "Authentication object representing the current user") Authentication authentication) {
@@ -58,16 +56,15 @@ public class PrivateUserController {
     /**
      * Updates the password of the currently authenticated user.
      *
-     * @param authentication Authentication object representing the current user
-     * @param password       UserUpdateDTO containing the new password
+     * @param authentication
+     *            Authentication object representing the current user
+     * @param password
+     *            UserUpdateDTO containing the new password
      * @return ResponseEntity indicating the result of the password update
      */
-    @Operation(summary = "Update current user",
-            description = "Update the password of the currently authenticated user",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Successfully updated password"),
-                    @ApiResponse(responseCode = "400", description = "Invalid password format")
-            })
+    @Operation(summary = "Update current user", description = "Update the password of the currently authenticated user", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated password"),
+            @ApiResponse(responseCode = "400", description = "Invalid password format") })
     @PutMapping
     public ResponseEntity<String> updateMe(
             @Parameter(description = "Authentication object representing the current user") Authentication authentication,
@@ -93,16 +90,15 @@ public class PrivateUserController {
     /**
      * Creates a new collaboration between the current user and a quiz.
      *
-     * @param authentication   Authentication object representing the current user
-     * @param collaborationDTO CollaborationDTO containing information about the collaboration
+     * @param authentication
+     *            Authentication object representing the current user
+     * @param collaborationDTO
+     *            CollaborationDTO containing information about the collaboration
      * @return ResponseEntity containing the created collaboration
      */
-    @Operation(summary = "Create collaboration",
-            description = "Create a new collaboration between a user and a quiz",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Successfully created collaboration"),
-                    @ApiResponse(responseCode = "404", description = "Quiz not found")
-            })
+    @Operation(summary = "Create collaboration", description = "Create a new collaboration between a user and a quiz", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully created collaboration"),
+            @ApiResponse(responseCode = "404", description = "Quiz not found") })
     @PostMapping("/collaborations")
     public ResponseEntity<CollaborationDTO> createCollaboration(
             @Parameter(description = "Authentication object representing the current user") Authentication authentication,
@@ -110,7 +106,8 @@ public class PrivateUserController {
         Quiz quiz = quizService.findQuizById(collaborationDTO.getQuizId());
         User user = userService.findUserByUsername(authentication.getName());
 
-        Collaboration collaboration = collaborationService.saveCollaboration(user, quiz, collaborationDTO.getCollaboratorType());
+        Collaboration collaboration = collaborationService.saveCollaboration(user, quiz,
+                collaborationDTO.getCollaboratorType());
         CollaborationDTO dto = CollaborationMapper.INSTANCE.toDTO(collaboration);
         return ResponseEntity.ok(dto);
     }
@@ -118,18 +115,20 @@ public class PrivateUserController {
     /**
      * Retrieves quizzes of the current user with a specified collaborator type.
      *
-     * @param authentication  Authentication object representing the current user
-     * @param collaboratorType Collaborator type
-     * @param page            Page number
-     * @param size            Page size
-     * @param sort            Sorting criteria
+     * @param authentication
+     *            Authentication object representing the current user
+     * @param collaboratorType
+     *            Collaborator type
+     * @param page
+     *            Page number
+     * @param size
+     *            Page size
+     * @param sort
+     *            Sorting criteria
      * @return ResponseEntity containing the page of quizzes
      */
-    @Operation(summary = "Get users quizzes",
-            description = "Get quizzes of a user with specified collaborator type",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Successfully retrieved user's quizzes")
-            })
+    @Operation(summary = "Get users quizzes", description = "Get quizzes of a user with specified collaborator type", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved user's quizzes") })
     @GetMapping("/quizzes")
     public ResponseEntity<?> getUserQuizzes(
             @Parameter(description = "Authentication object representing the current user") Authentication authentication,
@@ -137,12 +136,14 @@ public class PrivateUserController {
             @Parameter(description = "Page number") @RequestParam(defaultValue = "0", required = false) int page,
             @Parameter(description = "Page size") @RequestParam(defaultValue = "5", required = false) int size,
             @Parameter(description = "Sorting criteria") @RequestParam(defaultValue = "joinedOn:desc", required = false) String[] sort) {
-        LOGGER.info("Received get request for quizzes of: {} with type: {}", authentication.getName(), collaboratorType.toString());
+        LOGGER.info("Received get request for quizzes of: {} with type: {}", authentication.getName(),
+                collaboratorType.toString());
 
         User user = userService.findUserByUsername(authentication.getName());
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(SortingService.convertToOrder(sort)));
-        Page<QuizResponseDTO> quizzes = collaborationService.findQuizzesByUserId(user.getId(), collaboratorType, pageable);
+        Page<QuizResponseDTO> quizzes = collaborationService.findQuizzesByUserId(user.getId(), collaboratorType,
+                pageable);
 
         LOGGER.info("Successfully retrieved quizzes");
         return ResponseEntity.ok(quizzes);

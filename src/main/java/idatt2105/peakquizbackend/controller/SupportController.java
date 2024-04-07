@@ -21,11 +21,9 @@ public class SupportController {
         this.emailService = emailService;
     }
 
-    @Operation(summary = "Handle support query",
-            description = "Send a support query via email")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Query sent successfully"),
-            @ApiResponse(responseCode = "400", description = "Bad request")})
+    @Operation(summary = "Handle support query", description = "Send a support query via email")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Query sent successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request") })
     @PostMapping("/support")
     public ResponseEntity<String> handleSupportQuery(
             @Parameter(description = "Username of the user submitting the query", required = true, example = "john_doe") @RequestParam String username,
@@ -35,11 +33,9 @@ public class SupportController {
         return ResponseEntity.ok("Your query has been sent. We will respond shortly.");
     }
 
-    @Operation(summary = "Handle forgot password request",
-            description = "Send a password reset email to the specified email address")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Password reset email sent successfully"),
-            @ApiResponse(responseCode = "400", description = "Bad request")})
+    @Operation(summary = "Handle forgot password request", description = "Send a password reset email to the specified email address")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Password reset email sent successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request") })
     @PostMapping("/forgotPassword")
     public ResponseEntity<String> handleForgotPasswordRequest(
             @Parameter(description = "Email address of the user requesting password reset", required = true, example = "user@example.com") @RequestParam String email) {

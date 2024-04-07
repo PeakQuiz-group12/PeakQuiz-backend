@@ -18,7 +18,9 @@ public class GameService {
 
     /**
      * Save a game entity.
-     * @param game The game to save
+     * 
+     * @param game
+     *            The game to save
      * @return The saved game entity
      */
     public Game saveGame(Game game) {
@@ -27,7 +29,9 @@ public class GameService {
 
     /**
      * Find games by user ID.
-     * @param userId The ID of the user
+     * 
+     * @param userId
+     *            The ID of the user
      * @return A list of game entities associated with the user
      */
     public List<Game> findGamesByUserId(Long userId) {
@@ -36,7 +40,9 @@ public class GameService {
 
     /**
      * Find games by quiz ID.
-     * @param quizId The ID of the quiz
+     * 
+     * @param quizId
+     *            The ID of the quiz
      * @return A list of game entities associated with the quiz
      */
     public List<Game> findGamesByQuizId(Long quizId) {
@@ -45,6 +51,7 @@ public class GameService {
 
     /**
      * Get a list of all game entities.
+     * 
      * @return A list of all game entities
      */
     public List<Game> findAllGames() {

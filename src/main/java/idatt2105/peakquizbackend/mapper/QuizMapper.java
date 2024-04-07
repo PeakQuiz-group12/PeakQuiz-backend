@@ -45,7 +45,8 @@ public abstract class QuizMapper {
     /**
      * Converts a QuizCreateDTO to a Quiz entity.
      *
-     * @param quizCreateDTO The QuizCreateDTO to convert
+     * @param quizCreateDTO
+     *            The QuizCreateDTO to convert
      * @return The corresponding Quiz entity
      */
     @Mapping(target = "playCount", ignore = true)
@@ -60,8 +61,10 @@ public abstract class QuizMapper {
     /**
      * Updates a Quiz entity from a QuizResponseDTO.
      *
-     * @param quizResponseDTO The QuizResponseDTO to update from
-     * @param quiz The target Quiz entity to update
+     * @param quizResponseDTO
+     *            The QuizResponseDTO to update from
+     * @param quiz
+     *            The target Quiz entity to update
      */
     @Mapping(target = "games", ignore = true)
     @Mapping(target = "createdOn", ignore = true)
@@ -75,20 +78,21 @@ public abstract class QuizMapper {
     /**
      * Retrieves the questions associated with a QuizResponseDTO.
      *
-     * @param quizResponseDTO The QuizResponseDTO to retrieve questions from
+     * @param quizResponseDTO
+     *            The QuizResponseDTO to retrieve questions from
      * @return The set of questions associated with the QuizResponseDTO
      */
     @Named("getQuestions")
     public Set<Question> getQuestionsCreate(QuizResponseDTO quizResponseDTO) {
-        return quizResponseDTO.getQuestions().stream()
-                .map(question -> questionMapper.fromQuestionDTOtoEntity(question))
+        return quizResponseDTO.getQuestions().stream().map(question -> questionMapper.fromQuestionDTOtoEntity(question))
                 .collect(Collectors.toSet());
     }
 
     /**
      * Retrieves the questions associated with a QuizResponseDTO.
      *
-     * @param responseDTO The QuizResponseDTO to retrieve questions from
+     * @param responseDTO
+     *            The QuizResponseDTO to retrieve questions from
      * @return A Page object containing the questions associated with the QuizResponseDTO
      */
     @Named("getQuestions")
@@ -99,7 +103,8 @@ public abstract class QuizMapper {
     /**
      * Retrieves the categories associated with a QuizResponseDTO.
      *
-     * @param responseDTO The QuizResponseDTO to retrieve categories from
+     * @param responseDTO
+     *            The QuizResponseDTO to retrieve categories from
      * @return The set of categories associated with the QuizResponseDTO
      */
     @Named("getCategories")
@@ -110,7 +115,8 @@ public abstract class QuizMapper {
     /**
      * Maps category names to Category entities.
      *
-     * @param categoryNames The set of category names to map
+     * @param categoryNames
+     *            The set of category names to map
      * @return The set of corresponding Category entities
      */
     @Named("mapCategories")
@@ -121,7 +127,8 @@ public abstract class QuizMapper {
     /**
      * Maps Category entities to their names.
      *
-     * @param categories The set of Category entities to map
+     * @param categories
+     *            The set of Category entities to map
      * @return The set of corresponding category names
      */
     @Named("mapCategoriesToNames")
@@ -132,7 +139,8 @@ public abstract class QuizMapper {
     /**
      * Retrieves the IDs of the categories associated with a Quiz.
      *
-     * @param quiz The Quiz to retrieve category IDs from
+     * @param quiz
+     *            The Quiz to retrieve category IDs from
      * @return The set of category IDs associated with the Quiz
      */
     @Named("getCategoryIds")
@@ -143,7 +151,8 @@ public abstract class QuizMapper {
     /**
      * Retrieves the IDs of the questions associated with a Quiz.
      *
-     * @param quiz The Quiz to retrieve question IDs from
+     * @param quiz
+     *            The Quiz to retrieve question IDs from
      * @return The set of question IDs associated with the Quiz
      */
     @Named("getQuestionIds")
@@ -154,7 +163,8 @@ public abstract class QuizMapper {
     /**
      * Maps collaborators to their usernames.
      *
-     * @param collaborators The set of Collaboration entities to map
+     * @param collaborators
+     *            The set of Collaboration entities to map
      * @return The set of corresponding usernames
      */
     @Named("mapCollaborators")
@@ -166,7 +176,8 @@ public abstract class QuizMapper {
     /**
      * Maps Question entities to QuestionDTOs.
      *
-     * @param questions The set of Question entities to map
+     * @param questions
+     *            The set of Question entities to map
      * @return The set of corresponding QuestionDTOs
      */
     @Named("mapToQuestionDTOs")
@@ -177,7 +188,8 @@ public abstract class QuizMapper {
     /**
      * Converts a Quiz entity to a QuizResponseDTO.
      *
-     * @param quiz The Quiz entity to convert
+     * @param quiz
+     *            The Quiz entity to convert
      * @return The corresponding QuizResponseDTO
      */
     @Mapping(target = "collaboratorUsernames", source = "collaborators", qualifiedByName = "mapCollaborators")

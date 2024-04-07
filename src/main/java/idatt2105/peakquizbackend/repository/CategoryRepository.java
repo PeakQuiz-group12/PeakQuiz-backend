@@ -16,7 +16,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     /**
      * Retrieves all categories associated with a specific quiz ID.
      *
-     * @param quizId The ID of the quiz
+     * @param quizId
+     *            The ID of the quiz
      * @return A set of categories associated with the specified quiz ID
      */
     @Query("SELECT c FROM Category c JOIN c.quizzes q WHERE q.id = :quizId")
@@ -25,7 +26,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     /**
      * Searches for a category by its name.
      *
-     * @param categoryName The name of the category
+     * @param categoryName
+     *            The name of the category
      * @return An optional containing the category if found, otherwise empty
      */
     Optional<Category> findCategoryByName(String categoryName);
