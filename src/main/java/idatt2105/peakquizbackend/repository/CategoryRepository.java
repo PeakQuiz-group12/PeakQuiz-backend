@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-  @Query("SELECT c FROM Category c JOIN c.quizzes q WHERE q.id = :quizId")
-  Set<Category> findCategoriesByQuizId(Long quizId);
+    @Query("SELECT c FROM Category c JOIN c.quizzes q WHERE q.id = :quizId")
+    Set<Category> findCategoriesByQuizId(Long quizId);
 
-  Optional<Category> findCategoryByName(String categoryName);
+    Optional<Category> findCategoryByName(String categoryName);
 }

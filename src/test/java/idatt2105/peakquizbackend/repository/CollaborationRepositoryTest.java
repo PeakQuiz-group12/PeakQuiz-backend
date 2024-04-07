@@ -20,62 +20,63 @@ import org.springframework.data.domain.PageRequest;
 @DataJpaTest
 public class CollaborationRepositoryTest {
 
-  @Autowired
-  private TestEntityManager entityManager;
+    @Autowired
+    private TestEntityManager entityManager;
 
-  @Autowired
-  private CollaborationRepository collaborationRepository;
+    @Autowired
+    private CollaborationRepository collaborationRepository;
 
-  private Collaboration collaboration;
+    private Collaboration collaboration;
 
-  private Quiz quiz;
-  private User user;
-  @BeforeEach
-  void setup() {
-    user = new User("testUser", "test@example.com", "password");
-    entityManager.persist(user);
-    quiz = new Quiz();
-    entityManager.persist(quiz);
-    collaboration = new Collaboration(user, quiz, CollaboratorType.CREATOR);
-    entityManager.persistAndFlush(collaboration);
-  }
+    private Quiz quiz;
+    private User user;
 
-  @Test
-  public void testCollaborationEntityMapping() {
-    Collaboration persistedCollaboration = collaborationRepository.findById(collaboration.getId()).get();
+    @BeforeEach
+    void setup() {
+        user = new User("testUser", "test@example.com", "password");
+        entityManager.persist(user);
+        quiz = new Quiz();
+        entityManager.persist(quiz);
+        collaboration = new Collaboration(user, quiz, CollaboratorType.CREATOR);
+        entityManager.persistAndFlush(collaboration);
+    }
 
-    // Then
-    assertNotNull(persistedCollaboration.getId());
-    assertEquals(user, persistedCollaboration.getUser());
-    assertEquals(quiz, persistedCollaboration.getQuiz());
-    assertEquals(CollaboratorType.CREATOR, persistedCollaboration.getCollaboratorType());
-  }
+    @Test
+    public void testCollaborationEntityMapping() {
+        Collaboration persistedCollaboration = collaborationRepository.findById(collaboration.getId()).get();
 
-  @Test
-  void testFindAllByUserIdAndCollaboratorType() {
-    User user1 = new User("test", "test@mail.com", "pass");
-    entityManager.persistAndFlush(user1);
+        // Then
+        assertNotNull(persistedCollaboration.getId());
+        assertEquals(user, persistedCollaboration.getUser());
+        assertEquals(quiz, persistedCollaboration.getQuiz());
+        assertEquals(CollaboratorType.CREATOR, persistedCollaboration.getCollaboratorType());
+    }
 
-    Collaboration collaboration1 = new Collaboration(user1, quiz, CollaboratorType.CO_AUTHOR);
-    entityManager.persistAndFlush(collaboration1);
+    @Test
+    void testFindAllByUserIdAndCollaboratorType() {
+        User user1 = new User("test", "test@mail.com", "pass");
+        entityManager.persistAndFlush(user1);
 
-    Page<Collaboration> collaborations = collaborationRepository
-        .findAllByUserIdAndCollaboratorType(user.getId(), CollaboratorType.CREATOR, PageRequest.of(0, 3));
+        Collaboration collaboration1 = new Collaboration(user1, quiz, CollaboratorType.CO_AUTHOR);
+        entityManager.persistAndFlush(collaboration1);
 
-    assertEquals(1, collaborations.getTotalElements());
-  }
+        Page<Collaboration> collaborations = collaborationRepository.findAllByUserIdAndCollaboratorType(user.getId(),
+                CollaboratorType.CREATOR, PageRequest.of(0, 3));
 
-  @Test
-  void testFindAllByQuizId() {
-    User user1 = new User("test", "test@mail.com", "pass");
-    entityManager.persist(user1);
+        assertEquals(1, collaborations.getTotalElements());
+    }
 
-    Collaboration collaboration1 = new Collaboration(user1, quiz, CollaboratorType.CO_AUTHOR);
-    entityManager.persist(collaboration1);
+    @Test
+    void testFindAllByQuizId() {
+        User user1 = new User("test", "test@mail.com", "pass");
+        entityManager.persist(user1);
 
-    Page<Collaboration> collaborations = collaborationRepository
-        .findAllByQuizId(quiz.getId(), PageRequest.of(0, 3));
+        Collaboration collaboration1 = new Collaboration(user1, quiz, CollaboratorType.CO_AUTHOR);
+        entityManager.persist(collaboration1);
 
-    assertEquals(2, collaborations.getTotalElements());
-  }
+        Page<Collaboration> collaborations = collaborationRepository.findAllByQuizId(quiz.getId(),
+                PageRequest.of(0, 3));
+
+        assertEquals(2, collaborations.getTotalElements());
+    }
 }

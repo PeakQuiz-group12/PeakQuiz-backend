@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class CollaborationDTO {
 
-  private Long userId;
-  private Long quizId;
-  private CollaboratorType collaboratorType;
+    private Long userId;
+    private Long quizId;
+    private CollaboratorType collaboratorType;
 }

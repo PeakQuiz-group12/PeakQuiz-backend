@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CollaborationRepository extends JpaRepository<Collaboration, CollaborationId> {
 
-  Page<Collaboration> findAllByUserIdAndCollaboratorType(Long userId, CollaboratorType type, Pageable pageable);
+    Page<Collaboration> findAllByUserIdAndCollaboratorType(Long userId, CollaboratorType type, Pageable pageable);
 
-  Page<Collaboration> findAllByQuizId(Long quizId, Pageable pageable);
+    Page<Collaboration> findAllByQuizId(Long quizId, Pageable pageable);
 }

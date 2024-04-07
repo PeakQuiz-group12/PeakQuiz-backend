@@ -14,31 +14,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Mapper(componentModel = "spring")
 public abstract class QuestionMapper {
 
-  @Autowired
-  private QuizService quizService;
+    @Autowired
+    private QuizService quizService;
 
-  public static QuestionMapper INSTANCE = Mappers.getMapper(QuestionMapper.class);
+    public static QuestionMapper INSTANCE = Mappers.getMapper(QuestionMapper.class);
 
-  @Mapping(target = "quiz", source = "quizId", qualifiedByName = "mapQuiz")
-  public abstract Question fromQuestionDTOtoEntity(QuestionDTO questionDTO);
+    @Mapping(target = "quiz", source = "quizId", qualifiedByName = "mapQuiz")
+    public abstract Question fromQuestionDTOtoEntity(QuestionDTO questionDTO);
 
-  @Named("mapQuiz")
-  Quiz mapQuiz(Long quizId) {
-    return quizService.findQuizById(quizId);
-  }
+    @Named("mapQuiz")
+    Quiz mapQuiz(Long quizId) {
+        return quizService.findQuizById(quizId);
+    }
 
-  @Mapping(target = "quiz", ignore = true)
-  public abstract Question fromQuestionResponseDTOtoEntity(QuestionDTO questionDTO);
+    @Mapping(target = "quiz", ignore = true)
+    public abstract Question fromQuestionResponseDTOtoEntity(QuestionDTO questionDTO);
 
-  @Mapping(target = "quiz", ignore = true)
-  @Mapping(target = "id", ignore = true)
-  public abstract void updateQuestionFromDTO(QuestionDTO questionDTO, @MappingTarget Question question);
+    @Mapping(target = "quiz", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    public abstract void updateQuestionFromDTO(QuestionDTO questionDTO, @MappingTarget Question question);
 
-  @Mapping(target = "quizId", source = "quiz", qualifiedByName = "mapToQuizId")
-  public abstract QuestionDTO toDTO(Question question);
+    @Mapping(target = "quizId", source = "quiz", qualifiedByName = "mapToQuizId")
+    public abstract QuestionDTO toDTO(Question question);
 
-  @Named("mapToQuizId")
-  public Long mapToQuizId(Quiz quiz) {
-    return quiz.getId();
-  }
+    @Named("mapToQuizId")
+    public Long mapToQuizId(Quiz quiz) {
+        return quiz.getId();
+    }
 }

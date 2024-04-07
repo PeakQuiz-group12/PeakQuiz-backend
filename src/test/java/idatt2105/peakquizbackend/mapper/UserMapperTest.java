@@ -8,15 +8,15 @@ import static org.junit.Assert.assertEquals;
 
 public class UserMapperTest {
 
-  @Test
-  public void testUserToUserDTO() {
-    User user = new User("name", "email@mail.com", "password");
-    user.setId(1L);
+    @Test
+    public void testUserToUserDTO() {
+        User user = new User("name", "email@mail.com", "password");
+        user.setId(1L);
 
-    UserDTO dto = UserMapper.INSTANCE.toDTO(user);
+        UserDTO dto = UserMapper.INSTANCE.toDTO(user);
 
-    assertEquals(user.getId(), dto.getId());
-    assertEquals(user.getEmail(), dto.getEmail());
-    assertEquals(user.getUsername(), dto.getUsername());
-  }
+        assertEquals(user.getId(), dto.getId());
+        assertEquals(user.getEmail(), dto.getEmail());
+        assertEquals(user.getUsername(), dto.getUsername());
+    }
 }

@@ -13,11 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Answer {
 
-  @NotNull
-  @Column(nullable = false)
-  String answer;
+    @NotNull
+    @Column(nullable = false)
+    String answer;
 
-  @NotNull
-  @Column(nullable = false)
-  Boolean isAnswer;
+    @NotNull
+    @Column(nullable = false)
+    Boolean isAnswer;
 }

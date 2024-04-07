@@ -23,77 +23,70 @@ import java.util.Set;
 @NoArgsConstructor
 public class Collaboration {
 
-  public Collaboration(
-      User user,
-      Quiz quiz,
-      CollaboratorType collaboratorType) {
-    this.collaboratorType = collaboratorType;
-    this.user = user;
-    this.quiz = quiz;
-    this.id.userId = user.getId();
-    this.id.quizId = quiz.getId();
-    user.getCollaborations().add(this);
-    quiz.getCollaborators().add(this);
-  }
-  @Embeddable
-  @EqualsAndHashCode
-  public static class CollaborationId implements Serializable {
-    @Column(name = "USER_ID")
-    private Long userId;
-
-    @Column(name = "QUIZ_ID")
-    private Long quizId;
-
-    public CollaborationId() {
+    public Collaboration(User user, Quiz quiz, CollaboratorType collaboratorType) {
+        this.collaboratorType = collaboratorType;
+        this.user = user;
+        this.quiz = quiz;
+        this.id.userId = user.getId();
+        this.id.quizId = quiz.getId();
+        user.getCollaborations().add(this);
+        quiz.getCollaborators().add(this);
     }
 
-    public CollaborationId(Long userId, Long quizId) {
-      this.userId = userId;
-      this.quizId = quizId;
+    @Embeddable
+    @EqualsAndHashCode
+    public static class CollaborationId implements Serializable {
+        @Column(name = "USER_ID")
+        private Long userId;
+
+        @Column(name = "QUIZ_ID")
+        private Long quizId;
+
+        public CollaborationId() {
+        }
+
+        public CollaborationId(Long userId, Long quizId) {
+            this.userId = userId;
+            this.quizId = quizId;
+        }
+
+        @Override
+        public String toString() {
+            return "{userId: " + userId + "; quizId: " + quizId + "}";
+        }
+
     }
-    @Override
-    public String toString() { return "{userId: " + userId + "; quizId: " + quizId + "}"; }
 
-  }
+    @EmbeddedId
+    private CollaborationId id = new CollaborationId();
 
-  @EmbeddedId
-  private CollaborationId id = new CollaborationId();
+    @Column(nullable = false)
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private CollaboratorType collaboratorType;
 
-  @Column(nullable = false)
-  @NotNull
-  @Enumerated(EnumType.STRING)
-  private CollaboratorType collaboratorType;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
+    private ZonedDateTime joinedOn;
 
+    @ManyToOne
+    @JoinColumn(name = "USER_ID", insertable = false, updatable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    protected User user;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(nullable = false,
-          updatable = false)
-  @CreationTimestamp
-  private ZonedDateTime joinedOn;
+    @ManyToOne
+    @JoinColumn(name = "QUIZ_ID", insertable = false, updatable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Quiz quiz;
 
-  @ManyToOne
-  @JoinColumn(
-          name = "USER_ID",
-          insertable = false, updatable = false)
-  @EqualsAndHashCode.Exclude
-  @ToString.Exclude
-  protected User user;
-
-  @ManyToOne
-  @JoinColumn(
-          name = "QUIZ_ID",
-          insertable = false, updatable = false
-  )
-  @EqualsAndHashCode.Exclude
-  @ToString.Exclude
-  private Quiz quiz;
-
-  // TODO: Unsure if this mapping will work.
-  //  May have to make this mapping @ManyToOne and CascadeType.REMOVE.
-  @ElementCollection
-  @CollectionTable(name = "COMMENT")
-  @EqualsAndHashCode.Exclude
-  @ToString.Exclude
-  private Set<Comment> comments = new HashSet<>();
+    // TODO: Unsure if this mapping will work.
+    // May have to make this mapping @ManyToOne and CascadeType.REMOVE.
+    @ElementCollection
+    @CollectionTable(name = "COMMENT")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<Comment> comments = new HashSet<>();
 }
-

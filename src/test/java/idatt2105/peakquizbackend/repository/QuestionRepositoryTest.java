@@ -17,81 +17,74 @@ import org.springframework.data.domain.PageRequest;
 @DataJpaTest
 public class QuestionRepositoryTest {
 
-  @Autowired
-  private QuestionRepository questionRepository;
+    @Autowired
+    private QuestionRepository questionRepository;
 
-  @Autowired
-  private TestEntityManager entityManager;
+    @Autowired
+    private TestEntityManager entityManager;
 
-  private Question question;
+    private Question question;
 
-  @BeforeEach
-  void setup() {
-    // Given
-    question = Question.builder()
-        .text("Test question")
-        .questionType(QuestionType.MULTIPLE_CHOICE)
-        .difficulty((byte) 3)
-        .build();
-  }
+    @BeforeEach
+    void setup() {
+        // Given
+        question = Question.builder().text("Test question").questionType(QuestionType.MULTIPLE_CHOICE)
+                .difficulty((byte) 3).build();
+    }
 
-  @Test
-  public void testQuestionEntityMapping() {
+    @Test
+    public void testQuestionEntityMapping() {
 
-    // When
-    entityManager.persistAndFlush(question);
-    Question persistedQuestion = questionRepository.findById(question.getId()).get();
+        // When
+        entityManager.persistAndFlush(question);
+        Question persistedQuestion = questionRepository.findById(question.getId()).get();
 
-    // Then
-    assertNotNull(persistedQuestion.getId());
-    assertEquals(question.getText(), persistedQuestion.getText());
-    assertEquals(question.getQuestionType(), persistedQuestion.getQuestionType());
-    assertEquals(question.getDifficulty(), persistedQuestion.getDifficulty());
-    // Test other properties similarly
-  }
+        // Then
+        assertNotNull(persistedQuestion.getId());
+        assertEquals(question.getText(), persistedQuestion.getText());
+        assertEquals(question.getQuestionType(), persistedQuestion.getQuestionType());
+        assertEquals(question.getDifficulty(), persistedQuestion.getDifficulty());
+        // Test other properties similarly
+    }
 
-  @Test
-  public void testQuestionEntityValidation() {
-    // Given
-    Question invalidQuestion = Question.builder()
-        .text("A") // Invalid text length
-        .questionType(QuestionType.MULTIPLE_CHOICE)
-        .difficulty((byte) 3)
-        .build();
+    @Test
+    public void testQuestionEntityValidation() {
+        // Given
+        Question invalidQuestion = Question.builder().text("A") // Invalid text length
+                .questionType(QuestionType.MULTIPLE_CHOICE).difficulty((byte) 3).build();
 
-    // When & Then
-    assertThrows(ConstraintViolationException.class, () -> {
-      entityManager.persistAndFlush(invalidQuestion);
-    });
-  }
+        // When & Then
+        assertThrows(ConstraintViolationException.class, () -> {
+            entityManager.persistAndFlush(invalidQuestion);
+        });
+    }
 
-  @Test
-  public void testQuestionQuizRelationship() {
+    @Test
+    public void testQuestionQuizRelationship() {
 
-    //Given
-    Quiz quiz = new Quiz();
-    question.setQuiz(quiz);
+        // Given
+        Quiz quiz = new Quiz();
+        question.setQuiz(quiz);
 
-    // When
-    entityManager.persist(quiz);
-    entityManager.persistAndFlush(question);
-    Question persistedQuestion = questionRepository.findById(question.getId()).get();
+        // When
+        entityManager.persist(quiz);
+        entityManager.persistAndFlush(question);
+        Question persistedQuestion = questionRepository.findById(question.getId()).get();
 
-    // Then
-    assertNotNull(persistedQuestion.getQuiz());
-    assertEquals(quiz, persistedQuestion.getQuiz());
-  }
+        // Then
+        assertNotNull(persistedQuestion.getQuiz());
+        assertEquals(quiz, persistedQuestion.getQuiz());
+    }
 
-  @Test
-  public void findAllByQuizId() {
-    Quiz quiz = new Quiz();
-    quiz.addQuestion(question);
-    question.setQuiz(quiz);
-    entityManager.persist(quiz);
+    @Test
+    public void findAllByQuizId() {
+        Quiz quiz = new Quiz();
+        quiz.addQuestion(question);
+        question.setQuiz(quiz);
+        entityManager.persist(quiz);
 
-    Page<Question> questions = questionRepository.findAllByQuizId(quiz.getId(),
-        PageRequest.of(0,3));
+        Page<Question> questions = questionRepository.findAllByQuizId(quiz.getId(), PageRequest.of(0, 3));
 
-    assertEquals(1, questions.getTotalElements());
-  }
+        assertEquals(1, questions.getTotalElements());
+    }
 }

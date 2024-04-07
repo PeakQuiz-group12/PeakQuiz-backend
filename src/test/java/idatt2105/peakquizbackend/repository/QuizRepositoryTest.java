@@ -13,27 +13,28 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 @DataJpaTest
 public class QuizRepositoryTest {
 
-  @Autowired
-  private TestEntityManager entityManager;
+    @Autowired
+    private TestEntityManager entityManager;
 
-  @Autowired
-  private QuizRepository quizRepository;
+    @Autowired
+    private QuizRepository quizRepository;
 
-  @Before
-  public void setup() {
+    @Before
+    public void setup() {
 
-  }
-  @Test
-  public void testFindById() {
-    Quiz quiz = new Quiz();
-    quiz.setDescription("hi");
+    }
 
-    entityManager.persistAndFlush(quiz);
-    entityManager.flush();
+    @Test
+    public void testFindById() {
+        Quiz quiz = new Quiz();
+        quiz.setDescription("hi");
 
-    Quiz foundQuiz = quizRepository.findById(quiz.getId()).get();
+        entityManager.persistAndFlush(quiz);
+        entityManager.flush();
 
-    assertEquals(quiz.getDescription(), foundQuiz.getDescription());
-    assertEquals(0, foundQuiz.getQuestions().size());
-  }
+        Quiz foundQuiz = quizRepository.findById(quiz.getId()).get();
+
+        assertEquals(quiz.getDescription(), foundQuiz.getDescription());
+        assertEquals(0, foundQuiz.getQuestions().size());
+    }
 }

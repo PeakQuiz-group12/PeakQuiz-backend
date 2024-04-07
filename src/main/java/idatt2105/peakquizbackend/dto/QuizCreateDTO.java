@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
  */
 @Data
 public class QuizCreateDTO {
-  private String title;
-  private String description;
-  private String imageUrl;
-  private Set<String> categories;
+    private String title;
+    private String description;
+    private String imageUrl;
+    private Set<String> categories;
 }

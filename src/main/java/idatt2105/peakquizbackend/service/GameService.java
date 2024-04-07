@@ -11,21 +11,21 @@ import java.util.List;
 @AllArgsConstructor
 public class GameService {
 
-  private final GameRepository gameRepository;
+    private final GameRepository gameRepository;
 
-  public Game saveGame(Game game) {
-    return gameRepository.save(game);
-  }
+    public Game saveGame(Game game) {
+        return gameRepository.save(game);
+    }
 
-  public List<Game> findGamesByUserId(Long userId) {
-    return gameRepository.findByUserId(userId);
-  }
+    public List<Game> findGamesByUserId(Long userId) {
+        return gameRepository.findByUserId(userId);
+    }
 
-  public List<Game> findGamesByQuizId(Long quizId) {
-    return gameRepository.findByQuizId(quizId);
-  }
+    public List<Game> findGamesByQuizId(Long quizId) {
+        return gameRepository.findByQuizId(quizId);
+    }
 
-  public List<Game> findAllGames() {
-    return gameRepository.findAll();
-  }
+    public List<Game> findAllGames() {
+        return gameRepository.findAll();
+    }
 }

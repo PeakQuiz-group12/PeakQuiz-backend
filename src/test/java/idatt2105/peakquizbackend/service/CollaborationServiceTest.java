@@ -27,115 +27,86 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 public class CollaborationServiceTest {
 
-  @TestConfiguration
-  static class CollaborationServiceConfiguration {
+    @TestConfiguration
+    static class CollaborationServiceConfiguration {
 
-    @Bean
-    public CollaborationService collaborationService(CollaborationRepository collaborationRepository) {
-      return new CollaborationService(collaborationRepository);
+        @Bean
+        public CollaborationService collaborationService(CollaborationRepository collaborationRepository) {
+            return new CollaborationService(collaborationRepository);
+        }
     }
-  }
 
-  @Autowired
-  private CollaborationService collaborationService;
+    @Autowired
+    private CollaborationService collaborationService;
 
-  @MockBean
-  private CollaborationRepository collaborationRepository;
+    @MockBean
+    private CollaborationRepository collaborationRepository;
 
-  User user = new User();
+    User user = new User();
 
-  User otherUser = new User();
-  Quiz quiz = new Quiz();
+    User otherUser = new User();
+    Quiz quiz = new Quiz();
 
-  Collaboration existingCollaboration;
+    Collaboration existingCollaboration;
 
-  Collaboration nonExistingCollaboration;
-  @Before
-  public void setup() {
-    user.setId(1L);
-    otherUser.setId(2L);
-    quiz.setId(1L);
+    Collaboration nonExistingCollaboration;
 
-    existingCollaboration = new Collaboration(user, quiz, CollaboratorType.CREATOR);
-    System.out.println(existingCollaboration.getUser());
-    System.out.println("----------");
-    System.out.println(existingCollaboration.getId());
+    @Before
+    public void setup() {
+        user.setId(1L);
+        otherUser.setId(2L);
+        quiz.setId(1L);
 
-    when(collaborationRepository.save(existingCollaboration)).thenReturn(existingCollaboration);
-    when(
-        collaborationRepository
-            .findAllByQuizId(
-                existingCollaboration
-                    .getQuiz().getId(),
-                PageRequest.of(0,3)))
-        .thenReturn(new PageImpl<>(List.of(existingCollaboration), PageRequest.of(0,3), 1)
-        );
-    when(
-        collaborationRepository
-            .findAllByUserIdAndCollaboratorType(existingCollaboration.getUser().getId(), CollaboratorType.CREATOR, PageRequest.of(0,3)))
-        .thenReturn(new PageImpl<>(List.of(existingCollaboration), PageRequest.of(0,3), 1)
-        );
+        existingCollaboration = new Collaboration(user, quiz, CollaboratorType.CREATOR);
+        System.out.println(existingCollaboration.getUser());
+        System.out.println("----------");
+        System.out.println(existingCollaboration.getId());
 
-    nonExistingCollaboration = new Collaboration(otherUser, quiz, CollaboratorType.CO_AUTHOR);
-    when(
-        collaborationRepository
-            .findAllByQuizId(
-                nonExistingCollaboration
-                    .getQuiz().getId(),
-                PageRequest.of(0,3)))
-        .thenReturn(new PageImpl<>(Collections.emptyList(), PageRequest.of(0,3), 0)
-    );
-    when(
-        collaborationRepository
-            .findAllByUserIdAndCollaboratorType(nonExistingCollaboration.getUser().getId(), CollaboratorType.CO_AUTHOR, PageRequest.of(0,3)))
-        .thenReturn(new PageImpl<>(Collections.emptyList(), PageRequest.of(0,3),0)
-        );
-  }
+        when(collaborationRepository.save(existingCollaboration)).thenReturn(existingCollaboration);
+        when(collaborationRepository.findAllByQuizId(existingCollaboration.getQuiz().getId(), PageRequest.of(0, 3)))
+                .thenReturn(new PageImpl<>(List.of(existingCollaboration), PageRequest.of(0, 3), 1));
+        when(collaborationRepository.findAllByUserIdAndCollaboratorType(existingCollaboration.getUser().getId(),
+                CollaboratorType.CREATOR, PageRequest.of(0, 3)))
+                        .thenReturn(new PageImpl<>(List.of(existingCollaboration), PageRequest.of(0, 3), 1));
 
-  @Test
-  public void testSaveCollaboration() {
-    Collaboration collaboration = collaborationService.saveCollaboration(existingCollaboration.getUser(), existingCollaboration.getQuiz(), existingCollaboration.getCollaboratorType());
-    assertEquals(existingCollaboration, collaboration);
-  }
+        nonExistingCollaboration = new Collaboration(otherUser, quiz, CollaboratorType.CO_AUTHOR);
+        when(collaborationRepository.findAllByQuizId(nonExistingCollaboration.getQuiz().getId(), PageRequest.of(0, 3)))
+                .thenReturn(new PageImpl<>(Collections.emptyList(), PageRequest.of(0, 3), 0));
+        when(collaborationRepository.findAllByUserIdAndCollaboratorType(nonExistingCollaboration.getUser().getId(),
+                CollaboratorType.CO_AUTHOR, PageRequest.of(0, 3)))
+                        .thenReturn(new PageImpl<>(Collections.emptyList(), PageRequest.of(0, 3), 0));
+    }
 
-  /*@Test
-  public void testFindCollaboratorsByQuizId() {
-    System.out.println(existingCollaboration.getQuiz().getId());
-    assertEquals(1, collaborationService
-        .findCollaboratorsByQuizId(
-            existingCollaboration.getQuiz().getId(),
-            PageRequest.of(0,3))
-        .getTotalElements());
-  }*/
+    @Test
+    public void testSaveCollaboration() {
+        Collaboration collaboration = collaborationService.saveCollaboration(existingCollaboration.getUser(),
+                existingCollaboration.getQuiz(), existingCollaboration.getCollaboratorType());
+        assertEquals(existingCollaboration, collaboration);
+    }
 
-  @Test
-  public void testFindCollaboratorsWithUnusedQuizId() {
-    assertEquals(0, collaborationService
-        .findCollaboratorsByQuizId(
-            nonExistingCollaboration.getQuiz().getId(),
-            PageRequest.of(0,3))
-        .getTotalElements());
-  }
+    /*
+     * @Test public void testFindCollaboratorsByQuizId() { System.out.println(existingCollaboration.getQuiz().getId());
+     * assertEquals(1, collaborationService .findCollaboratorsByQuizId( existingCollaboration.getQuiz().getId(),
+     * PageRequest.of(0,3)) .getTotalElements()); }
+     */
 
-  @Test
-  public void testFindQuizzesByUserId() {
-    assertEquals(1, collaborationService
-            .findQuizzesByUserId(
-                existingCollaboration.getUser().getId(),
-                CollaboratorType.CREATOR,
-                PageRequest.of(0,3)
-            ).getTotalElements()
-        );
-  }
+    @Test
+    public void testFindCollaboratorsWithUnusedQuizId() {
+        assertEquals(0,
+                collaborationService
+                        .findCollaboratorsByQuizId(nonExistingCollaboration.getQuiz().getId(), PageRequest.of(0, 3))
+                        .getTotalElements());
+    }
 
-  @Test
-  public void testFindQuizzesByUnusedUserId() {
-    assertEquals(0, collaborationService
-        .findQuizzesByUserId(
-            nonExistingCollaboration.getUser().getId(),
-            CollaboratorType.CO_AUTHOR,
-            PageRequest.of(0,3)
-        ).getTotalElements()
-    );
-  }
+    @Test
+    public void testFindQuizzesByUserId() {
+        assertEquals(1, collaborationService.findQuizzesByUserId(existingCollaboration.getUser().getId(),
+                CollaboratorType.CREATOR, PageRequest.of(0, 3)).getTotalElements());
+    }
+
+    @Test
+    public void testFindQuizzesByUnusedUserId() {
+        assertEquals(0, collaborationService.findQuizzesByUserId(nonExistingCollaboration.getUser().getId(),
+                CollaboratorType.CO_AUTHOR, PageRequest.of(0, 3)).getTotalElements());
+    }
 }

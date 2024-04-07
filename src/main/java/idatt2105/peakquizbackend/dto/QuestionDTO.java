@@ -1,6 +1,5 @@
 package idatt2105.peakquizbackend.dto;
 
-
 import idatt2105.peakquizbackend.model.embedded.Answer;
 import idatt2105.peakquizbackend.model.enums.QuestionType;
 import java.sql.Blob;
@@ -14,19 +13,19 @@ import lombok.NoArgsConstructor;
 @Data
 public class QuestionDTO {
 
-  private Long id;
+    private Long id;
 
-  private String text;
+    private String text;
 
-  private QuestionType questionType;
+    private QuestionType questionType;
 
-  private String media;
+    private String media;
 
-  private Byte difficulty;
+    private Byte difficulty;
 
-  private String explanation;
+    private String explanation;
 
-  private Set<Answer> answers = new HashSet<>();
+    private Set<Answer> answers = new HashSet<>();
 
-  private Long quizId;
+    private Long quizId;
 }

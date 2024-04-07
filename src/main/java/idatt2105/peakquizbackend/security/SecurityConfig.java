@@ -15,34 +15,23 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
-  @Bean
-  public BCryptPasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-  @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-      .csrf(AbstractHttpConfigurer::disable)
-        .headers((headers) ->
-            headers
-                .frameOptions(FrameOptionsConfig::disable)
-        )
-    //.cors().and()
-      .authorizeHttpRequests(
-              authorize -> {
-                authorize
-                    .requestMatchers("/console/**", "/login", "/register", "/refreshToken", "/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs/", "swagger-ui.html", "/webjars/**, /forgotPassword")
-                    .permitAll()
-                    .anyRequest()
-                    .authenticated();
-              }
-      )
-      .sessionManagement(
-              manager -> manager
-                      .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-      .addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf(AbstractHttpConfigurer::disable)
+                .headers((headers) -> headers.frameOptions(FrameOptionsConfig::disable))
+                // .cors().and()
+                .authorizeHttpRequests(authorize -> {
+                    authorize.requestMatchers("/console/**", "/login", "/register", "/refreshToken", "/swagger-ui/**",
+                            "/v3/api-docs/**", "/v3/api-docs/", "swagger-ui.html", "/webjars/**, /forgotPassword")
+                            .permitAll().anyRequest().authenticated();
+                }).sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
-    return http.build();
-  }
+        return http.build();
+    }
 }

@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class TagService {
-  private final TagRepository tagRepository;
+    private final TagRepository tagRepository;
 
-  public Tag findTagById(Long id) {
-    return tagRepository.findById(id).orElseThrow(TagNotFoundException::new);
-  }
+    public Tag findTagById(Long id) {
+        return tagRepository.findById(id).orElseThrow(TagNotFoundException::new);
+    }
 
-  public Tag saveTag(Tag tag) {
-    return tagRepository.save(tag);
-  }
+    public Tag saveTag(Tag tag) {
+        return tagRepository.save(tag);
+    }
 }
