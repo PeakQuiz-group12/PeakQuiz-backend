@@ -17,18 +17,13 @@ public class PrivateUserController {
     UserService userService;
 
     @GetMapping
-    public ResponseEntity<User> getMe(Authentication authentication
-            ) {
+    public ResponseEntity<User> getMe(Authentication authentication) {
         return ResponseEntity.ok(userService.findUserByUsername(authentication.getName()));
     }
 
     // todo: Bug - the logged in user is no longer you, because username differs
     @PutMapping
-    public ResponseEntity<UserDTO> updateMe(
-            Authentication authentication,
-            @RequestBody UserDTO userDTO
-    )
-    {
+    public ResponseEntity<UserDTO> updateMe(Authentication authentication, @RequestBody UserDTO userDTO) {
         User user = userService.findUserByUsername(authentication.getName());
 
         if (userDTO.getEmail() != null) {
@@ -41,7 +36,7 @@ public class PrivateUserController {
 
         UserDTO updatedUserDTO = UserMapper.INSTANCE.toDTO(userService.saveUser(user));
 
-        //SecurityContextHolder.getContext().setAuthentication(auth);
+        // SecurityContextHolder.getContext().setAuthentication(auth);
         return ResponseEntity.ok(updatedUserDTO);
     }
 }

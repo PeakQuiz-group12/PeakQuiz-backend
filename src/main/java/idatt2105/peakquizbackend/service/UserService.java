@@ -12,28 +12,27 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class UserService {
-  private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-  public User saveUser(User user) {
-    return userRepository.save(user);
-  }
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
 
-  public User findUserByUsername(String username) {
-    return userRepository.findUserByUsername(username)
-        .orElseThrow(UserNotFoundException::new);
-  }
+    public User findUserByUsername(String username) {
+        return userRepository.findUserByUsername(username).orElseThrow(UserNotFoundException::new);
+    }
 
-  public boolean usernameExists(String username) {
-    Optional<User> existingUser = userRepository.findUserByUsername(username);
-      return existingUser.isPresent();
-  }
+    public boolean usernameExists(String username) {
+        Optional<User> existingUser = userRepository.findUserByUsername(username);
+        return existingUser.isPresent();
+    }
 
-  public User findUserByUserId(Long id) {
-    return userRepository.findById(id)
-        .orElseThrow(UserNotFoundException::new);
-  }
-  public List<User> findAllUsers() {
-    return userRepository.findAll();
-  }
+    public User findUserByUserId(Long id) {
+        return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+    }
+
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
+    }
 
 }

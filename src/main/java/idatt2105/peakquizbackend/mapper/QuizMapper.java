@@ -25,92 +25,81 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public abstract class QuizMapper {
 
-  @Autowired
-  private CategoryService categoryService;
-  @Autowired
-  private QuestionService questionService;
-  @Autowired
-  private QuestionMapper questionMapper;
-  public static QuizMapper INSTANCE = Mappers.getMapper(QuizMapper.class);
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private QuestionService questionService;
+    @Autowired
+    private QuestionMapper questionMapper;
+    public static QuizMapper INSTANCE = Mappers.getMapper(QuizMapper.class);
 
+    @Mapping(target = "playCount", ignore = true)
+    @Mapping(target = "questions", ignore = true)
+    @Mapping(target = "games", ignore = true)
+    @Mapping(target = "createdOn", ignore = true)
+    @Mapping(target = "collaborators", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "categories", source = "categories", qualifiedByName = "mapCategories")
+    public abstract Quiz fromQuizCreateDTOtoEntity(QuizCreateDTO quizCreateDTO);
 
-  @Mapping(target = "playCount", ignore = true)
-  @Mapping(target = "questions", ignore = true)
-  @Mapping(target = "games", ignore = true)
-  @Mapping(target = "createdOn", ignore = true)
-  @Mapping(target = "collaborators", ignore = true)
-  @Mapping(target = "id", ignore = true)
-  @Mapping(target = "categories", source = "categories", qualifiedByName = "mapCategories")
-  public abstract Quiz fromQuizCreateDTOtoEntity(QuizCreateDTO quizCreateDTO);
+    @Mapping(target = "games", ignore = true)
+    @Mapping(target = "createdOn", ignore = true)
+    @Mapping(target = "collaborators", ignore = true)
+    @Mapping(target = "categories", ignore = true)
+    @Mapping(target = "questions", ignore = true)
+    @Mapping(target = "playCount", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    public abstract void updateQuizFromDTO(QuizResponseDTO quizResponseDTO, @MappingTarget Quiz quiz);
 
-  @Mapping(target = "games", ignore = true)
-  @Mapping(target = "createdOn", ignore = true)
-  @Mapping(target = "collaborators", ignore = true)
-  @Mapping(target = "categories", ignore = true)
-  @Mapping(target = "questions", ignore = true)
-  @Mapping(target = "playCount", ignore = true)
-  @Mapping(target = "id", ignore = true)
-  public abstract void updateQuizFromDTO(QuizResponseDTO quizResponseDTO, @MappingTarget Quiz quiz);
+    @Named("getQuestions")
+    public Set<Question> getQuestionsCreate(QuizResponseDTO quizResponseDTO) {
+        return quizResponseDTO.getQuestions().stream().map(question -> questionMapper.fromQuestionDTOtoEntity(question))
+                .collect(Collectors.toSet());
+    }
 
+    @Named("getQuestions")
+    public Page<Question> getQuestions(QuizResponseDTO responseDTO) {
+        return questionService.findQuestionsByQuizId(responseDTO.getId(), PageRequest.of(0, Integer.MAX_VALUE));
+    }
 
-  @Named("getQuestions")
-  public Set<Question> getQuestionsCreate(QuizResponseDTO quizResponseDTO) {
-    return quizResponseDTO.getQuestions().stream()
-            .map(question -> questionMapper.fromQuestionDTOtoEntity(question))
-            .collect(Collectors.toSet());
-  }
+    @Named("getCategories")
+    public Set<Category> getCategories(QuizResponseDTO responseDTO) {
+        return categoryService.findCategoriesByQuizId(responseDTO.getId());
+    }
 
-  @Named("getQuestions")
-  public Page<Question> getQuestions(QuizResponseDTO responseDTO) {
-    return questionService.findQuestionsByQuizId(responseDTO.getId(), PageRequest.of(0, Integer.MAX_VALUE));
-  }
+    @Named("mapCategories")
+    public Set<Category> mapCategories(Set<String> categoryNames) {
+        return categoryNames.stream().map(name -> categoryService.findCategoryByName(name)).collect(Collectors.toSet());
+    }
 
-  @Named("getCategories")
-  public Set<Category> getCategories(QuizResponseDTO responseDTO) {
-    return categoryService.findCategoriesByQuizId(responseDTO.getId());
-  }
+    @Named("mapCategoriesToNames")
+    public Set<String> mapCategoriesToNames(Set<Category> categories) {
+        return categories.stream().map(Category::getName).collect(Collectors.toSet());
+    }
 
-  @Named("mapCategories")
-  public Set<Category> mapCategories(Set<String> categoryNames) {
-    return categoryNames.stream()
-            .map(name -> categoryService.findCategoryByName(name)
-            )
-            .collect(Collectors.toSet());
-  }
+    @Named("getCategoryIds")
+    public Set<Long> getCategoryIds(Quiz quiz) {
+        return quiz.getCategories().stream().map(Category::getId).collect(Collectors.toSet());
+    }
 
-  @Named("mapCategoriesToNames")
-  public Set<String> mapCategoriesToNames(Set<Category> categories) {
-    return categories.stream()
-            .map(Category::getName)
-            .collect(Collectors.toSet());
-  }
+    @Named("getQuestionIds")
+    public Set<Long> questionIds(Quiz quiz) {
+        return quiz.getQuestions().stream().map(Question::getId).collect(Collectors.toSet());
+    }
 
-  @Named("getCategoryIds")
-  public Set<Long> getCategoryIds(Quiz quiz) {
-    return quiz.getCategories().stream().map(Category::getId).collect(Collectors.toSet());
-  }
+    @Named("mapCollaborators")
+    public Set<String> mapCollaborators(Set<Collaboration> collaborators) {
+        return collaborators.stream().map(collaboration -> collaboration.getUser().getUsername())
+                .collect(Collectors.toSet());
+    }
 
-  @Named("getQuestionIds")
-  public Set<Long> questionIds(Quiz quiz) {
-    return quiz.getQuestions().stream().map(Question::getId).collect(Collectors.toSet());
-  }
+    @Named("mapToQuestionDTOs")
+    public Set<QuestionDTO> mapToQuestionDTOs(Set<Question> questions) {
+        return questions.stream().map(question -> QuestionMapper.INSTANCE.toDTO(question)).collect(Collectors.toSet());
+    }
 
-  @Named("mapCollaborators")
-  public Set<String> mapCollaborators(Set<Collaboration> collaborators) {
-    return collaborators.stream()
-            .map(collaboration -> collaboration.getUser().getUsername())
-            .collect(Collectors.toSet());
-  }
-
-  @Named("mapToQuestionDTOs")
-  public Set<QuestionDTO> mapToQuestionDTOs(Set<Question> questions) {
-    return questions.stream()
-        .map(question -> QuestionMapper.INSTANCE.toDTO(question))
-        .collect(Collectors.toSet());
-  }
-
-  @Mapping(target = "collaboratorUsernames", source = "collaborators", qualifiedByName = "mapCollaborators")
-  @Mapping(target = "categories", source = "categories", qualifiedByName = "mapCategoriesToNames")
-  @Mapping(target = "questions", source = "questions", qualifiedByName = "mapToQuestionDTOs")
-  public abstract QuizResponseDTO toDTO(Quiz quiz);
+    @Mapping(target = "collaboratorUsernames", source = "collaborators", qualifiedByName = "mapCollaborators")
+    @Mapping(target = "categories", source = "categories", qualifiedByName = "mapCategoriesToNames")
+    @Mapping(target = "questions", source = "questions", qualifiedByName = "mapToQuestionDTOs")
+    public abstract QuizResponseDTO toDTO(Quiz quiz);
 }
