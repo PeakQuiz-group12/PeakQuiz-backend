@@ -11,9 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "TAG", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"USER_ID", "TITLE"})
-})
+@Table(name = "TAG", uniqueConstraints = { @UniqueConstraint(columnNames = { "USER_ID", "TITLE" }) })
 @Data
 public class Tag {
 
@@ -33,13 +31,7 @@ public class Tag {
 
     // Unidirectional mapping between tag and question
 
-  @ManyToMany(cascade = {
-          CascadeType.DETACH,
-  })
-  @JoinTable(
-          name = "TAG_QUESTION",
-          joinColumns = @JoinColumn(name = "TAG_ID"),
-          inverseJoinColumns = @JoinColumn(name = "QUESTION_ID")
-  )
-  private Set<Question> questions = new HashSet<>();
+    @ManyToMany(cascade = { CascadeType.DETACH, })
+    @JoinTable(name = "TAG_QUESTION", joinColumns = @JoinColumn(name = "TAG_ID"), inverseJoinColumns = @JoinColumn(name = "QUESTION_ID"))
+    private Set<Question> questions = new HashSet<>();
 }

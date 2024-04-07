@@ -12,6 +12,7 @@ import idatt2105.peakquizbackend.service.AuthService;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -27,12 +28,12 @@ public class AuthenticationController {
     public static final String keyStr = "testsecrettestsecrettestsecrettestsecrettestsecret";
     private final UserService userService;
 
-  private final AuthService authService;
+    private final AuthService authService;
 
-  public AuthenticationController(UserService userService, AuthService authService) {
-    this.userService = userService;
-    this.authService = authService;
-  }
+    public AuthenticationController(UserService userService, AuthService authService) {
+        this.userService = userService;
+        this.authService = authService;
+    }
 
     @PostMapping("/register")
     @CrossOrigin
@@ -52,20 +53,21 @@ public class AuthenticationController {
                     "Password must be at least 8 characters long, include numbers, upper and lower case letters, and at least one special character");
         }
 
-    if (!authService.isPasswordStrong(password)) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password must be at least 8 characters long, include numbers, upper and lower case letters, and at least one special character");
-    }
+        if (!authService.isPasswordStrong(password)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    "Password must be at least 8 characters long, include numbers, upper and lower case letters, and at least one special character");
+        }
 
-    String encodedPassword = authService.encryptPassword(password);
+        String encodedPassword = authService.encryptPassword(password);
 
         userService.saveUser(new User(username, mail, encodedPassword));
         System.out.println("New user registered");
 
-    String accessToken = authService.generateToken(username, Duration.ofMinutes(5), keyStr);
-    String refreshToken = authService.generateToken(username, Duration.ofMinutes(30), keyStr);
-    Map<String, String> tokens = new HashMap<>();
-    tokens.put("accessToken", accessToken);
-    tokens.put("refreshToken", refreshToken);
+        String accessToken = authService.generateToken(username, Duration.ofMinutes(5), keyStr);
+        String refreshToken = authService.generateToken(username, Duration.ofMinutes(30), keyStr);
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("accessToken", accessToken);
+        tokens.put("refreshToken", refreshToken);
 
         return ResponseEntity.ok(tokens);
     }
@@ -89,12 +91,12 @@ public class AuthenticationController {
 
         String encodedPassword = user.getPassword();
 
-    if(authService.matches(password, encodedPassword)) {
-      String accessToken = authService.generateToken(username, Duration.ofMinutes(5), keyStr);
-      String refreshToken = authService.generateToken(username, Duration.ofMinutes(30), keyStr);
-      Map<String, String> tokens = new HashMap<>();
-      tokens.put("accessToken", accessToken);
-      tokens.put("refreshToken", refreshToken);
+        if (authService.matches(password, encodedPassword)) {
+            String accessToken = authService.generateToken(username, Duration.ofMinutes(5), keyStr);
+            String refreshToken = authService.generateToken(username, Duration.ofMinutes(30), keyStr);
+            Map<String, String> tokens = new HashMap<>();
+            tokens.put("accessToken", accessToken);
+            tokens.put("refreshToken", refreshToken);
 
             return ResponseEntity.ok(tokens);
         } else {
@@ -102,19 +104,19 @@ public class AuthenticationController {
         }
     }
 
-  @PostMapping("/refreshToken")
-  @CrossOrigin
-  public ResponseEntity<?> refreshToken(@RequestParam String refreshToken) {
-    try {
-      Algorithm algorithm = Algorithm.HMAC512(keyStr);
-      JWTVerifier verifier = JWT.require(algorithm).build(); // Reuse the JWTVerifier
-      DecodedJWT jwt = verifier.verify(refreshToken); // Verify the passed refresh token
-      String userId = jwt.getSubject();
-      System.out.println(userId);
+    @PostMapping("/refreshToken")
+    @CrossOrigin
+    public ResponseEntity<?> refreshToken(@RequestParam String refreshToken) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC512(keyStr);
+            JWTVerifier verifier = JWT.require(algorithm).build(); // Reuse the JWTVerifier
+            DecodedJWT jwt = verifier.verify(refreshToken); // Verify the passed refresh token
+            String userId = jwt.getSubject();
+            System.out.println(userId);
 
-      // Assuming the refresh token is valid, issue a new access token
-      String newAccessToken = authService.generateToken(userId, Duration.ofMinutes(5), keyStr);
-      System.out.println("newAccessToken: " + newAccessToken);
+            // Assuming the refresh token is valid, issue a new access token
+            String newAccessToken = authService.generateToken(userId, Duration.ofMinutes(5), keyStr);
+            System.out.println("newAccessToken: " + newAccessToken);
 
             return ResponseEntity.ok(newAccessToken);
         } catch (JWTVerificationException exception) {
@@ -123,10 +125,10 @@ public class AuthenticationController {
         }
     }
 
-  @GetMapping("/validate-token")
-  @PreAuthorize("isAuthenticated()")
-  public ResponseEntity<?> validateToken() {
-    // If this point is reached, the JWTAuthorizationFilter has already validated the token
-    return ResponseEntity.ok().body("Token is valid");
-  }
+    @GetMapping("/validate-token")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> validateToken() {
+        // If this point is reached, the JWTAuthorizationFilter has already validated the token
+        return ResponseEntity.ok().body("Token is valid");
+    }
 }

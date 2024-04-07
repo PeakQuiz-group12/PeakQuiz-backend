@@ -13,32 +13,28 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
 
-  @Autowired
-  private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-  public boolean isPasswordStrong(String password) {
-    // Example criteria: at least 8 characters, including numbers, letters and at least one special character
-    String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
-    return Pattern.compile(passwordPattern).matcher(password).matches();
-  }
+    public boolean isPasswordStrong(String password) {
+        // Example criteria: at least 8 characters, including numbers, letters and at least one special character
+        String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
+        return Pattern.compile(passwordPattern).matcher(password).matches();
+    }
 
-  public String encryptPassword(String password) {
-    return bCryptPasswordEncoder.encode(password);
-  }
+    public String encryptPassword(String password) {
+        return bCryptPasswordEncoder.encode(password);
+    }
 
-  public boolean matches(String inputPassword, String storedPassword) {
-    return bCryptPasswordEncoder.matches(inputPassword, storedPassword);
-  }
+    public boolean matches(String inputPassword, String storedPassword) {
+        return bCryptPasswordEncoder.matches(inputPassword, storedPassword);
+    }
 
-  public String generateToken(final String userId, final Duration validMinutes, String secret) {
-    final Instant now = Instant.now();
-    final Algorithm hmac512 = Algorithm.HMAC512(secret);
-    final JWTVerifier verifier = JWT.require(hmac512).build();
-    return JWT.create()
-        .withSubject(userId)
-        .withIssuer("idatt2105_token_issuer_app")
-        .withIssuedAt(now)
-        .withExpiresAt(now.plusMillis(validMinutes.toMillis()))
-        .sign(hmac512);
-  }
+    public String generateToken(final String userId, final Duration validMinutes, String secret) {
+        final Instant now = Instant.now();
+        final Algorithm hmac512 = Algorithm.HMAC512(secret);
+        final JWTVerifier verifier = JWT.require(hmac512).build();
+        return JWT.create().withSubject(userId).withIssuer("idatt2105_token_issuer_app").withIssuedAt(now)
+                .withExpiresAt(now.plusMillis(validMinutes.toMillis())).sign(hmac512);
+    }
 }

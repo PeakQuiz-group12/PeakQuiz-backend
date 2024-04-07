@@ -22,23 +22,18 @@ public class PrivateUserController {
     AuthService authService;
 
     @GetMapping
-    public ResponseEntity<UserDTO> getMe(Authentication authentication
-            ) {
+    public ResponseEntity<UserDTO> getMe(Authentication authentication) {
         return ResponseEntity.ok(UserMapper.INSTANCE.toDTO(userService.findUserByUsername(authentication.getName())));
     }
 
     @PutMapping
-    public ResponseEntity<String> updateMe(
-            Authentication authentication,
-            @RequestBody UserUpdateDTO password
-    )
-    {
+    public ResponseEntity<String> updateMe(Authentication authentication, @RequestBody UserUpdateDTO password) {
         User user = userService.findUserByUsername(authentication.getName());
 
         if (password != null) {
             if (!authService.isPasswordStrong(password.getPassword())) {
                 throw new BadInputException(
-                    "Password must be at least 8 characters long, include numbers, upper and lower case letters, and at least one special character");
+                        "Password must be at least 8 characters long, include numbers, upper and lower case letters, and at least one special character");
             }
             user.setPassword(authService.encryptPassword(password.getPassword()));
             System.out.println(password.getPassword());
@@ -49,7 +44,8 @@ public class PrivateUserController {
             return ResponseEntity.ok(message);
 
         } else {
-            throw new BadInputException("Password must be at least 8 characters long, include numbers, upper and lower case letters, and at least one special character");
+            throw new BadInputException(
+                    "Password must be at least 8 characters long, include numbers, upper and lower case letters, and at least one special character");
         }
     }
 }

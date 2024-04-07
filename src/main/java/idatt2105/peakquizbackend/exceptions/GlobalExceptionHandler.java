@@ -29,43 +29,35 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
-    @ExceptionHandler(value = { QuizNotFoundException.class, UserNotFoundException.class, TagAlreadyExistsException.class
-    })
+    @ExceptionHandler(value = { QuizNotFoundException.class, UserNotFoundException.class,
+            TagAlreadyExistsException.class })
     public ResponseEntity<String> handleObjectDoesNotExistException(Exception ex) {
         logError(ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
-  @ExceptionHandler(value = {
-      IllegalArgumentException.class,
-      NullPointerException.class,
-      MissingServletRequestParameterException.class,
-      HttpRequestMethodNotSupportedException.class
-  })
-  public ResponseEntity<String> handleBadInputException(Exception ex) {
-    logError(ex);
-    return ResponseEntity
-        .status(HttpStatus.BAD_REQUEST)
-        .body(ex.getClass().getSimpleName());
-  }
-
-  @ExceptionHandler(ConstraintViolationException.class)
-  @ResponseBody
-  public ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException ex) {
-    List<String> errors = new ArrayList<>();
-    for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
-      errors.add(violation.getMessage());
+    @ExceptionHandler(value = { IllegalArgumentException.class, NullPointerException.class,
+            MissingServletRequestParameterException.class, HttpRequestMethodNotSupportedException.class })
+    public ResponseEntity<String> handleBadInputException(Exception ex) {
+        logError(ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getClass().getSimpleName());
     }
 
-    String errorMessage = String.join(", ", errors);
-    return ResponseEntity.badRequest().body(errorMessage);
-  }
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseBody
+    public ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException ex) {
+        List<String> errors = new ArrayList<>();
+        for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
+            errors.add(violation.getMessage());
+        }
 
-  @ExceptionHandler(value = {Exception.class})
-  public ResponseEntity<String> handleRemainderExceptions(Exception ex) {
-    logError(ex);
-    return ResponseEntity
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(ex.getClass().getSimpleName());
-  }
+        String errorMessage = String.join(", ", errors);
+        return ResponseEntity.badRequest().body(errorMessage);
+    }
+
+    @ExceptionHandler(value = { Exception.class })
+    public ResponseEntity<String> handleRemainderExceptions(Exception ex) {
+        logError(ex);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getClass().getSimpleName());
+    }
 }
