@@ -12,13 +12,10 @@ import idatt2105.peakquizbackend.service.AuthService;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,7 +30,6 @@ public class AuthenticationController {
 
     public static final String keyStr = "testsecrettestsecrettestsecrettestsecrettestsecret";
     private final UserService userService;
-
     private final AuthService authService;
 
     public AuthenticationController(UserService userService, AuthService authService) {
@@ -41,13 +37,26 @@ public class AuthenticationController {
         this.authService = authService;
     }
 
-    @Operation(summary = "Register user", description = "Register a new user with a username, password, and email")
+    /**
+     * Registers a new user with a username, password, and email.
+     *
+     * @param username The username of the new user
+     * @param password The password of the new user
+     * @param mail     The email of the new user
+     * @return ResponseEntity containing access and refresh tokens upon successful registration
+     */
+    @Operation(summary = "Register user",
+            description = "Register a new user with a username, password, and email",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully registered user"),
+                    @ApiResponse(responseCode = "400", description = "Invalid email format or weak password"),
+                    @ApiResponse(responseCode = "409", description = "Username already exists") })
     @PostMapping("/register")
     @CrossOrigin
     public ResponseEntity<?> registerUser(
-            @Parameter(description = "Username") @RequestParam String username,
-            @Parameter(description = "Password") @RequestParam String password,
-            @Parameter(description = "Email") @RequestParam String mail) {
+            @Parameter(description = "Username", example = "john_doe") @RequestParam String username,
+            @Parameter(description = "Password", example = "Password@123") @RequestParam String password,
+            @Parameter(description = "Email", example = "john@example.com") @RequestParam String mail) {
 
         if (userService.usernameExists(username)) {
             throw new UserAlreadyExistsException();
@@ -76,12 +85,23 @@ public class AuthenticationController {
         return ResponseEntity.ok(tokens);
     }
 
-    @Operation(summary = "Login user", description = "Login an existing user with username and password")
+    /**
+     * Logs in an existing user with username and password.
+     *
+     * @param username The username of the user
+     * @param password The password of the user
+     * @return ResponseEntity containing access and refresh tokens upon successful login
+     */
+    @Operation(summary = "Login user",
+            description = "Login an existing user with username and password",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully logged in"),
+                    @ApiResponse(responseCode = "401", description = "Wrong username or password") })
     @PostMapping("/login")
     @CrossOrigin
     public ResponseEntity<?> loginUser(
-            @Parameter(description = "Username") @RequestParam String username,
-            @Parameter(description = "Password") @RequestParam String password) {
+            @Parameter(description = "Username", example = "john_doe") @RequestParam String username,
+            @Parameter(description = "Password", example = "Password@123") @RequestParam String password) {
 
         User user = userService.findUserByUsername(username);
 
@@ -100,10 +120,20 @@ public class AuthenticationController {
         }
     }
 
-    @Operation(summary = "Refresh token", description = "Refresh the access token using a valid refresh token")
+    /**
+     * Refreshes the access token using a valid refresh token.
+     *
+     * @param refreshToken The refresh token to be used for refreshing the access token
+     * @return ResponseEntity containing a new access token
+     */
+    @Operation(summary = "Refresh token",
+            description = "Refresh the access token using a valid refresh token",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully refreshed access token"),
+                    @ApiResponse(responseCode = "401", description = "Invalid refresh token") })
     @PostMapping("/refreshToken")
     @CrossOrigin
-    public ResponseEntity<?> refreshToken(@Parameter(description = "Refresh token") @RequestParam String refreshToken) {
+    public ResponseEntity<?> refreshToken(@Parameter(description = "Refresh token", example = "your_refresh_token") @RequestParam String refreshToken) {
         try {
             Algorithm algorithm = Algorithm.HMAC512(keyStr);
             JWTVerifier verifier = JWT.require(algorithm).build(); // Reuse the JWTVerifier
@@ -122,7 +152,16 @@ public class AuthenticationController {
         }
     }
 
-    @Operation(summary = "Validate token", description = "Validate the JWT access token")
+    /**
+     * Validates the JWT access token.
+     *
+     * @return ResponseEntity indicating whether the token is valid or not
+     */
+    @Operation(summary = "Validate token",
+            description = "Validate the JWT access token",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Token is valid"),
+                    @ApiResponse(responseCode = "401", description = "Token is not valid") })
     @GetMapping("/validate-token")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> validateToken() {
