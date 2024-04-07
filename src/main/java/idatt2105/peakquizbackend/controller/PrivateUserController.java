@@ -1,6 +1,7 @@
 package idatt2105.peakquizbackend.controller;
 
 import idatt2105.peakquizbackend.dto.CollaborationDTO;
+import idatt2105.peakquizbackend.dto.QuizResponseDTO;
 import idatt2105.peakquizbackend.dto.UserDTO;
 import idatt2105.peakquizbackend.dto.UserUpdateDTO;
 import idatt2105.peakquizbackend.exceptions.BadInputException;
@@ -18,6 +19,7 @@ import idatt2105.peakquizbackend.service.*;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -30,9 +32,6 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class PrivateUserController {
 
-    UserService userService;
-
-    AuthService authService;
     private final QuizService quizService;
     private final CollaborationService collaborationService;
     private final UserService userService;
