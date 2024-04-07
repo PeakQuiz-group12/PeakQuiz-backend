@@ -42,7 +42,8 @@ public class GlobalExceptionHandler {
      *            The exception indicating that an object already exists.
      * @return ResponseEntity with an appropriate HTTP status code and error message.
      */
-    @ExceptionHandler(value = { QuizAlreadyExistsException.class, UserAlreadyExistsException.class })
+    @ExceptionHandler(value = { QuizAlreadyExistsException.class, UserAlreadyExistsException.class,
+            TagAlreadyExistsException.class })
     public ResponseEntity<String> handleObjectAlreadyExistException(Exception ex) {
         logError(ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
@@ -55,8 +56,8 @@ public class GlobalExceptionHandler {
      *            The exception indicating that an object does not exist.
      * @return ResponseEntity with an appropriate HTTP status code and error message.
      */
-    @ExceptionHandler(value = { QuizNotFoundException.class, UserNotFoundException.class,
-            TagAlreadyExistsException.class })
+    @ExceptionHandler(value = { QuizNotFoundException.class, UserNotFoundException.class, TagNotFoundException.class,
+            CategoryNotFoundException.class, QuizNotFoundException.class, })
     public ResponseEntity<String> handleObjectDoesNotExistException(Exception ex) {
         logError(ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
