@@ -101,20 +101,15 @@ public class QuizController {
         return ResponseEntity.ok(quizResponseDTOS);
     }
 
-  @Operation(
-          summary = "Get quiz",
-          description = "Get quiz based on its id"
-  )
-  @GetMapping("/{id}")
-  public ResponseEntity<QuizResponseDTO> getQuiz(
-           @PathVariable Long id
-  ) {
-    LOGGER.info("Received request for quiz with id: " + id);
-    Quiz quiz = quizService.findQuizById(id);
+    @Operation(summary = "Get quiz", description = "Get quiz based on its id")
+    @GetMapping("/{id}")
+    public ResponseEntity<QuizResponseDTO> getQuiz(@PathVariable Long id) {
+      LOGGER.info("Received request for quiz with id: {}", id);
+        Quiz quiz = quizService.findQuizById(id);
 
-    LOGGER.info("Successfully returned quiz");
-    return ResponseEntity.ok(quizMapper.toDTO(quiz));
-  }
+        LOGGER.info("Successfully returned quiz");
+        return ResponseEntity.ok(quizMapper.toDTO(quiz));
+    }
 
     @Operation(summary = "Get quiz", description = "Get quiz based on its id")
     @PostMapping

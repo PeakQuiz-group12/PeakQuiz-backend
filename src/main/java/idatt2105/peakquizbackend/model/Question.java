@@ -29,14 +29,10 @@ public class Question {
     @SequenceGenerator(name = "question_id_seq", sequenceName = "question_id_seq")
     private Long id;
 
-  @Size(
-          min = 2,
-          max = 100,
-          message = "Text is required, maximum 100 characters."
-  )
-  @NotNull
-  @Column(nullable = false)
-  private String text;
+    @Size(min = 2, max = 100, message = "Text is required, maximum 100 characters.")
+    @NotNull
+    @Column(nullable = false)
+    private String text;
 
     @NotNull
     @Column(nullable = false)

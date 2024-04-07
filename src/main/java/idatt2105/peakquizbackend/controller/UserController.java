@@ -48,15 +48,9 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/games")
-    public ResponseEntity<?> getAllGames() {
-        Set<GameDTO> games = gameMapper.toDTOs(new HashSet<>(gameService.findAllGames()));
-        return ResponseEntity.ok(games);
-    }
-
     @GetMapping("/{username}/games")
     public ResponseEntity<Set<GameDTO>> getGames(@PathVariable String username) {
-        LOGGER.info("Received request for games by user: " + username);
+        LOGGER.info("Received request for games by user: {}", username);
         Set<Game> games = userService.findUserByUsername(username).getGames();
 
         LOGGER.info("Successfully found games");
@@ -69,9 +63,6 @@ public class UserController {
     @PostMapping("/{username}/games")
     public ResponseEntity<GameDTO> createGame(@PathVariable String username, @RequestBody @NonNull GameDTO gameDTO) {
         LOGGER.info("Received post request for game: {}", gameDTO);
-
-        if (!username.equals(gameDTO.getUsername()))
-            throw new BadInputException("Username mismatch");
 
         Game game = gameMapper.fromGameDTOtoEntity(gameDTO);
         game.getId().setUserId(game.getUser().getId());
@@ -90,7 +81,7 @@ public class UserController {
 
     @GetMapping("/{username}/tags")
     public ResponseEntity<Set<TagDTO>> getTags(@PathVariable String username) {
-      LOGGER.info("Received get request for tags by user: {}", username);
+        LOGGER.info("Received get request for tags by user: {}", username);
         User user = userService.findUserByUsername(username);
         Set<TagDTO> tags = user.getTags().stream().map(tagMapper::toDTO).collect(Collectors.toSet());
         return ResponseEntity.ok(tags);
@@ -98,33 +89,25 @@ public class UserController {
 
     @PostMapping("/{username}/tags")
     public ResponseEntity<TagDTO> createTag(@PathVariable String username, @RequestBody @NonNull TagDTO tagDTO) {
-      LOGGER.info("Received post request for tag: {}", tagDTO);
+        LOGGER.info("Received post request for tag: {}", tagDTO);
         User user = userService.findUserByUsername(username);
         Tag tag = tagMapper.fromTagDTOtoEntity(tagDTO);
 
-    Tag createdTag = tagService.saveTag(tag);
-    user.getTags().add(createdTag);
-    //userService.saveUser(user);
+        Tag persistedTag = tagService.saveTag(tag);
+        user.getTags().add(persistedTag);
+        userService.saveUser(user);
+        return ResponseEntity.ok(tagMapper.toDTO(persistedTag));
+    }
 
-    Tag persistedTag = tagService.saveTag(tag);
-    user.getTags().add(persistedTag);
-    userService.saveUser(user);
-    return ResponseEntity.ok(tagMapper.toDTO(persistedTag));
-  }
-
-  @PutMapping("/{username}/tags")
-  public ResponseEntity<TagDTO> updateTag(
-          @PathVariable String username,
-          @RequestBody TagDTO tagDTO
-  )
-  {
-    LOGGER.info("Received put request for tag: {}", tagDTO);
-    Tag tag = tagService.findTagById(tagDTO.getId());
-    tagMapper.updateTagFromDTO(tagDTO, tag);
-    Tag updatedTag = tagService.saveTag(tag);
-    User user = userService.findUserByUsername(username);
-    user.getTags().add(updatedTag);
-    userService.saveUser(user);
-    return ResponseEntity.ok(TagMapper.INSTANCE.toDTO(updatedTag));
-  }
+    @PutMapping("/{username}/tags")
+    public ResponseEntity<TagDTO> updateTag(@PathVariable String username, @RequestBody TagDTO tagDTO) {
+        LOGGER.info("Received put request for tag: {}", tagDTO);
+        Tag tag = tagService.findTagById(tagDTO.getId());
+        tagMapper.updateTagFromDTO(tagDTO, tag);
+        Tag updatedTag = tagService.saveTag(tag);
+        User user = userService.findUserByUsername(username);
+        user.getTags().add(updatedTag);
+        userService.saveUser(user);
+        return ResponseEntity.ok(TagMapper.INSTANCE.toDTO(updatedTag));
+    }
 }
