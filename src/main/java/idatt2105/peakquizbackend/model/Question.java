@@ -39,7 +39,8 @@ public class Question {
     @Enumerated(EnumType.STRING)
     private QuestionType questionType;
 
-    @URL(regexp = "^(http|https).*")
+    @Column(columnDefinition = "TEXT", length = 2048)
+    @URL(regexp = "(?i)^(http|https):\\/\\/.+\\.(jpg|jpeg|png|gif)$", message = "Invalid image URL format. Must start with http/https and be of type .jpg, .jpeg, .png or .gif")
     private String media;
 
     @Min(value = 0, message = "Difficulty should not be less than 0")

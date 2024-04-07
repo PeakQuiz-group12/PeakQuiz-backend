@@ -13,6 +13,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import org.hibernate.annotations.NaturalId;
 
 @Entity
 @Table(name = "USERS")
@@ -37,6 +38,7 @@ public class User {
 
     @NotNull
     @Column(nullable = false, unique = true)
+    @NaturalId
     private String username;
 
     @Email(message = "Email should be valid")
