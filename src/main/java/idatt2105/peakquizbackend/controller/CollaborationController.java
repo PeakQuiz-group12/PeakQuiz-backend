@@ -31,71 +31,61 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/collaborations")
 public class CollaborationController {
 
-  private final CollaborationService collaborationService;
-  private final UserService userService;
-  private final QuizService quizService;
-  private final static Logger LOGGER = LoggerFactory.getLogger(QuizController.class);
+    private final CollaborationService collaborationService;
+    private final UserService userService;
+    private final QuizService quizService;
+    private final static Logger LOGGER = LoggerFactory.getLogger(QuizController.class);
 
-  public CollaborationController(CollaborationService collaborationService, UserService userService,
-      QuizService quizService) {
-    this.collaborationService = collaborationService;
-    this.userService = userService;
-    this.quizService = quizService;
-  }
-
-  @PostMapping
-  public ResponseEntity<CollaborationDTO> createCollaboration(
-      @RequestParam Long userId,
-      @RequestParam Long quizId,
-      @RequestParam CollaboratorType collaborationType
-  ) {
-    User user = userService.findUserByUserId(userId);
-    Quiz quiz = quizService.findQuizById(quizId);
-
-    Collaboration collaboration = collaborationService
-        .saveCollaboration(user, quiz, collaborationType);
-    CollaborationDTO dto = CollaborationMapper.INSTANCE.toDTO(collaboration);
-    return ResponseEntity.ok(dto);
-  }
-
-  // TODO: Consider to user quiz endpoint: /quizzes/{id}/collaborators
-  @GetMapping("/user")
-  public ResponseEntity<?> getCollaborators(
-      @RequestParam Long quizId,
-      @RequestParam(defaultValue = "0", required = false) int page,
-      @RequestParam(defaultValue = "5", required = false) int size,
-      @RequestParam(defaultValue = "username:asc", required = false) String[] sort
-  )
-  {
-    LOGGER.info("Received get request for collaborators of quiz: " + quizId);
-
-    Pageable pageable = PageRequest.of(page, size, Sort.by(SortingService.convertToOrder(sort)));
-    Page<UserDTO> collaborators = collaborationService.findCollaboratorsByQuizId(quizId, pageable);
-
-    if (collaborators.isEmpty()) {
-      LOGGER.error("Could not find quiz with id: " + quizId);
-      return ResponseEntity.notFound().build();
+    public CollaborationController(CollaborationService collaborationService, UserService userService,
+            QuizService quizService) {
+        this.collaborationService = collaborationService;
+        this.userService = userService;
+        this.quizService = quizService;
     }
 
-    LOGGER.info("Successfully returned collaborators.");
-    return ResponseEntity.ok(collaborators);
-  }
+    @PostMapping
+    public ResponseEntity<CollaborationDTO> createCollaboration(@RequestParam Long userId, @RequestParam Long quizId,
+            @RequestParam CollaboratorType collaborationType) {
+        User user = userService.findUserByUserId(userId);
+        Quiz quiz = quizService.findQuizById(quizId);
 
-  // TODO: Consider move to user endpoint: user/{id}/collaborations
-  @GetMapping("/quiz")
-  public ResponseEntity<?> getUserQuizzes(
-      @RequestParam Long userId,
-      @RequestParam CollaboratorType collaboratorType,
-      @RequestParam(defaultValue = "0", required = false) int page,
-      @RequestParam(defaultValue = "5", required = false) int size,
-      @RequestParam(defaultValue = "createdOn:desc") String[] sort
-  ) {
-    LOGGER.info("Received get request for quizzes of: " + userId + " with type: " + collaboratorType.toString());
+        Collaboration collaboration = collaborationService.saveCollaboration(user, quiz, collaborationType);
+        CollaborationDTO dto = CollaborationMapper.INSTANCE.toDTO(collaboration);
+        return ResponseEntity.ok(dto);
+    }
 
-    Pageable pageable = PageRequest.of(page, size, Sort.by(SortingService.convertToOrder(sort)));
-    Page<QuizResponseDTO> quizzes = collaborationService.findQuizzesByUserId(userId, collaboratorType, pageable);
+    // TODO: Consider to user quiz endpoint: /quizzes/{id}/collaborators
+    @GetMapping("/user")
+    public ResponseEntity<?> getCollaborators(@RequestParam Long quizId,
+            @RequestParam(defaultValue = "0", required = false) int page,
+            @RequestParam(defaultValue = "5", required = false) int size,
+            @RequestParam(defaultValue = "username:asc", required = false) String[] sort) {
+        LOGGER.info("Received get request for collaborators of quiz: " + quizId);
 
-    LOGGER.info("Successfully retrieved quizzes");
-    return ResponseEntity.ok(quizzes);
-  }
+        Pageable pageable = PageRequest.of(page, size, Sort.by(SortingService.convertToOrder(sort)));
+        Page<UserDTO> collaborators = collaborationService.findCollaboratorsByQuizId(quizId, pageable);
+
+        if (collaborators.isEmpty()) {
+            LOGGER.error("Could not find quiz with id: " + quizId);
+            return ResponseEntity.notFound().build();
+        }
+
+        LOGGER.info("Successfully returned collaborators.");
+        return ResponseEntity.ok(collaborators);
+    }
+
+    // TODO: Consider move to user endpoint: user/{id}/collaborations
+    @GetMapping("/quiz")
+    public ResponseEntity<?> getUserQuizzes(@RequestParam Long userId, @RequestParam CollaboratorType collaboratorType,
+            @RequestParam(defaultValue = "0", required = false) int page,
+            @RequestParam(defaultValue = "5", required = false) int size,
+            @RequestParam(defaultValue = "createdOn:desc") String[] sort) {
+        LOGGER.info("Received get request for quizzes of: " + userId + " with type: " + collaboratorType.toString());
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(SortingService.convertToOrder(sort)));
+        Page<QuizResponseDTO> quizzes = collaborationService.findQuizzesByUserId(userId, collaboratorType, pageable);
+
+        LOGGER.info("Successfully retrieved quizzes");
+        return ResponseEntity.ok(quizzes);
+    }
 }

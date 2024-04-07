@@ -8,11 +8,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-  Optional<User> findUserByUsername(String username);
+    Optional<User> findUserByUsername(String username);
 
-  User findUserByEmail(String email);
+    User findUserByEmail(String email);
 
-  @Transactional
-  @Modifying
-  @Query("UPDATE User u SET u.password = :password WHERE u.email = :email")
-  void updateUserPassword(String email, String password);}
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.password = :password WHERE u.email = :email")
+    void updateUserPassword(String email, String password);
+}

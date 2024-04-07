@@ -24,8 +24,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @RestController
 public class AuthenticationController {
 
-  public static final String keyStr = "testsecrettestsecrettestsecrettestsecrettestsecret";
-  private final UserService userService;
+    public static final String keyStr = "testsecrettestsecrettestsecrettestsecrettestsecret";
+    private final UserService userService;
 
   private final AuthService authService;
 
@@ -34,11 +34,11 @@ public class AuthenticationController {
     this.authService = authService;
   }
 
-  @PostMapping("/register")
-  @CrossOrigin
-  public ResponseEntity<?> registerUser(@RequestParam String username, @RequestParam String password,
-  @RequestParam String mail) {
-    System.out.println(username + password);
+    @PostMapping("/register")
+    @CrossOrigin
+    public ResponseEntity<?> registerUser(@RequestParam String username, @RequestParam String password,
+            @RequestParam String mail) {
+        System.out.println(username + password);
 
     if (userService.usernameExists(username)) {
       throw new UserAlreadyExistsException();
@@ -50,10 +50,8 @@ public class AuthenticationController {
 
     String encodedPassword = authService.encryptPassword(password);
 
-
-
-    userService.saveUser(new User(username, mail, encodedPassword));
-    System.out.println("New user registered");
+        userService.saveUser(new User(username, mail, encodedPassword));
+        System.out.println("New user registered");
 
     String accessToken = authService.generateToken(username, Duration.ofMinutes(5), keyStr);
     String refreshToken = authService.generateToken(username, Duration.ofMinutes(30), keyStr);
@@ -61,17 +59,16 @@ public class AuthenticationController {
     tokens.put("accessToken", accessToken);
     tokens.put("refreshToken", refreshToken);
 
-    return ResponseEntity.ok(tokens);
-  }
+        return ResponseEntity.ok(tokens);
+    }
 
   @PostMapping("/login")
   @CrossOrigin
   public ResponseEntity<?> loginUser(@RequestParam String username, @RequestParam String password) {
 
+        User user = userService.findUserByUsername(username);
 
-    User user = userService.findUserByUsername(username);
-
-    String encodedPassword = user.getPassword();
+        String encodedPassword = user.getPassword();
 
     if(authService.matches(password, encodedPassword)) {
       String accessToken = authService.generateToken(username, Duration.ofMinutes(5), keyStr);
@@ -80,12 +77,11 @@ public class AuthenticationController {
       tokens.put("accessToken", accessToken);
       tokens.put("refreshToken", refreshToken);
 
-      return ResponseEntity.ok(tokens);
+            return ResponseEntity.ok(tokens);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong username or password");
+        }
     }
-    else {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong username or password");
-    }
-  }
 
   @PostMapping("/refreshToken")
   @CrossOrigin
@@ -101,12 +97,12 @@ public class AuthenticationController {
       String newAccessToken = authService.generateToken(userId, Duration.ofMinutes(5), keyStr);
       System.out.println("newAccessToken: " + newAccessToken);
 
-      return ResponseEntity.ok(newAccessToken);
-    } catch (JWTVerificationException exception){
-      // Token is invalid
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
+            return ResponseEntity.ok(newAccessToken);
+        } catch (JWTVerificationException exception) {
+            // Token is invalid
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
+        }
     }
-  }
 
   @GetMapping("/validate-token")
   @PreAuthorize("isAuthenticated()")

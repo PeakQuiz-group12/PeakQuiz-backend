@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.hibernate.envers.NotAudited;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,43 +13,23 @@ import java.util.Set;
 @Data
 public class Tag {
 
-  @Id
-  @GeneratedValue(
-          generator = "tag_id_seq",
-          strategy = GenerationType.SEQUENCE
-  )
-  @SequenceGenerator(
-          name = "tag_id_seq",
-          sequenceName = "tag_id_seq"
-  )
-  Long id;
+    @Id
+    @GeneratedValue(generator = "tag_id_seq", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "tag_id_seq", sequenceName = "tag_id_seq")
+    Long id;
 
-  @NotNull
-  @Column(nullable = false)
-  @Size(
-          min = 2,
-          max = 10,
-          message = "Title is required, maximum 10 characters."
-  )
-  private String title;
+    @NotNull
+    @Column(nullable = false)
+    @Size(min = 2, max = 10, message = "Title is required, maximum 10 characters.")
+    private String title;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(
-          name = "USER_ID",
-          nullable = false
-  )
-  private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private User user;
 
-  // Unidirectional mapping between tag and question
+    // Unidirectional mapping between tag and question
 
-  @ManyToMany(cascade = {
-          CascadeType.DETACH,
-          CascadeType.PERSIST
-  })
-  @JoinTable(
-          name = "TAG_QUESTION",
-          joinColumns = @JoinColumn(name = "TAG_ID"),
-          inverseJoinColumns = @JoinColumn(name = "QUESTION_ID")
-  )
-  private Set<Question> questions = new HashSet<>();
+    @ManyToMany(cascade = { CascadeType.DETACH, CascadeType.PERSIST })
+    @JoinTable(name = "TAG_QUESTION", joinColumns = @JoinColumn(name = "TAG_ID"), inverseJoinColumns = @JoinColumn(name = "QUESTION_ID"))
+    private Set<Question> questions = new HashSet<>();
 }
