@@ -13,18 +13,17 @@ import java.util.Objects;
 
 @Embeddable
 public class Comment {
-  @Column(nullable = false)
-  private String text;
+    @Column(nullable = false)
+    private String text;
 
-  // TODO: Check up on the compile time error ('Basic' attribute type should not be 'Persistence Entity')
-  @Parent
-  private Collaboration collaboration;
+    // TODO: Check up on the compile time error ('Basic' attribute type should not be 'Persistence Entity')
+    @Parent
+    private Collaboration collaboration;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(nullable = false,
-          updatable = false)
-  @CreationTimestamp
-  private ZonedDateTime createdOn;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
+    private ZonedDateTime createdOn;
 
   @Override
   public boolean equals(Object o) {
@@ -33,16 +32,16 @@ public class Comment {
     return text.equals(comment.text);
   }
 
-  public Collaboration getCollaboration() {
-    return collaboration;
-  }
+    public Collaboration getCollaboration() {
+        return collaboration;
+    }
 
-  public void setCollaboration(Collaboration collaboration) {
-    this.collaboration = collaboration;
-  }
+    public void setCollaboration(Collaboration collaboration) {
+        this.collaboration = collaboration;
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(text);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(text);
+    }
 }

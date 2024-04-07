@@ -24,83 +24,85 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 public class UserServiceTest {
-  @TestConfiguration
-  static class UserServiceTestConfiguration {
-    @Bean
-    public UserService userService(UserRepository userRepository) {
-      return new UserService(userRepository);
+    @TestConfiguration
+    static class UserServiceTestConfiguration {
+        @Bean
+        public UserService userService(UserRepository userRepository) {
+            return new UserService(userRepository);
+        }
     }
-  }
 
-  @Autowired
-  UserService userService;
+    @Autowired
+    UserService userService;
 
-  @MockBean
-  private UserRepository userRepository;
+    @MockBean
+    private UserRepository userRepository;
 
-  User existingUser;
+    User existingUser;
 
-  User nonExistentUser;
-  @Before
-  public void setup() {
-    existingUser = new User("name", "example@mail.com", "password");
+    User nonExistentUser;
 
-    when(userRepository.findUserByUsername(existingUser.getUsername())).thenReturn(Optional.of(existingUser));
-    when(userRepository.existsById(existingUser.getId())).thenReturn(true);
-    when(userRepository.findUserByUsername(existingUser.getUsername())).thenReturn(Optional.of(existingUser));
-    when(userRepository.save(existingUser)).thenReturn(existingUser);
-    doNothing().when(userRepository).delete(existingUser);
-    when(userRepository.findAll()).thenReturn(List.of(existingUser));
+    @Before
+    public void setup() {
+        existingUser = new User("name", "example@mail.com", "password");
 
-    nonExistentUser = new User("novel", "novel@novel.com", "novel");
+        when(userRepository.findUserByUsername(existingUser.getUsername())).thenReturn(Optional.of(existingUser));
+        when(userRepository.existsById(existingUser.getId())).thenReturn(true);
+        when(userRepository.findUserByUsername(existingUser.getUsername())).thenReturn(Optional.of(existingUser));
+        when(userRepository.save(existingUser)).thenReturn(existingUser);
+        doNothing().when(userRepository).delete(existingUser);
+        when(userRepository.findAll()).thenReturn(List.of(existingUser));
 
-    when(userRepository.findUserByUsername(nonExistentUser.getUsername())).thenReturn(Optional.empty());
-    when(userRepository.findById(nonExistentUser.getId())).thenReturn(Optional.empty());
-    when(userRepository.save(nonExistentUser)).thenReturn(nonExistentUser);
-    doNothing().when(userRepository).delete(nonExistentUser);
-  }
+        nonExistentUser = new User("novel", "novel@novel.com", "novel");
 
-  @Test
-  public void testSaveUserExistingUser() {
-    assertDoesNotThrow(()-> {
-      userService.saveUser(existingUser);
-    });
-  }
-
-  @Test
-  public void testUsernameExistsBadUsername() {
-    boolean result = userService.usernameExists(existingUser.getUsername());
-    assertTrue(result);
-  }
-
-  @Test
-  public void testFindByUserIdBadUserId() {
-    assertThrows(UserNotFoundException.class, () -> {
-      userService.findUserByUserId(nonExistentUser.getId());
-      fail();
-    });
-  }
-
-  @Test
-  public void testFindUserByUsernameBadUsername() {
-    assertThrows(UserNotFoundException.class, () -> userService.findUserByUsername(nonExistentUser.getUsername()));
-  }
-  @Test
-  public void testSaveUser() {
-    User newUser;
-
-    try {
-      newUser = userService.saveUser(nonExistentUser);
-    } catch (RuntimeException e) {
-      fail();
-      return;
+        when(userRepository.findUserByUsername(nonExistentUser.getUsername())).thenReturn(Optional.empty());
+        when(userRepository.findById(nonExistentUser.getId())).thenReturn(Optional.empty());
+        when(userRepository.save(nonExistentUser)).thenReturn(nonExistentUser);
+        doNothing().when(userRepository).delete(nonExistentUser);
     }
-    assertEquals(nonExistentUser.getId(), newUser.getId());
-    assertEquals(nonExistentUser.getUsername(), newUser.getUsername());
-    assertEquals(nonExistentUser.getEmail(), newUser.getEmail());
-    assertEquals(nonExistentUser.getPassword(), newUser.getPassword());
-    assertEquals(nonExistentUser.getCreatedOn(), newUser.getCreatedOn());
-    assertEquals(nonExistentUser.getTags(), newUser.getTags());
-    assertEquals(nonExistentUser.getCollaborations(), newUser.getCollaborations());
-  }
+
+    @Test
+    public void testSaveUserExistingUser() {
+        assertDoesNotThrow(() -> {
+            userService.saveUser(existingUser);
+        });
+    }
+
+    @Test
+    public void testUsernameExistsBadUsername() {
+        boolean result = userService.usernameExists(existingUser.getUsername());
+        assertTrue(result);
+    }
+
+    @Test
+    public void testFindByUserIdBadUserId() {
+        assertThrows(UserNotFoundException.class, () -> {
+            userService.findUserByUserId(nonExistentUser.getId());
+            fail();
+        });
+    }
+
+    @Test
+    public void testFindUserByUsernameBadUsername() {
+        assertThrows(UserNotFoundException.class, () -> userService.findUserByUsername(nonExistentUser.getUsername()));
+    }
+
+    @Test
+    public void testSaveUser() {
+        User newUser;
+
+        try {
+            newUser = userService.saveUser(nonExistentUser);
+        } catch (RuntimeException e) {
+            fail();
+            return;
+        }
+        assertEquals(nonExistentUser.getId(), newUser.getId());
+        assertEquals(nonExistentUser.getUsername(), newUser.getUsername());
+        assertEquals(nonExistentUser.getEmail(), newUser.getEmail());
+        assertEquals(nonExistentUser.getPassword(), newUser.getPassword());
+        assertEquals(nonExistentUser.getCreatedOn(), newUser.getCreatedOn());
+        assertEquals(nonExistentUser.getTags(), newUser.getTags());
+        assertEquals(nonExistentUser.getCollaborations(), newUser.getCollaborations());
+    }
 }
