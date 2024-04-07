@@ -79,8 +79,8 @@ public abstract class TagMapper {
      * @return The set of corresponding QuestionDTOs
      */
     @Named("mapToQuestionDTOs")
-    public Set<QuestionDTO> mapsToQuestionDTOs(Set<Question> questions) {
-        return questions.stream().map(questionMapper::toDTO).collect(Collectors.toSet());
+    public Set<QuestionDTO> mapToQuestionDTOs(Set<Question> questions) {
+        return questions.stream().map(QuestionMapper.INSTANCE::toDTO).collect(Collectors.toSet());
     }
 
     /**
