@@ -1,5 +1,8 @@
 package idatt2105.peakquizbackend.model;
 
+import idatt2105.peakquizbackend.model.Category;
+import idatt2105.peakquizbackend.model.Game;
+import idatt2105.peakquizbackend.model.Question;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -8,12 +11,16 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Formula;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
+import org.hibernate.validator.constraints.URL;
 
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import org.hibernate.validator.constraints.URL;
 
+/**
+ * Represents a quiz in the system.
+ */
 @Entity
 @Audited
 @Data

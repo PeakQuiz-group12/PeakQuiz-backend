@@ -14,6 +14,9 @@ import org.hibernate.validator.constraints.URL;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Represents a question in a quiz.
+ */
 @Entity
 @Table(name = "QUESTION")
 @Data

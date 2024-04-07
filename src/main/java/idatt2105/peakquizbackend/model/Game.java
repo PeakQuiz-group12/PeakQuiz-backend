@@ -9,6 +9,9 @@ import org.hibernate.annotations.Immutable;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
+/**
+ * Represents a game played by a user.
+ */
 @Entity
 @Immutable
 @Builder
@@ -17,6 +20,10 @@ import java.time.ZonedDateTime;
 @AllArgsConstructor
 @ToString
 public class Game {
+
+    /**
+     * Embedded ID class for Game entity.
+     */
     @Embeddable
     @EqualsAndHashCode
     @NoArgsConstructor

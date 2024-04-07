@@ -13,6 +13,12 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -35,10 +41,13 @@ public class AuthenticationController {
         this.authService = authService;
     }
 
+    @Operation(summary = "Register user", description = "Register a new user with a username, password, and email")
     @PostMapping("/register")
     @CrossOrigin
-    public ResponseEntity<?> registerUser(@RequestParam String username, @RequestParam String password,
-            @RequestParam String mail) {
+    public ResponseEntity<?> registerUser(
+            @Parameter(description = "Username") @RequestParam String username,
+            @Parameter(description = "Password") @RequestParam String password,
+            @Parameter(description = "Email") @RequestParam String mail) {
 
         if (userService.usernameExists(username)) {
             throw new UserAlreadyExistsException();
@@ -67,9 +76,12 @@ public class AuthenticationController {
         return ResponseEntity.ok(tokens);
     }
 
+    @Operation(summary = "Login user", description = "Login an existing user with username and password")
     @PostMapping("/login")
     @CrossOrigin
-    public ResponseEntity<?> loginUser(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<?> loginUser(
+            @Parameter(description = "Username") @RequestParam String username,
+            @Parameter(description = "Password") @RequestParam String password) {
 
         User user = userService.findUserByUsername(username);
 
@@ -88,9 +100,10 @@ public class AuthenticationController {
         }
     }
 
+    @Operation(summary = "Refresh token", description = "Refresh the access token using a valid refresh token")
     @PostMapping("/refreshToken")
     @CrossOrigin
-    public ResponseEntity<?> refreshToken(@RequestParam String refreshToken) {
+    public ResponseEntity<?> refreshToken(@Parameter(description = "Refresh token") @RequestParam String refreshToken) {
         try {
             Algorithm algorithm = Algorithm.HMAC512(keyStr);
             JWTVerifier verifier = JWT.require(algorithm).build(); // Reuse the JWTVerifier
@@ -109,6 +122,7 @@ public class AuthenticationController {
         }
     }
 
+    @Operation(summary = "Validate token", description = "Validate the JWT access token")
     @GetMapping("/validate-token")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> validateToken() {

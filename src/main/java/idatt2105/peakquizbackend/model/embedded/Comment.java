@@ -5,43 +5,38 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Parent;
 
 import java.time.ZonedDateTime;
 import java.util.Objects;
 
+/**
+ * An embedded class representing a comment associated with a collaboration.
+ */
 @Embeddable
+@Data
 public class Comment {
+
+    /**
+     * The text content of the comment.
+     */
     @Column(nullable = false)
     private String text;
 
-    // TODO: Check up on the compile time error ('Basic' attribute type should not be 'Persistence Entity')
+    /**
+     * The collaboration instance associated with the comment.
+     */
     @Parent
     private Collaboration collaboration;
 
+    /**
+     * The timestamp when the comment was created.
+     */
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
     private ZonedDateTime createdOn;
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof Comment comment)) return false;
-    return text.equals(comment.text);
-  }
-
-    public Collaboration getCollaboration() {
-        return collaboration;
-    }
-
-    public void setCollaboration(Collaboration collaboration) {
-        this.collaboration = collaboration;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(text);
-    }
 }
