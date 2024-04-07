@@ -4,13 +4,16 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.envers.NotAudited;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "TAG")
+@Table(name = "TAG", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"USER_ID", "TITLE"})
+})
 @Data
 public class Tag {
 
@@ -23,14 +26,14 @@ public class Tag {
           name = "tag_id_seq",
           sequenceName = "tag_id_seq"
   )
-  Long id;
+  private Long id;
 
   @NotNull
-  @Column(nullable = false)
+  @Column(name = "TITLE", nullable = false)
   @Size(
           min = 2,
-          max = 10,
-          message = "Title is required, maximum 10 characters."
+          max = 30,
+          message = "Title is required, maximum 30 characters."
   )
   private String title;
 
@@ -45,7 +48,6 @@ public class Tag {
 
   @ManyToMany(cascade = {
           CascadeType.DETACH,
-          CascadeType.PERSIST
   })
   @JoinTable(
           name = "TAG_QUESTION",

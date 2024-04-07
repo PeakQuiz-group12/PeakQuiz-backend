@@ -18,7 +18,8 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(value = {
       QuizAlreadyExistsException.class,
-      UserAlreadyExistsException.class
+      UserAlreadyExistsException.class,
+      TagAlreadyExistsException.class
   })
   public ResponseEntity<String> handleObjectAlreadyExistException(Exception ex) {
     logError(ex);

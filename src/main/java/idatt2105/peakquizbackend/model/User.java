@@ -65,6 +65,12 @@ public class User {
   @EqualsAndHashCode.Exclude
   protected Set<Game> games = new HashSet<>();
 
+  @ToString.Include
+  private String getGamesToString() {
+    if (games == null) return "";
+    return games.stream().map(Game::getId).toString();
+  }
+
   @Getter
   @OneToMany(
       mappedBy = "user",
@@ -74,8 +80,19 @@ public class User {
   @OneToMany(
           mappedBy = "user",
           fetch = FetchType.EAGER,
-          cascade = CascadeType.REMOVE
+          cascade = {
+                  CascadeType.REMOVE,
+                  CascadeType.PERSIST,
+                  CascadeType.MERGE
+          }
   )
+  @ToString.Exclude
+  @EqualsAndHashCode.Exclude
   public Set<Tag> tags = new HashSet<>();
 
+  @ToString.Include
+  String getTagsToString() {
+    if (tags == null) return "";
+    return tags.stream().map(Tag::getId).toString();
+  }
 }

@@ -3,6 +3,7 @@ package idatt2105.peakquizbackend.controller;
 import idatt2105.peakquizbackend.dto.GameDTO;
 import idatt2105.peakquizbackend.dto.TagDTO;
 import idatt2105.peakquizbackend.exceptions.BadInputException;
+import idatt2105.peakquizbackend.exceptions.TagAlreadyExistsException;
 import idatt2105.peakquizbackend.mapper.GameMapper;
 import idatt2105.peakquizbackend.mapper.TagMapper;
 import idatt2105.peakquizbackend.model.Game;
@@ -98,7 +99,7 @@ public class UserController {
   public ResponseEntity<Set<TagDTO>> getTags(
           @PathVariable String username
   ) {
-    LOGGER.info("Received request for tags by user: " + username);
+    LOGGER.info("Received get request for tags by user: " + username);
     User user = userService.findUserByUsername(username);
     Set<TagDTO> tags = user.getTags().stream().map(tagMapper::toDTO).collect(Collectors.toSet());
     return ResponseEntity.ok(tags);
@@ -110,18 +111,21 @@ public class UserController {
       @RequestBody @NonNull TagDTO tagDTO
   )
   {
-    LOGGER.info("Received post request for tag: " + tagDTO);
+    LOGGER.info("Received post request for tag: {}", tagDTO);
     User user = userService.findUserByUsername(username);
     Tag tag = tagMapper.fromTagDTOtoEntity(tagDTO);
 
-    Tag createdTag = tagService.saveTag(tag);
-    user.getTags().add(createdTag);
-    //userService.saveUser(user);
+    if (tagService.tagExists(user.getId(), tag.getTitle())) {
+      throw new TagAlreadyExistsException();
+    }
 
-    return ResponseEntity.ok(tagMapper.toDTO(createdTag));
+    Tag persistedTag = tagService.saveTag(tag);
+    user.getTags().add(persistedTag);
+    userService.saveUser(user);
+    return ResponseEntity.ok(tagMapper.toDTO(persistedTag));
   }
 
-  @PutMapping("tags/{username}")
+  @PutMapping("/{username}/tags")
   public ResponseEntity<TagDTO> updateTag(
           @PathVariable String username,
           @RequestBody TagDTO tagDTO
@@ -129,8 +133,13 @@ public class UserController {
   {
     LOGGER.info("Received put request for tag: {}", tagDTO);
     Tag tag = tagService.findTagById(tagDTO.getId());
-    TagMapper.INSTANCE.updateTagFromDTO(tagDTO, tag);
-    tagService.saveTag(tag);
-    return ResponseEntity.ok(TagMapper.INSTANCE.toDTO(tag));
+    tagMapper.updateTagFromDTO(tagDTO, tag);
+    System.out.println("-----------------------------------------");
+    System.out.println(tag);
+    Tag updatedTag = tagService.saveTag(tag);
+    User user = userService.findUserByUsername(username);
+    user.getTags().add(updatedTag);
+    userService.saveUser(user);
+    return ResponseEntity.ok(TagMapper.INSTANCE.toDTO(updatedTag));
   }
 }

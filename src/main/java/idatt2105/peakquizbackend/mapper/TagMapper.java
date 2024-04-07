@@ -1,5 +1,6 @@
 package idatt2105.peakquizbackend.mapper;
 
+import com.sun.mail.util.QEncoderStream;
 import idatt2105.peakquizbackend.dto.QuestionDTO;
 import idatt2105.peakquizbackend.dto.TagDTO;
 import idatt2105.peakquizbackend.model.Question;
@@ -49,7 +50,7 @@ public abstract class TagMapper {
 
   @Named("mapToQuestionDTOs")
   public Set<QuestionDTO> mapsToQuestionDTOs(Set<Question> questions) {
-    return questions.stream().map(questionMapper::toDTO).collect(Collectors.toSet());
+    return questions.stream().map(QuestionMapper.INSTANCE::toDTO).collect(Collectors.toSet());
   }
 
   @Named("mapToUsername")
@@ -59,12 +60,13 @@ public abstract class TagMapper {
 
   @Named("mapUser")
   public User mapUser(String username) {
+
     return userService.findUserByUsername(username);
   }
 
   @Named("mapQuestions")
   public Set<Question> mapQuestions(Set<QuestionDTO> questions) {
-    return questions.stream().map(questionMapper::fromQuestionDTOtoEntity).collect(Collectors.toSet());
+    return questions.stream().map(questionMapper::fromQuestionResponseDTOtoEntity).collect(Collectors.toSet());
   }
 
 

@@ -18,4 +18,8 @@ public class TagService {
   public Tag saveTag(Tag tag) {
     return tagRepository.save(tag);
   }
+
+  public boolean tagExists(Long userId, String title) {
+    return tagRepository.findTagByUserIdAndTitle(userId, title).isPresent();
+  }
 }

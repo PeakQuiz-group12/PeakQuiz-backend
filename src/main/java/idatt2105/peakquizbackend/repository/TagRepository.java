@@ -4,6 +4,8 @@ import idatt2105.peakquizbackend.model.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-public interface TagRepository extends JpaRepository<Tag, Long> {
+import java.util.Optional;
 
+public interface TagRepository extends JpaRepository<Tag, Long> {
+  Optional<Tag> findTagByUserIdAndTitle(Long userId, String title);
 }
