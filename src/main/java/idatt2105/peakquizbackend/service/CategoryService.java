@@ -8,8 +8,6 @@ import java.util.Set;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
-
 /**
  * Service class for managing categories.
  */

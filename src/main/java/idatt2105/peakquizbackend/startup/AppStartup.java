@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Startup component for initializing data on application startup.
+ */
 @Component
 public class AppStartup implements CommandLineRunner {
 
@@ -25,12 +28,21 @@ public class AppStartup implements CommandLineRunner {
     @Autowired
     QuizService quizService;
 
+    /**
+     * Runs on application startup.
+     *
+     * @param args
+     *            Command line arguments
+     */
     @Override
     public void run(String... args) {
         prepareCategories();
         prepareTemplates();
     }
 
+    /**
+     * Prepares categories if they do not exist already.
+     */
     private void prepareCategories() {
         List<String> categories = new ArrayList<>();
         categories.add("History");
@@ -44,6 +56,9 @@ public class AppStartup implements CommandLineRunner {
         });
     }
 
+    /**
+     * Prepares quiz templates if they do not exist already.
+     */
     private void prepareTemplates() {
         final int nrTemplates = 1;
         if (quizService.findAllTemplates(PageRequest.of(0, 3)).getTotalElements() == nrTemplates)

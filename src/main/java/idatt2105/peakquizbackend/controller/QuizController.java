@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.slf4j.Logger;
@@ -59,19 +61,32 @@ public class QuizController {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(QuizController.class);
 
+    /**
+     * Gets all quizzes, allowing for pagination and sorting.
+     *
+     * @param page
+     *            Page number
+     * @param size
+     *            Page size
+     * @param sort
+     *            Sorting column and ordering direction
+     * @param isTemplate
+     *            Boolean that decides whether to filter by templates
+     * @param difficulty
+     *            Quiz difficulty
+     * @param categoryNames
+     *            Categories
+     * @return ResponseEntity containing the page of quizzes
+     */
     @Operation(summary = "Get quizzes", description = "Gets all quizzes, allowing for pagination and sorting")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully retrieved quizzes") })
     @GetMapping
     public ResponseEntity<Page<QuizResponseDTO>> getQuizzes(
             @Parameter(description = "Page number") @RequestParam(defaultValue = "0", required = false) int page,
-
             @Parameter(description = "Page size") @RequestParam(defaultValue = "6", required = false) int size,
-
             @Parameter(description = "Sorting column and ordering direction") @RequestParam(defaultValue = "id:asc", required = false) String[] sort,
-
             @Parameter(description = "Boolean that decides whether to filter by templates") @RequestParam(defaultValue = "false", required = false) boolean isTemplate,
-
             @Parameter(description = "Quiz difficulty") @RequestParam(required = false) Byte difficulty,
-
             @Parameter(description = "Categories") @RequestParam(required = false) List<String> categoryNames) {
         LOGGER.info("Received get-request for quizzes");
 
@@ -95,7 +110,16 @@ public class QuizController {
         return ResponseEntity.ok(quizResponseDTOS);
     }
 
+    /**
+     * Get quiz based on its id.
+     *
+     * @param id
+     *            ID of the quiz to be retrieved
+     * @return ResponseEntity containing the quiz
+     */
     @Operation(summary = "Get quiz", description = "Get quiz based on its id")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully retrieved quiz"),
+            @ApiResponse(responseCode = "404", description = "Quiz not found") })
     @GetMapping("/{id}")
     public ResponseEntity<QuizResponseDTO> getQuiz(
             @Parameter(description = "ID of the quiz to be retrieved", required = true) @PathVariable Long id) {
@@ -106,10 +130,20 @@ public class QuizController {
         return ResponseEntity.ok(quizMapper.toDTO(quiz));
     }
 
+    /**
+     * Create a new quiz.
+     *
+     * @param quizCreateDTO
+     *            Quiz data to create
+     * @return ResponseEntity containing the created quiz
+     */
     @Operation(summary = "Create quiz", description = "Create a new quiz")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully created quiz") })
     @PostMapping
     public ResponseEntity<QuizResponseDTO> createQuiz(
-            @Parameter(description = "Quiz data to create", required = true) @RequestBody @NonNull QuizCreateDTO quizCreateDTO) {
+            @Parameter(description = "Quiz data to create", required = true) @RequestBody @
+
+            NonNull QuizCreateDTO quizCreateDTO) {
         LOGGER.info("Received post request for quiz: {}", quizCreateDTO);
         Quiz quiz = quizMapper.fromQuizCreateDTOtoEntity(quizCreateDTO);
         quiz.getCategories().forEach(c -> c.addQuiz(quiz));
@@ -120,33 +154,48 @@ public class QuizController {
         return ResponseEntity.ok(quizResponseDTO);
     }
 
+    /**
+     * Edit an existing quiz.
+     *
+     * @param id
+     *            ID of the quiz to be edited
+     * @param quizResponseDTO
+     *            Updated quiz data
+     * @return ResponseEntity containing the updated quiz
+     */
     @Operation(summary = "Edit quiz", description = "Edit an existing quiz")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully updated quiz"),
+            @ApiResponse(responseCode = "404", description = "Quiz not found") })
     @PutMapping("/{id}")
     public ResponseEntity<QuizResponseDTO> editQuiz(
             @Parameter(description = "ID of the quiz to be edited", required = true) @PathVariable Long id,
             @Parameter(description = "Updated quiz data", required = true) @RequestBody QuizResponseDTO quizResponseDTO) {
-        LOGGER.info("Received put request for quiz: " + quizResponseDTO);
+        LOGGER.info("Received put request for quiz: {}", quizResponseDTO);
         Quiz quiz = quizService.findQuizById(id);
         QuizMapper.INSTANCE.updateQuizFromDTO(quizResponseDTO, quiz);
 
-        // Does nothing to categories and questions if you don't send it
-        System.out.println("updating categoreis");
         updateQuizCategories(quiz, quizResponseDTO.getCategories());
 
-        System.out.println("updating updateing question");
         updateQuestions(quiz, quizResponseDTO.getQuestions());
 
-        System.out.println("Done");
         System.out.println(quiz.getQuestions());
 
-        Quiz newQuiz = (quizService.saveQuiz(quiz));
-        System.out.println(newQuiz);
+        Quiz newQuiz = quizService.saveQuiz(quiz);
 
         LOGGER.info("Successfully updated quiz");
-        return ResponseEntity.ok(QuizMapper.INSTANCE.toDTO(quiz));
+        return ResponseEntity.ok(QuizMapper.INSTANCE.toDTO(newQuiz));
     }
 
+    /**
+     * Get all games associated with a quiz by its ID.
+     *
+     * @param id
+     *            ID of the quiz to retrieve games for
+     * @return ResponseEntity containing the set of games
+     */
     @Operation(summary = "Get games by quiz ID", description = "Get all games associated with a quiz by its ID")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully retrieved games"),
+            @ApiResponse(responseCode = "404", description = "Quiz not found") })
     @GetMapping("/games/{id}")
     public ResponseEntity<Set<GameDTO>> getGames(
             @Parameter(description = "ID of the quiz to retrieve games for", required = true) @PathVariable Long id) {
@@ -160,7 +209,16 @@ public class QuizController {
         return ResponseEntity.ok(gameDTOs);
     }
 
+    /**
+     * Delete a quiz by its ID.
+     *
+     * @param id
+     *            ID of the quiz to be deleted
+     * @return ResponseEntity indicating the result of the deletion
+     */
     @Operation(summary = "Delete quiz", description = "Delete a quiz by its ID")
+    @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Successfully deleted quiz"),
+            @ApiResponse(responseCode = "404", description = "Quiz not found") })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteQuiz(
             @Parameter(description = "ID of the quiz to be deleted", required = true) @PathVariable Long id) {
