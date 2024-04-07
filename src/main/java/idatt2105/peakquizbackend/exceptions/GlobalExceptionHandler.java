@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
-    @ExceptionHandler(value = { IllegalArgumentException.class, NullPointerException.class,
+    @ExceptionHandler(value = { IllegalArgumentException.class, NullPointerException.class, BadInputException.class,
             MissingServletRequestParameterException.class, HttpRequestMethodNotSupportedException.class })
     public ResponseEntity<String> handleBadInputException(Exception ex) {
         logError(ex);
