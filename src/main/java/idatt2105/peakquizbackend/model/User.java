@@ -14,6 +14,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import org.hibernate.annotations.NaturalId;
 
 @Entity
 @Table(name = "USERS")
@@ -45,7 +46,8 @@ public class User {
           message = "Username is required, maximum 20 characters."
   )
   @NotNull
-  @Column(nullable = false, unique = true)
+  @Column(nullable = false)
+  @NaturalId
   protected String username;
 
   @Email(message = "Email should be valid")
