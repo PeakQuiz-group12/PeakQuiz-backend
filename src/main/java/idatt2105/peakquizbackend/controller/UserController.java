@@ -2,10 +2,12 @@ package idatt2105.peakquizbackend.controller;
 
 import idatt2105.peakquizbackend.dto.GameDTO;
 import idatt2105.peakquizbackend.dto.TagDTO;
+import idatt2105.peakquizbackend.dto.UserDTO;
 import idatt2105.peakquizbackend.exceptions.BadInputException;
 import idatt2105.peakquizbackend.exceptions.TagAlreadyExistsException;
 import idatt2105.peakquizbackend.mapper.GameMapper;
 import idatt2105.peakquizbackend.mapper.TagMapper;
+import idatt2105.peakquizbackend.mapper.UserMapper;
 import idatt2105.peakquizbackend.model.Game;
 import idatt2105.peakquizbackend.model.Tag;
 import idatt2105.peakquizbackend.model.User;
@@ -43,9 +45,16 @@ public class UserController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping
-    public ResponseEntity<List<User>> getUsers() {
+    public ResponseEntity<List<UserDTO>> getUsers() {
         List<User> users = userService.findAllUsers();
-        return ResponseEntity.ok(users);
+        List<UserDTO> userDTOS = users.stream().map(UserMapper.INSTANCE::toDTO).toList();
+        return ResponseEntity.ok(userDTOS);
+    }
+
+    @GetMapping("/games")
+    public ResponseEntity<Set<GameDTO>> getAllGames() {
+        Set<GameDTO> games = gameMapper.toDTOs(new HashSet<>(gameService.findAllGames()));
+        return ResponseEntity.ok(games);
     }
 
     @GetMapping("/{username}/games")
@@ -63,6 +72,9 @@ public class UserController {
     @PostMapping("/{username}/games")
     public ResponseEntity<GameDTO> createGame(@PathVariable String username, @RequestBody @NonNull GameDTO gameDTO) {
         LOGGER.info("Received post request for game: {}", gameDTO);
+
+        if (!username.equals(gameDTO.getUsername()))
+            throw new BadInputException("Username mismatch");
 
         Game game = gameMapper.fromGameDTOtoEntity(gameDTO);
         game.getId().setUserId(game.getUser().getId());
