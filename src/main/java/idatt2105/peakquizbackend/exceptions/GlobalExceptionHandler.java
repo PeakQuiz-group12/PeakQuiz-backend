@@ -1,11 +1,16 @@
 package idatt2105.peakquizbackend.exceptions;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import java.util.ArrayList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -49,11 +54,23 @@ public class GlobalExceptionHandler {
         .body(ex.getClass().getSimpleName());
   }
 
-  /*@ExceptionHandler(value = {Exception.class})
+  @ExceptionHandler(ConstraintViolationException.class)
+  @ResponseBody
+  public ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException ex) {
+    List<String> errors = new ArrayList<>();
+    for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
+      errors.add(violation.getMessage());
+    }
+
+    String errorMessage = String.join(", ", errors);
+    return ResponseEntity.badRequest().body(errorMessage);
+  }
+
+  @ExceptionHandler(value = {Exception.class})
   public ResponseEntity<String> handleRemainderExceptions(Exception ex) {
     logError(ex);
     return ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body(ex.getClass().getSimpleName());
-  }*/
+  }
 }
