@@ -10,7 +10,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Parent;
 
 import java.time.ZonedDateTime;
-import java.util.Objects;
 
 /**
  * An embedded class representing a comment associated with a collaboration.

@@ -39,10 +39,10 @@ public class CollaborationServiceTest {
     @MockBean
     private CollaborationRepository collaborationRepository;
 
-    User user = new User();
+    final User user = new User();
 
-    User otherUser = new User();
-    Quiz quiz = new Quiz();
+    final User otherUser = new User();
+    final Quiz quiz = new Quiz();
 
     Collaboration existingCollaboration;
 

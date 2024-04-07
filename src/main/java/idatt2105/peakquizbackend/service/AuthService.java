@@ -1,7 +1,6 @@
 package idatt2105.peakquizbackend.service;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import java.time.Duration;
 import java.time.Instant;
@@ -72,7 +71,6 @@ public class AuthService {
     public String generateToken(final String userId, final Duration validMinutes, String secret) {
         final Instant now = Instant.now();
         final Algorithm hmac512 = Algorithm.HMAC512(secret);
-        final JWTVerifier verifier = JWT.require(hmac512).build();
         return JWT.create().withSubject(userId).withIssuer("idatt2105_token_issuer_app").withIssuedAt(now)
                 .withExpiresAt(now.plusMillis(validMinutes.toMillis())).sign(hmac512);
     }
