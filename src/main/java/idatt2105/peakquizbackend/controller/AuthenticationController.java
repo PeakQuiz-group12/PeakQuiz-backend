@@ -42,10 +42,13 @@ public class AuthenticationController {
     @CrossOrigin
     public ResponseEntity<?> registerUser(@RequestParam String username, @RequestParam String password,
             @RequestParam String mail) {
-        System.out.println(username + password);
 
         if (userService.usernameExists(username)) {
             throw new UserAlreadyExistsException();
+        }
+
+        if (!isEmailValid(mail)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid email format");
         }
         /*
          * if (_user.isPresent()) { return
@@ -69,6 +72,11 @@ public class AuthenticationController {
         tokens.put("refreshToken", refreshToken);
 
         return ResponseEntity.ok(tokens);
+    }
+
+    private boolean isEmailValid(String email) {
+        String emailPattern = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        return Pattern.compile(emailPattern).matcher(email).matches();
     }
 
     private boolean isPasswordStrong(String password) {
