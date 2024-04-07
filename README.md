@@ -30,5 +30,11 @@ The application now runs on port 8080.
 - ```make format``` Format source code
 - ```make install``` Install the project
 - ```make help``` Get list of commands
+
+## Test data ##
+The database is populated with a test user. 
+- username is "test"
+- password is "Aa12345!"
+
 ## Documentation
 The API is documented with [swagger](https://swagger.io/tools/swagger-ui/). You can find more information about this and other documentation in the [wiki](https://github.com/PeakQuiz-group12/PeakQuiz-backend/wiki).
