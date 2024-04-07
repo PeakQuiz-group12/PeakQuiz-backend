@@ -44,13 +44,8 @@ public class AuthenticationController {
             throw new UserAlreadyExistsException();
         }
 
-        if (!isEmailValid(mail)) {
+        if (!authService.isEmailValid(mail)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid email format");
-        }
-
-        if (!isPasswordStrong(password)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    "Password must be at least 8 characters long, include numbers, upper and lower case letters, and at least one special character");
         }
 
         if (!authService.isPasswordStrong(password)) {
@@ -70,17 +65,6 @@ public class AuthenticationController {
         tokens.put("refreshToken", refreshToken);
 
         return ResponseEntity.ok(tokens);
-    }
-
-    private boolean isEmailValid(String email) {
-        String emailPattern = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        return Pattern.compile(emailPattern).matcher(email).matches();
-    }
-
-    private boolean isPasswordStrong(String password) {
-        // Example criteria: at least 8 characters, including numbers, letters and at least one special character
-        String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
-        return Pattern.compile(passwordPattern).matcher(password).matches();
     }
 
     @PostMapping("/login")
