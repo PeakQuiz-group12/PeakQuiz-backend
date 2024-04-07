@@ -11,11 +11,17 @@ import idatt2105.peakquizbackend.mapper.QuizMapper;
 import idatt2105.peakquizbackend.mapper.QuizMapperImpl;
 import idatt2105.peakquizbackend.mapper.UserMapper;
 import idatt2105.peakquizbackend.mapper.UserMapperImpl;
+import idatt2105.peakquizbackend.model.Collaboration;
+import idatt2105.peakquizbackend.model.Quiz;
 import idatt2105.peakquizbackend.model.User;
+import idatt2105.peakquizbackend.model.enums.CollaboratorType;
 import idatt2105.peakquizbackend.security.JWTAuthorizationFilter;
 import idatt2105.peakquizbackend.security.SecurityConfig;
 import idatt2105.peakquizbackend.service.AuthService;
+import idatt2105.peakquizbackend.service.CollaborationService;
+import idatt2105.peakquizbackend.service.QuizService;
 import idatt2105.peakquizbackend.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +30,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,9 +39,10 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest({ PrivateUserControllerTest.class, SecurityConfig.class, JWTAuthorizationFilter.class })
+@WebMvcTest({ PrivateUserControllerTest.class, SecurityConfig.class })
 public class PrivateUserControllerTest {
 
     @Autowired
@@ -47,10 +55,10 @@ public class PrivateUserControllerTest {
     private AuthService authService;
 
     @MockBean
-    private Authentication authentication;
+    private CollaborationService collaborationService;
 
     @MockBean
-    private SecurityContextHolder securityContextHolder;
+    private QuizService quizService;
 
     @Autowired
     private UserMapper userMapper;
@@ -76,5 +84,4 @@ public class PrivateUserControllerTest {
         mvc.perform(MockMvcRequestBuilders.put("/users/me").content(content).contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)).andExpect(status().isForbidden());
     }
-
 }
