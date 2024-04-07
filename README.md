@@ -29,3 +29,5 @@ The application now runs on port 8080.
 - ```make test```: Run all tests
 - ```make format```: Format source code
 - ```make install```: Install the project
+## Documentation
+The API is documented with [swagger](https://swagger.io/tools/swagger-ui/). You can find more information about this and other documentation in the [wiki](wiki).
