@@ -35,7 +35,8 @@ public abstract class GameMapper {
     /**
      * Converts a GameDTO to a Game entity.
      *
-     * @param gameDTO The GameDTO to convert
+     * @param gameDTO
+     *            The GameDTO to convert
      * @return The corresponding Game entity
      */
     @Mapping(source = "quizId", target = "quiz", qualifiedByName = "mapQuizToQuizId")
@@ -46,7 +47,8 @@ public abstract class GameMapper {
     /**
      * Converts a Game entity to a GameDTO.
      *
-     * @param game The Game entity to convert
+     * @param game
+     *            The Game entity to convert
      * @return The corresponding GameDTO
      */
     @Mapping(source = "quiz", target = "quizId", qualifiedByName = "mapQuiz")
@@ -56,7 +58,8 @@ public abstract class GameMapper {
     /**
      * Converts a Set of Game entities to a Set of GameDTOs.
      *
-     * @param games The Set of Game entities to convert
+     * @param games
+     *            The Set of Game entities to convert
      * @return The corresponding Set of GameDTOs
      */
     public abstract Set<GameDTO> toDTOs(Set<Game> games);
@@ -64,7 +67,8 @@ public abstract class GameMapper {
     /**
      * Maps the GameId to a new GameId object.
      *
-     * @param gameId The GameId to map
+     * @param gameId
+     *            The GameId to map
      * @return The new GameId object
      */
     @Named("mapId")
@@ -75,7 +79,8 @@ public abstract class GameMapper {
     /**
      * Maps the username to a User object.
      *
-     * @param username The username to map
+     * @param username
+     *            The username to map
      * @return The corresponding User object
      */
     @Named("mapUserToUsername")
@@ -86,7 +91,8 @@ public abstract class GameMapper {
     /**
      * Maps the quizId to a Quiz object.
      *
-     * @param id The quizId to map
+     * @param id
+     *            The quizId to map
      * @return The corresponding Quiz object
      */
     @Named("mapQuizToQuizId")
@@ -97,7 +103,8 @@ public abstract class GameMapper {
     /**
      * Maps the Quiz object to its ID.
      *
-     * @param quiz The Quiz object to map
+     * @param quiz
+     *            The Quiz object to map
      * @return The ID of the Quiz object
      */
     @Named("mapQuiz")
@@ -108,7 +115,8 @@ public abstract class GameMapper {
     /**
      * Maps the User object to its username.
      *
-     * @param user The User object to map
+     * @param user
+     *            The User object to map
      * @return The username of the User object
      */
     @Named("mapUser")

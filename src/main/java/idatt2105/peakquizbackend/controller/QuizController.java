@@ -213,27 +213,27 @@ public class QuizController {
         });
     }
 
-/*
-
-    @Operation(summary = "Get collaborators", description = "Get collaborators of a quiz")
-    @GetMapping("/user")
-    public ResponseEntity<?> getCollaborators(
-            @Parameter(description = "Quiz ID") @RequestParam Long quizId,
-            @Parameter(description = "Page number") @RequestParam(defaultValue = "0", required = false) int page,
-            @Parameter(description = "Page size") @RequestParam(defaultValue = "5", required = false) int size,
-            @Parameter(description = "Sorting criteria") @RequestParam(defaultValue = "username:asc", required = false) String[] sort) {
-        LOGGER.info("Received get request for collaborators of quiz: " + quizId);
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by(SortingService.convertToOrder(sort)));
-        Page<UserDTO> collaborators = collaborationService.findCollaboratorsByQuizId(quizId, pageable);
-
-        if (collaborators.isEmpty()) {
-            LOGGER.error("Could not find quiz with id: " + quizId);
-            return ResponseEntity.notFound().build();
-        }
-
-        LOGGER.info("Successfully returned collaborators.");
-        return ResponseEntity.ok(collaborators);
-    }
-*/
+    /*
+     * 
+     * @Operation(summary = "Get collaborators", description = "Get collaborators of a quiz")
+     * 
+     * @GetMapping("/user") public ResponseEntity<?> getCollaborators(
+     * 
+     * @Parameter(description = "Quiz ID") @RequestParam Long quizId,
+     * 
+     * @Parameter(description = "Page number") @RequestParam(defaultValue = "0", required = false) int page,
+     * 
+     * @Parameter(description = "Page size") @RequestParam(defaultValue = "5", required = false) int size,
+     * 
+     * @Parameter(description = "Sorting criteria") @RequestParam(defaultValue = "username:asc", required = false)
+     * String[] sort) { LOGGER.info("Received get request for collaborators of quiz: " + quizId);
+     * 
+     * Pageable pageable = PageRequest.of(page, size, Sort.by(SortingService.convertToOrder(sort))); Page<UserDTO>
+     * collaborators = collaborationService.findCollaboratorsByQuizId(quizId, pageable);
+     * 
+     * if (collaborators.isEmpty()) { LOGGER.error("Could not find quiz with id: " + quizId); return
+     * ResponseEntity.notFound().build(); }
+     * 
+     * LOGGER.info("Successfully returned collaborators."); return ResponseEntity.ok(collaborators); }
+     */
 }
