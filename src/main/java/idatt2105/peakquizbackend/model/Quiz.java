@@ -1,8 +1,5 @@
 package idatt2105.peakquizbackend.model;
 
-import idatt2105.peakquizbackend.model.Category;
-import idatt2105.peakquizbackend.model.Game;
-import idatt2105.peakquizbackend.model.Question;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -28,7 +28,8 @@ public abstract class QuestionMapper {
     /**
      * Converts a QuestionDTO to a Question entity.
      *
-     * @param questionDTO The QuestionDTO to convert
+     * @param questionDTO
+     *            The QuestionDTO to convert
      * @return The corresponding Question entity
      */
     @Mapping(target = "quiz", source = "quizId", qualifiedByName = "mapQuiz")
@@ -37,7 +38,8 @@ public abstract class QuestionMapper {
     /**
      * Maps the quizId to a Quiz entity.
      *
-     * @param quizId The quizId to map
+     * @param quizId
+     *            The quizId to map
      * @return The corresponding Quiz entity
      */
     @Named("mapQuiz")
@@ -48,7 +50,8 @@ public abstract class QuestionMapper {
     /**
      * Converts a QuestionDTO to a Question entity for updating.
      *
-     * @param questionDTO The QuestionDTO to convert
+     * @param questionDTO
+     *            The QuestionDTO to convert
      */
     @Mapping(target = "quiz", ignore = true)
     public abstract Question fromQuestionResponseDTOtoEntity(QuestionDTO questionDTO);
@@ -60,7 +63,8 @@ public abstract class QuestionMapper {
     /**
      * Converts a Question entity to a QuestionDTO.
      *
-     * @param question The Question entity to convert
+     * @param question
+     *            The Question entity to convert
      * @return The corresponding QuestionDTO
      */
     @Mapping(target = "quizId", source = "quiz", qualifiedByName = "mapToQuizId")
@@ -69,7 +73,8 @@ public abstract class QuestionMapper {
     /**
      * Maps the Quiz entity to its ID.
      *
-     * @param quiz The Quiz entity to map
+     * @param quiz
+     *            The Quiz entity to map
      * @return The ID of the Quiz entity
      */
     @Named("mapToQuizId")

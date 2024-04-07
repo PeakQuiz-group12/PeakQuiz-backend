@@ -45,9 +45,6 @@ public class EmailService {
     public void sendEmail(String fromUsername, String subject, String messageToSend) throws MessagingException {
         System.out.println("Start sender mail");
 
-        final String username = "peakquizgruppe12@gmail.com";
-        final String password = "sbnx lxxo nfsq clnd ";
-
         Properties prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");
         prop.put("mail.smtp.port", "587");
