@@ -22,6 +22,7 @@ public class Game {
     @NoArgsConstructor
     @ToString
     @Setter
+    @AllArgsConstructor
     public static class GameId implements Serializable {
 
         @Column(name = "USER_ID")
