@@ -10,12 +10,11 @@ import idatt2105.peakquizbackend.mapper.UserMapper;
 import idatt2105.peakquizbackend.model.Collaboration;
 import idatt2105.peakquizbackend.model.Quiz;
 import idatt2105.peakquizbackend.model.User;
-import idatt2105.peakquizbackend.service.AuthService;
-import idatt2105.peakquizbackend.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import idatt2105.peakquizbackend.model.enums.CollaboratorType;
 import idatt2105.peakquizbackend.service.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,14 +38,33 @@ public class PrivateUserController {
 
     private final Logger LOGGER = LoggerFactory.getLogger(PrivateUserController.class);
 
-    @Operation(summary = "Get current user", description = "Retrieve information about the currently authenticated user")
+    /**
+     * Retrieves information about the currently authenticated user.
+     *
+     * @param authentication
+     *            Authentication object representing the current user
+     * @return ResponseEntity containing user information
+     */
+    @Operation(summary = "Get current user", description = "Retrieve information about the currently authenticated user", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved current user") })
     @GetMapping
     public ResponseEntity<UserDTO> getMe(
             @Parameter(description = "Authentication object representing the current user") Authentication authentication) {
         return ResponseEntity.ok(UserMapper.INSTANCE.toDTO(userService.findUserByUsername(authentication.getName())));
     }
 
-    @Operation(summary = "Update current user", description = "Update the password of the currently authenticated user")
+    /**
+     * Updates the password of the currently authenticated user.
+     *
+     * @param authentication
+     *            Authentication object representing the current user
+     * @param password
+     *            UserUpdateDTO containing the new password
+     * @return ResponseEntity indicating the result of the password update
+     */
+    @Operation(summary = "Update current user", description = "Update the password of the currently authenticated user", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated password"),
+            @ApiResponse(responseCode = "400", description = "Invalid password format") })
     @PutMapping
     public ResponseEntity<String> updateMe(
             @Parameter(description = "Authentication object representing the current user") Authentication authentication,
@@ -69,7 +87,18 @@ public class PrivateUserController {
         }
     }
 
-    @Operation(summary = "Create collaboration", description = "Create a new collaboration between a user and a quiz")
+    /**
+     * Creates a new collaboration between the current user and a quiz.
+     *
+     * @param authentication
+     *            Authentication object representing the current user
+     * @param collaborationDTO
+     *            CollaborationDTO containing information about the collaboration
+     * @return ResponseEntity containing the created collaboration
+     */
+    @Operation(summary = "Create collaboration", description = "Create a new collaboration between a user and a quiz", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully created collaboration"),
+            @ApiResponse(responseCode = "404", description = "Quiz not found") })
     @PostMapping("/collaborations")
     public ResponseEntity<CollaborationDTO> createCollaboration(
             @Parameter(description = "Authentication object representing the current user") Authentication authentication,
@@ -83,7 +112,23 @@ public class PrivateUserController {
         return ResponseEntity.ok(dto);
     }
 
-    @Operation(summary = "Get users quizzes", description = "Get quizzes of a user with specified collaborator type")
+    /**
+     * Retrieves quizzes of the current user with a specified collaborator type.
+     *
+     * @param authentication
+     *            Authentication object representing the current user
+     * @param collaboratorType
+     *            Collaborator type
+     * @param page
+     *            Page number
+     * @param size
+     *            Page size
+     * @param sort
+     *            Sorting criteria
+     * @return ResponseEntity containing the page of quizzes
+     */
+    @Operation(summary = "Get users quizzes", description = "Get quizzes of a user with specified collaborator type", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved user's quizzes") })
     @GetMapping("/quizzes")
     public ResponseEntity<?> getUserQuizzes(
             @Parameter(description = "Authentication object representing the current user") Authentication authentication,

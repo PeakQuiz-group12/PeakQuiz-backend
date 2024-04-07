@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.mail.MessagingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +43,7 @@ public class GlobalExceptionHandler {
      *            The exception indicating that an object already exists.
      * @return ResponseEntity with an appropriate HTTP status code and error message.
      */
-    @ExceptionHandler(value = { QuizAlreadyExistsException.class, UserAlreadyExistsException.class,
-            TagAlreadyExistsException.class })
+    @ExceptionHandler(value = { QuizAlreadyExistsException.class, UserAlreadyExistsException.class })
     public ResponseEntity<String> handleObjectAlreadyExistException(Exception ex) {
         logError(ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
@@ -72,7 +72,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = { IllegalArgumentException.class, NullPointerException.class, BadInputException.class,
             MissingServletRequestParameterException.class, HttpRequestMethodNotSupportedException.class,
-            DataIntegrityViolationException.class })
+            DataIntegrityViolationException.class, MessagingException.class })
     public ResponseEntity<String> handleBadInputException(Exception ex) {
         logError(ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());

@@ -30,7 +30,7 @@ public abstract class GameMapper {
     /**
      * INSTANCE variable for accessing the mapper instance.
      */
-    public static GameMapper INSTANCE = Mappers.getMapper(GameMapper.class);
+    public static final GameMapper INSTANCE = Mappers.getMapper(GameMapper.class);
 
     /**
      * Converts a GameDTO to a Game entity.

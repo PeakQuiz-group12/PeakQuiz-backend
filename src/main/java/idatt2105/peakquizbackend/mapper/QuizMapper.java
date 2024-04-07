@@ -40,7 +40,7 @@ public abstract class QuizMapper {
     /**
      * INSTANCE variable for accessing the mapper instance.
      */
-    public static QuizMapper INSTANCE = Mappers.getMapper(QuizMapper.class);
+    public static final QuizMapper INSTANCE = Mappers.getMapper(QuizMapper.class);
 
     /**
      * Converts a QuizCreateDTO to a Quiz entity.

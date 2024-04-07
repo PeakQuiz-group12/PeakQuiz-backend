@@ -31,6 +31,12 @@ public class AppStartup implements CommandLineRunner {
 
     private UserService userService;
 
+    /**
+     * Runs on application startup.
+     *
+     * @param args
+     *            Command line arguments
+     */
     @Override
     public void run(String... args) {
         prepareUser();
@@ -55,8 +61,8 @@ public class AppStartup implements CommandLineRunner {
     }
 
     /**
-     * Add test user - note that this users password is not hashed, nor salted for
-     * testing purposes, but all other users will
+     * Add test user - note that this users password is not hashed, nor salted for testing purposes, but all other users
+     * will
      *
      */
     private void prepareUser() {
@@ -68,7 +74,7 @@ public class AppStartup implements CommandLineRunner {
     }
 
     /**
-     * Add test quiz and questions to database
+     * Prepares quiz templates if they do not exist already.
      */
     private void prepareTemplates() {
         final int nrTemplates = 1;
@@ -92,7 +98,8 @@ public class AppStartup implements CommandLineRunner {
 
         Question question1 = new Question();
         question1.setText("When did WWII end?");
-        question1.setMedia("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Matilda_tanks_on_the_move_outside_the_perimeter_of_Tobruk%2C_Libya%2C_18_November_1941._E6600.jpg/173px-Matilda_tanks_on_the_move_outside_the_perimeter_of_Tobruk%2C_Libya%2C_18_November_1941._E6600.jpg");
+        question1.setMedia(
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Matilda_tanks_on_the_move_outside_the_perimeter_of_Tobruk%2C_Libya%2C_18_November_1941._E6600.jpg/173px-Matilda_tanks_on_the_move_outside_the_perimeter_of_Tobruk%2C_Libya%2C_18_November_1941._E6600.jpg");
         question1.setQuestionType(QuestionType.FILL_IN_BLANK);
         question1.setDifficulty((byte) 5);
         question1.setAnswers(Set.of(new Answer("1945", true)));

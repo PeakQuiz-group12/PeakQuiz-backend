@@ -7,8 +7,6 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 /**
  * Service class for managing user-related operations.
  */
