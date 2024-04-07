@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -37,10 +38,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = { IllegalArgumentException.class, NullPointerException.class, BadInputException.class,
-            MissingServletRequestParameterException.class, HttpRequestMethodNotSupportedException.class })
+            MissingServletRequestParameterException.class, HttpRequestMethodNotSupportedException.class,
+            DataIntegrityViolationException.class })
     public ResponseEntity<String> handleBadInputException(Exception ex) {
         logError(ex);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getClass().getSimpleName());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
