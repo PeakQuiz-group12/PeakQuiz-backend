@@ -34,7 +34,7 @@ public class EmailService {
 
     /**
      * Sends an email.
-     * 
+     *
      * @param fromUsername
      *            The username of the sender
      * @param subject
@@ -44,6 +44,9 @@ public class EmailService {
      */
     public void sendEmail(String fromUsername, String subject, String messageToSend) throws MessagingException {
         System.out.println("Start sender mail");
+
+        final String username = "peakquizgruppe12@gmail.com";
+        final String password = "sbnx lxxo nfsq clnd ";
 
         Properties prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");
@@ -65,10 +68,11 @@ public class EmailService {
         message.setText("Sent from user with email: " + fromUser.getEmail() + "\nMessage: " + messageToSend);
 
         Transport.send(message);
-        System.out.println("Slutt sender mail");
     }
 
     private Session createEmailSession() {
+        final String username = "peakquizgruppe12@gmail.com";
+        final String password = "sbnx lxxo nfsq clnd ";
 
         Properties prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");
@@ -85,7 +89,7 @@ public class EmailService {
 
     /**
      * Generates a temporary password.
-     * 
+     *
      * @return The generated temporary password
      */
     private String generateTemporaryPassword() {
@@ -100,7 +104,7 @@ public class EmailService {
 
     /**
      * Sends a temporary password to the user's email address to reset their password.
-     * 
+     *
      * @param email
      *            The email address of the user requesting the password reset
      */

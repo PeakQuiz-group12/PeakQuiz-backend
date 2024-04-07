@@ -18,8 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Global exception handler to handle different types of exceptions across the application. It provides centralized
- * exception handling for various types of exceptions that may occur during the execution of the application.
+ * Global exception handler to handle different types of exceptions across the application.
+ * It provides centralized exception handling for various types of exceptions that may occur
+ * during the execution of the application.
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -29,8 +30,7 @@ public class GlobalExceptionHandler {
     /**
      * Log the error to the logger.
      *
-     * @param ex
-     *            The exception to be logged.
+     * @param ex The exception to be logged.
      */
     private void logError(Exception ex) {
         LOGGER.error("{}: {}", ex.getClass().getSimpleName(), ex.getMessage());
@@ -39,11 +39,10 @@ public class GlobalExceptionHandler {
     /**
      * Handle exceptions related to existing objects.
      *
-     * @param ex
-     *            The exception indicating that an object already exists.
+     * @param ex The exception indicating that an object already exists.
      * @return ResponseEntity with an appropriate HTTP status code and error message.
      */
-    @ExceptionHandler(value = { QuizAlreadyExistsException.class, UserAlreadyExistsException.class })
+    @ExceptionHandler(value = {QuizAlreadyExistsException.class, UserAlreadyExistsException.class})
     public ResponseEntity<String> handleObjectAlreadyExistException(Exception ex) {
         logError(ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
@@ -52,12 +51,11 @@ public class GlobalExceptionHandler {
     /**
      * Handle exceptions related to non-existing objects.
      *
-     * @param ex
-     *            The exception indicating that an object does not exist.
+     * @param ex The exception indicating that an object does not exist.
      * @return ResponseEntity with an appropriate HTTP status code and error message.
      */
-    @ExceptionHandler(value = { QuizNotFoundException.class, UserNotFoundException.class,
-            TagAlreadyExistsException.class })
+    @ExceptionHandler(value = { QuizNotFoundException.class, UserNotFoundException.class, TagNotFoundException.class,
+            CategoryNotFoundException.class, QuizNotFoundException.class, })
     public ResponseEntity<String> handleObjectDoesNotExistException(Exception ex) {
         logError(ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
@@ -66,8 +64,7 @@ public class GlobalExceptionHandler {
     /**
      * Handle exceptions related to bad input or invalid requests.
      *
-     * @param ex
-     *            The exception indicating bad input or invalid request.
+     * @param ex The exception indicating bad input or invalid request.
      * @return ResponseEntity with an appropriate HTTP status code and error message.
      */
     @ExceptionHandler(value = { IllegalArgumentException.class, NullPointerException.class, BadInputException.class,
@@ -81,8 +78,7 @@ public class GlobalExceptionHandler {
     /**
      * Handle exceptions related to constraint violations in validation.
      *
-     * @param ex
-     *            The exception indicating constraint violations during validation.
+     * @param ex The exception indicating constraint violations during validation.
      * @return ResponseEntity with an appropriate HTTP status code and error message.
      */
     @ExceptionHandler(ConstraintViolationException.class)
@@ -100,8 +96,7 @@ public class GlobalExceptionHandler {
     /**
      * Handle any remaining exceptions that are not explicitly handled.
      *
-     * @param ex
-     *            The exception that is not explicitly handled.
+     * @param ex The exception that is not explicitly handled.
      * @return ResponseEntity with an appropriate HTTP status code and error message.
      */
     @ExceptionHandler(value = { Exception.class })
