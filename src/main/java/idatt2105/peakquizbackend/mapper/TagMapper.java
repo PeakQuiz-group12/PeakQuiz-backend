@@ -1,6 +1,5 @@
 package idatt2105.peakquizbackend.mapper;
 
-import com.sun.mail.util.QEncoderStream;
 import idatt2105.peakquizbackend.dto.QuestionDTO;
 import idatt2105.peakquizbackend.dto.TagDTO;
 import idatt2105.peakquizbackend.model.Question;
