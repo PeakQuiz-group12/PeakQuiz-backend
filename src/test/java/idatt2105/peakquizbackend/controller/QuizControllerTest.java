@@ -79,22 +79,22 @@ public class QuizControllerTest {
     private CategoryService categoryService;
 
     @MockBean
-    QuestionService questionService;
+    private QuestionService questionService;
 
     @MockBean
-    UserService userService;
+    private UserService userService;
 
     @MockBean
     private GameService gameService;
 
     @Autowired
-    QuestionMapper questionMapper;
+    private QuestionMapper questionMapper;
 
     @Autowired
-    QuizMapper quizMapper;
+    private QuizMapper quizMapper;
 
     @Autowired
-    GameMapper gameMapper;
+    private GameMapper gameMapper;
 
     @Test
     @WithMockUser

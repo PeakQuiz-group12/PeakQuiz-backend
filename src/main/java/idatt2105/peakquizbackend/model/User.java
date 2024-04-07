@@ -26,9 +26,12 @@ public class User {
     /**
      * Constructs a new User object with the provided username, email, and password.
      *
-     * @param username The username of the user.
-     * @param email The email of the user.
-     * @param password The password of the user.
+     * @param username
+     *            The username of the user.
+     * @param email
+     *            The email of the user.
+     * @param password
+     *            The password of the user.
      */
     public User(String username, String email, String password) {
         this.username = username;

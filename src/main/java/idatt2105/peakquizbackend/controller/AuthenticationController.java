@@ -44,8 +44,7 @@ public class AuthenticationController {
     @Operation(summary = "Register user", description = "Register a new user with a username, password, and email")
     @PostMapping("/register")
     @CrossOrigin
-    public ResponseEntity<?> registerUser(
-            @Parameter(description = "Username") @RequestParam String username,
+    public ResponseEntity<?> registerUser(@Parameter(description = "Username") @RequestParam String username,
             @Parameter(description = "Password") @RequestParam String password,
             @Parameter(description = "Email") @RequestParam String mail) {
 
@@ -79,8 +78,7 @@ public class AuthenticationController {
     @Operation(summary = "Login user", description = "Login an existing user with username and password")
     @PostMapping("/login")
     @CrossOrigin
-    public ResponseEntity<?> loginUser(
-            @Parameter(description = "Username") @RequestParam String username,
+    public ResponseEntity<?> loginUser(@Parameter(description = "Username") @RequestParam String username,
             @Parameter(description = "Password") @RequestParam String password) {
 
         User user = userService.findUserByUsername(username);

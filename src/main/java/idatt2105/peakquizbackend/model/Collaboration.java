@@ -16,15 +16,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Represents a collaboration between users on the creation of a quiz object.
- * Multiple users can collaborate on the same quiz.
+ * Represents a collaboration between users on the creation of a quiz object. Multiple users can collaborate on the same
+ * quiz.
  */
 @Entity
 @Table(name = "COLLABORATION")
 @Data
 @NoArgsConstructor
 public class Collaboration {
-
 
     public Collaboration(User user, Quiz quiz, CollaboratorType collaboratorType) {
         this.collaboratorType = collaboratorType;

@@ -65,7 +65,9 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     /**
      * Validate the JWT token and retrieve the user ID from it.
-     * @param token The JWT token to validate
+     * 
+     * @param token
+     *            The JWT token to validate
      * @return The user ID extracted from the token if the token is valid, null otherwise
      */
     public String validateTokenAndGetUserId(final String token) {

@@ -7,7 +7,9 @@ public class BadInputException extends RuntimeException {
 
     /**
      * Constructs a new BadInputException with the specified detail message.
-     * @param message the detail message
+     * 
+     * @param message
+     *            the detail message
      */
     public BadInputException(String message) {
         super(message);
