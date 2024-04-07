@@ -24,4 +24,4 @@ help:
 	@echo   test    : Test the application
 	@echo   format  : Format the source code of the application
 	@echo   install : Install the application
-	@echo Usage: make target
+	@echo Usage: make "target"

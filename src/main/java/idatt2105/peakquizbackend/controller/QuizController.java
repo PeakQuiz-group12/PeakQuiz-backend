@@ -1,9 +1,6 @@
 package idatt2105.peakquizbackend.controller;
 
-import idatt2105.peakquizbackend.dto.GameDTO;
-import idatt2105.peakquizbackend.dto.QuestionDTO;
-import idatt2105.peakquizbackend.dto.QuizCreateDTO;
-import idatt2105.peakquizbackend.dto.QuizResponseDTO;
+import idatt2105.peakquizbackend.dto.*;
 import idatt2105.peakquizbackend.mapper.GameMapper;
 import idatt2105.peakquizbackend.mapper.QuestionMapper;
 import idatt2105.peakquizbackend.mapper.QuizMapper;
@@ -30,10 +27,7 @@ import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -214,7 +208,7 @@ NonNull QuizCreateDTO quizCreateDTO) {
     @GetMapping("/games/{id}")
     public ResponseEntity<Set<GameDTO>> getGames(
             @Parameter(description = "ID of the quiz to retrieve games for", required = true) @PathVariable Long id) {
-        LOGGER.info("Received request for games by quiz with id: " + id);
+        LOGGER.info("Received request for games by quiz with id: {}", id);
         Set<Game> games = quizService.findQuizById(id).getGames();
 
         LOGGER.info("Successfully found games");
@@ -239,8 +233,7 @@ NonNull QuizCreateDTO quizCreateDTO) {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteQuiz(
             @Parameter(description = "ID of the quiz to be deleted", required = true) @PathVariable Long id) {
-        LOGGER.info("Received delete request for quiz_id: " + id);
-
+        LOGGER.info("Received delete request for quiz_id: {}", id);
         quizService.deleteQuizById(id);
 
         return ResponseEntity.noContent().build();
@@ -288,4 +281,28 @@ NonNull QuizCreateDTO quizCreateDTO) {
             quiz.addQuestion(question);
         });
     }
+
+/*
+
+    @Operation(summary = "Get collaborators", description = "Get collaborators of a quiz")
+    @GetMapping("/user")
+    public ResponseEntity<?> getCollaborators(
+            @Parameter(description = "Quiz ID") @RequestParam Long quizId,
+            @Parameter(description = "Page number") @RequestParam(defaultValue = "0", required = false) int page,
+            @Parameter(description = "Page size") @RequestParam(defaultValue = "5", required = false) int size,
+            @Parameter(description = "Sorting criteria") @RequestParam(defaultValue = "username:asc", required = false) String[] sort) {
+        LOGGER.info("Received get request for collaborators of quiz: " + quizId);
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(SortingService.convertToOrder(sort)));
+        Page<UserDTO> collaborators = collaborationService.findCollaboratorsByQuizId(quizId, pageable);
+
+        if (collaborators.isEmpty()) {
+            LOGGER.error("Could not find quiz with id: " + quizId);
+            return ResponseEntity.notFound().build();
+        }
+
+        LOGGER.info("Successfully returned collaborators.");
+        return ResponseEntity.ok(collaborators);
+    }
+*/
 }
