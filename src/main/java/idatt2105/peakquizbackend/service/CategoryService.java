@@ -12,21 +12,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class CategoryService {
 
-  private CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
 
-  public Set<Category> findCategoriesByQuizId(Long quizId) {
-    return categoryRepository.findCategoriesByQuizId(quizId);
-  }
+    public Set<Category> findCategoriesByQuizId(Long quizId) {
+        return categoryRepository.findCategoriesByQuizId(quizId);
+    }
 
-  public Category findCategoryByName(String name) {
-    return categoryRepository.findCategoryByName(name).orElseThrow(CategoryNotFoundException::new);
-  }
+    public Category findCategoryByName(String name) {
+        return categoryRepository.findCategoryByName(name).orElseThrow(CategoryNotFoundException::new);
+    }
 
-  public boolean categoryExists(String name) {
-    return categoryRepository.findCategoryByName(name).isPresent();
-  }
+    public boolean categoryExists(String name) {
+        return categoryRepository.findCategoryByName(name).isPresent();
+    }
 
-  public Category saveCategory(Category category) {
-    return categoryRepository.save(category);
-  }
+    public Category saveCategory(Category category) {
+        return categoryRepository.save(category);
+    }
 }

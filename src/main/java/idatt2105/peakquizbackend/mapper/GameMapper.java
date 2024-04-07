@@ -18,47 +18,48 @@ import java.util.Set;
 @Mapper(componentModel = "spring")
 public abstract class GameMapper {
 
-  @Autowired
-  private UserService userService;
+    @Autowired
+    private UserService userService;
 
-  @Autowired
-  private QuizService quizService;
+    @Autowired
+    private QuizService quizService;
 
-  public static GameMapper INSTANCE = Mappers.getMapper(GameMapper.class);
+    public static GameMapper INSTANCE = Mappers.getMapper(GameMapper.class);
 
-  @Mapping(source = "quizId", target = "quiz", qualifiedByName = "mapQuizToQuizId")
-  @Mapping(source = "username", target = "user", qualifiedByName = "mapUserToUsername")
-  @Mapping(source = "gameId", target = "id", qualifiedByName = "mapId")
-  public abstract Game fromGameDTOtoEntity(GameDTO gameDTO);
+    @Mapping(source = "quizId", target = "quiz", qualifiedByName = "mapQuizToQuizId")
+    @Mapping(source = "username", target = "user", qualifiedByName = "mapUserToUsername")
+    @Mapping(source = "gameId", target = "id", qualifiedByName = "mapId")
+    public abstract Game fromGameDTOtoEntity(GameDTO gameDTO);
 
-  @Mapping(source = "quiz", target = "quizId", qualifiedByName = "mapQuiz")
-  @Mapping(source = "user", target = "username", qualifiedByName = "mapUser")
-  public abstract GameDTO toDTO(Game game);
+    @Mapping(source = "quiz", target = "quizId", qualifiedByName = "mapQuiz")
+    @Mapping(source = "user", target = "username", qualifiedByName = "mapUser")
+    public abstract GameDTO toDTO(Game game);
 
-  public abstract Set<GameDTO> toDTOs(Set<Game> games);
+    public abstract Set<GameDTO> toDTOs(Set<Game> games);
 
-  @Named("mapId")
-  public GameId mapId(GameId gameId) {
-      return new GameId();
-  }
-  @Named("mapUserToUsername")
-  public User mapUser(String username) {
-    return userService.findUserByUsername(username);
-  }
+    @Named("mapId")
+    public GameId mapId(GameId gameId) {
+        return new GameId();
+    }
 
-  @Named("mapQuizToQuizId")
-  public Quiz mapQuiz(Long id) {
-    return quizService.findQuizById(id);
-  }
+    @Named("mapUserToUsername")
+    public User mapUser(String username) {
+        return userService.findUserByUsername(username);
+    }
 
-  @Named("mapQuiz")
-  public Long mapQuiz(Quiz quiz) {
-    return quiz.getId();
-  }
+    @Named("mapQuizToQuizId")
+    public Quiz mapQuiz(Long id) {
+        return quizService.findQuizById(id);
+    }
 
-  @Named("mapUser")
-  public String mapUser(User user) {
-    return user.getUsername();
-  }
+    @Named("mapQuiz")
+    public Long mapQuiz(Quiz quiz) {
+        return quiz.getId();
+    }
+
+    @Named("mapUser")
+    public String mapUser(User user) {
+        return user.getUsername();
+    }
 
 }

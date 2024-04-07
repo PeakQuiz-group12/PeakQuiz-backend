@@ -1,7 +1,6 @@
 
 package idatt2105.peakquizbackend.controller;
 
-
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -47,286 +46,234 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @RunWith(SpringRunner.class)
-@WebMvcTest({ QuizController.class, SecurityConfig.class})
+@WebMvcTest({ QuizController.class, SecurityConfig.class })
 public class QuizControllerTest {
 
-  @TestConfiguration
-  static class MapperTestConfiguration {
-    @Bean
-    public QuestionMapper questionMapper() {
-      return new QuestionMapperImpl();
+    @TestConfiguration
+    static class MapperTestConfiguration {
+        @Bean
+        public QuestionMapper questionMapper() {
+            return new QuestionMapperImpl();
+        }
+
+        @Bean
+        public QuizMapper quizMapper() {
+            return new QuizMapperImpl();
+        }
+
+        @Bean
+        public GameMapper gameMapper() {
+            return new GameMapperImpl();
+        }
     }
-    @Bean
-    public QuizMapper quizMapper() {
-      return new QuizMapperImpl();
+
+    @Autowired
+    private MockMvc mvc;
+
+    @MockBean
+    private QuizService quizService;
+
+    @MockBean
+    private CategoryService categoryService;
+
+    @MockBean
+    QuestionService questionService;
+
+    @MockBean
+    UserService userService;
+
+    @MockBean
+    private GameService gameService;
+
+    @Autowired
+    QuestionMapper questionMapper;
+
+    @Autowired
+    QuizMapper quizMapper;
+
+    @Autowired
+    GameMapper gameMapper;
+
+    @Test
+    @WithMockUser
+    public void testCreateQuiz() throws Exception {
+        String categoryName1 = "History";
+        String categoryName2 = "Math";
+        when(categoryService.findCategoryByName(categoryName1)).thenReturn(new Category(categoryName1));
+        when(categoryService.findCategoryByName(categoryName2)).thenReturn(new Category(categoryName2));
+        Quiz quiz = new Quiz();
+        when(quizService.saveQuiz(quiz)).thenReturn(quiz);
+        String content = "{" + "  \"title\": \"username\"," + "  \"description\": \"description\","
+                + "  \"playCount\": 0," + "  \"questions\": []," + "  \"categories\": [\"History\", \"Math\"]" + "}";
+        mvc.perform(MockMvcRequestBuilders.post("/quizzes").contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON).content(content)).andExpect(status().isOk());
     }
-    @Bean
-    public GameMapper gameMapper() {
-      return new GameMapperImpl();
+
+    @Test
+    @WithMockUser
+    public void testCreateQuizWithNullCategories() throws Exception {
+        Quiz quiz = new Quiz();
+        when(quizService.saveQuiz(quiz)).thenReturn(quiz);
+        String content = "{" + "  \"title\": \"username\"," + "  \"description\": \"description\","
+                + "  \"playCount\": 0," + "  \"questions\": []" + "}";
+        mvc.perform(MockMvcRequestBuilders.post("/quizzes").contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON).content(content)).andExpect(status().isBadRequest());
     }
-  }
-  @Autowired
-  private MockMvc mvc;
 
-  @MockBean
-  private QuizService quizService;
+    @Test
+    @WithMockUser
+    public void testGetQuizzes() throws Exception {
+        Quiz quiz = new Quiz();
+        quiz.setId(1L);
 
-  @MockBean
-  private CategoryService categoryService;
+        List<Quiz> quizzes = new ArrayList<>();
+        quizzes.add(quiz);
 
-  @MockBean
-  QuestionService questionService;
+        Mockito.when(quizService.findAllQuizzes(PageRequest.of(0, 6, Sort.by("id").ascending())))
+                .thenReturn(new PageImpl<>(quizzes, PageRequest.of(0, 3), 1));
 
-  @MockBean
-  UserService userService;
+        mvc.perform(get("/quizzes").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)));
+    }
 
-  @MockBean
-  private GameService gameService;
+    @Test
+    @WithMockUser
+    public void testGetQuiz() throws Exception {
+        Quiz quiz = new Quiz();
+        quiz.setId(1L);
+        quiz.setTitle("Sample Quiz");
 
-  @Autowired
-  QuestionMapper questionMapper;
+        when(quizService.findQuizById(1L)).thenReturn(quiz);
 
-  @Autowired
-  QuizMapper quizMapper;
+        mvc.perform(get("/quizzes/{id}", 1L).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON)).andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.title").value("Sample Quiz"));
+    }
 
-  @Autowired
-  GameMapper gameMapper;
+    @Test
+    @WithMockUser
+    public void testGetNonExistentQuiz() throws Exception {
+        when(quizService.findQuizById(1L)).thenThrow(QuizNotFoundException.class);
+        mvc.perform(get("/quizzes/{id}", 1L).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+    }
 
-  @Test
-  @WithMockUser
-  public void testCreateQuiz() throws Exception {
-    String categoryName1 = "History";
-    String categoryName2 = "Math";
-    when(categoryService.findCategoryByName(categoryName1)).thenReturn(new Category(categoryName1));
-    when(categoryService.findCategoryByName(categoryName2)).thenReturn(new Category(categoryName2));
-    Quiz quiz = new Quiz();
-    when(quizService.saveQuiz(quiz)).thenReturn(quiz);
-    String content =
-        "{" +
-        "  \"title\": \"username\"," +
-        "  \"description\": \"description\"," +
-        "  \"playCount\": 0," +
-        "  \"questions\": []," +
-        "  \"categories\": [\"History\", \"Math\"]" +
-        "}";
-    mvc.perform(
-            MockMvcRequestBuilders
-                .post("/quizzes")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(content)
-        )
-        .andExpect(status().isOk());
-  }
+    @Test
+    @WithMockUser
+    public void testDeleteQuiz() throws Exception {
+        mvc.perform(delete("/quizzes/{id}", 1L)).andExpect(status().isNoContent());
+    }
 
-  @Test
-  @WithMockUser
-  public void testCreateQuizWithNullCategories() throws Exception {
-    Quiz quiz = new Quiz();
-    when(quizService.saveQuiz(quiz)).thenReturn(quiz);
-    String content =
-        "{" +
-            "  \"title\": \"username\"," +
-            "  \"description\": \"description\"," +
-            "  \"playCount\": 0," +
-            "  \"questions\": []" +
-            "}";
-    mvc.perform(
-            MockMvcRequestBuilders
-                .post("/quizzes")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(content)
-        )
-        .andExpect(status().isBadRequest());
-  }
+    @Test
+    @WithMockUser
+    public void testPutQuiz() throws Exception {
+        Quiz quiz = new Quiz();
+        quiz.setId(1L);
+        quiz.setTitle("Sample Quiz");
 
-  @Test
-  @WithMockUser
-  public void testGetQuizzes() throws Exception {
-    Quiz quiz = new Quiz();
-    quiz.setId(1L);
+        when(quizService.saveQuiz(quiz)).thenReturn(quiz);
+        when(quizService.findQuizById(1L)).thenReturn(quiz);
 
-    List<Quiz> quizzes = new ArrayList<>();
-    quizzes.add(quiz);
+        mvc.perform(put("/quizzes/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
+                .content("{ \"title\": \"Updated Quiz\" }")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("Updated Quiz"));
+    }
 
-    Mockito.when(quizService.findAllQuizzes(PageRequest.of(0,6, Sort.by("id").ascending()))).thenReturn(new PageImpl<>(quizzes,
-        PageRequest.of(0,3), 1));
+    @Test
+    @WithMockUser
+    public void testPutWithNonExistentQuiz() throws Exception {
+        Quiz quiz = new Quiz();
+        quiz.setId(1L);
+        quiz.setTitle("Sample Quiz");
 
-    mvc.perform(get("/quizzes")
-            .accept(MediaType.APPLICATION_JSON)
-        )
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.content", hasSize(1)));
-  }
+        when(quizService.findQuizById(1L)).thenThrow(QuizNotFoundException.class);
 
-  @Test
-  @WithMockUser
-  public void testGetQuiz() throws Exception {
-    Quiz quiz = new Quiz();
-    quiz.setId(1L);
-    quiz.setTitle("Sample Quiz");
+        mvc.perform(put("/quizzes/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
+                .content("{ \"title\": \"Updated Quiz\" }")).andExpect(status().isNotFound());
+    }
 
-    when(quizService.findQuizById(1L)).thenReturn(quiz);
+    @Test
+    @WithMockUser
+    public void testAddingCategoriesToQuiz() throws Exception {
+        String categoryName1 = "History";
+        String categoryName2 = "Math";
+        when(categoryService.findCategoryByName(categoryName1)).thenReturn(new Category(categoryName1));
+        when(categoryService.findCategoryByName(categoryName2)).thenReturn(new Category(categoryName2));
 
-    mvc.perform(get("/quizzes/{id}", 1L)
-            .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.id").value(1))
-        .andExpect(jsonPath("$.title").value("Sample Quiz"));
-  }
-  @Test
-  @WithMockUser
-  public void testGetNonExistentQuiz() throws Exception {
-    when(quizService.findQuizById(1L)).thenThrow(QuizNotFoundException.class);
-    mvc.perform(get("/quizzes/{id}", 1L)
-            .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isNotFound());
-  }
+        Quiz quiz = new Quiz();
+        quiz.setId(1L);
 
-  @Test
-  @WithMockUser
-  public void testDeleteQuiz() throws Exception {
-    mvc.perform(delete("/quizzes/{id}", 1L))
-        .andExpect(status().isNoContent());
-  }
+        when(quizService.saveQuiz(quiz)).thenReturn(quiz);
+        when(quizService.findQuizById(1L)).thenReturn(quiz);
 
-  @Test
-  @WithMockUser
-  public void testPutQuiz() throws Exception {
-    Quiz quiz = new Quiz();
-    quiz.setId(1L);
-    quiz.setTitle("Sample Quiz");
+        String content = "{\"categories\": [\"History\", \"Math\"]}";
+        mvc.perform(put("/quizzes/{id}", 1L).contentType(MediaType.APPLICATION_JSON).content(content))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.categories", hasSize(2)));
+    }
 
-    when(quizService.saveQuiz(quiz)).thenReturn(quiz);
-    when(quizService.findQuizById(1L)).thenReturn(quiz);
+    @Test
+    @WithMockUser
+    public void testRemovingCategoriesFromQuiz() throws Exception {
+        String categoryName1 = "History";
+        String categoryName2 = "Math";
+        when(categoryService.findCategoryByName(categoryName1)).thenReturn(new Category(categoryName1));
+        when(categoryService.findCategoryByName(categoryName2)).thenReturn(new Category(categoryName2));
 
-    mvc.perform(put("/quizzes/{id}", 1L)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content("{ \"title\": \"Updated Quiz\" }"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.title").value("Updated Quiz"));
-  }
-  @Test
-  @WithMockUser
-  public void testPutWithNonExistentQuiz() throws Exception {
-    Quiz quiz = new Quiz();
-    quiz.setId(1L);
-    quiz.setTitle("Sample Quiz");
+        Quiz quiz = new Quiz();
+        quiz.setId(1L);
+        quiz.getCategories().add(new Category(categoryName1));
+        quiz.getCategories().add(new Category(categoryName2));
 
-    when(quizService.findQuizById(1L)).thenThrow(QuizNotFoundException.class);
+        assertEquals(2, quiz.getCategories().size());
 
-    mvc.perform(put("/quizzes/{id}", 1L)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content("{ \"title\": \"Updated Quiz\" }"))
-        .andExpect(status().isNotFound());
-  }
-  @Test
-  @WithMockUser
-  public void testAddingCategoriesToQuiz() throws Exception {
-    String categoryName1 = "History";
-    String categoryName2 = "Math";
-    when(categoryService.findCategoryByName(categoryName1)).thenReturn(new Category(categoryName1));
-    when(categoryService.findCategoryByName(categoryName2)).thenReturn(new Category(categoryName2));
+        when(quizService.saveQuiz(quiz)).thenReturn(quiz);
+        when(quizService.findQuizById(1L)).thenReturn(quiz);
 
-    Quiz quiz = new Quiz();
-    quiz.setId(1L);
+        String content = "{\"categories\": []}";
+        mvc.perform(put("/quizzes/{id}", 1L).contentType(MediaType.APPLICATION_JSON).content(content))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.categories", hasSize(0)));
+    }
 
-    when(quizService.saveQuiz(quiz)).thenReturn(quiz);
-    when(quizService.findQuizById(1L)).thenReturn(quiz);
+    @Test
+    @WithMockUser
+    public void testAddingQuestionsToQuiz() throws Exception {
 
-    String content = "{\"categories\": [\"History\", \"Math\"]}";
-    mvc.perform(put("/quizzes/{id}", 1L)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(content))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.categories", hasSize(2)));
-  }
+        Quiz quiz = new Quiz();
+        quiz.setId(1L);
 
-  @Test
-  @WithMockUser
-  public void testRemovingCategoriesFromQuiz() throws Exception {
-    String categoryName1 = "History";
-    String categoryName2 = "Math";
-    when(categoryService.findCategoryByName(categoryName1)).thenReturn(new Category(categoryName1));
-    when(categoryService.findCategoryByName(categoryName2)).thenReturn(new Category(categoryName2));
+        assertEquals(0, quiz.getQuestions().size());
 
-    Quiz quiz = new Quiz();
-    quiz.setId(1L);
-    quiz.getCategories().add(new Category(categoryName1));
-    quiz.getCategories().add(new Category(categoryName2));
+        when(quizService.saveQuiz(quiz)).thenReturn(quiz);
+        when(quizService.findQuizById(1L)).thenReturn(quiz);
 
-    assertEquals(2, quiz.getCategories().size());
+        String content = "{" + "\"questions\": [" + "{" + "\"id\": null," + "\"text\": \"dddd\","
+                + "\"media\": \"https://www.zelda.com/breath-of-the-wild/assets/icons/BOTW-Share_icon.jpg\","
+                + "\"questionType\": \"MULTIPLE_CHOICE\"," + "\"difficulty\": 5," + "\"explanation\": \"Yes\","
+                + "\"answers\": [" + "{" + "\"answer\": \"newanswer\"," + "\"isAnswer\": false" + "}" + "],"
+                + "\"quizId\": 1" + "}]" + "}";
+        mvc.perform(put("/quizzes/{id}", 1L).contentType(MediaType.APPLICATION_JSON).content(content))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.questions", hasSize(1)));
+    }
 
-    when(quizService.saveQuiz(quiz)).thenReturn(quiz);
-    when(quizService.findQuizById(1L)).thenReturn(quiz);
+    @Test
+    @WithMockUser
+    public void testRemovingQuestionsFromQuiz() throws Exception {
 
-    String content = "{\"categories\": []}";
-    mvc.perform(put("/quizzes/{id}", 1L)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(content))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.categories", hasSize(0)));
-  }
-  @Test
-  @WithMockUser
-  public void testAddingQuestionsToQuiz() throws Exception {
+        Quiz quiz = new Quiz();
+        quiz.setId(1L);
+        Question question1 = new Question();
+        question1.setText("lol");
+        quiz.addQuestion(question1);
+        quiz.addQuestion(new Question());
 
-    Quiz quiz = new Quiz();
-    quiz.setId(1L);
+        assertEquals(2, quiz.getQuestions().size());
 
-    assertEquals(0, quiz.getQuestions().size());
+        when(quizService.saveQuiz(quiz)).thenReturn(quiz);
+        when(quizService.findQuizById(1L)).thenReturn(quiz);
 
-    when(quizService.saveQuiz(quiz)).thenReturn(quiz);
-    when(quizService.findQuizById(1L)).thenReturn(quiz);
-
-    String content = "{" +
-        "\"questions\": [" +
-        "{" +
-            "\"id\": null," +
-                "\"text\": \"dddd\"," +
-                "\"media\": \"https://www.zelda.com/breath-of-the-wild/assets/icons/BOTW-Share_icon.jpg\"," +
-                "\"questionType\": \"MULTIPLE_CHOICE\"," +
-                "\"difficulty\": 5," +
-                "\"explanation\": \"Yes\"," +
-                "\"answers\": [" +
-                "{" +
-                "\"answer\": \"newanswer\"," +
-                "\"isAnswer\": false" +
-                "}" +
-                "]," +
-                "\"quizId\": 1" +
-                "}]" +
-        "}";
-    mvc.perform(put("/quizzes/{id}", 1L)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(content))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.questions", hasSize(1)));
-  }
-  @Test
-  @WithMockUser
-  public void testRemovingQuestionsFromQuiz() throws Exception {
-
-    Quiz quiz = new Quiz();
-    quiz.setId(1L);
-    Question question1 = new Question();
-    question1.setText("lol");
-    quiz.addQuestion(question1);
-    quiz.addQuestion(new Question());
-
-    assertEquals(2, quiz.getQuestions().size());
-
-    when(quizService.saveQuiz(quiz)).thenReturn(quiz);
-    when(quizService.findQuizById(1L)).thenReturn(quiz);
-
-    String content = "{\"questions\": []}";
-    mvc.perform(put("/quizzes/{id}", 1L)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(content))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.questions", hasSize(0)));
-  }
+        String content = "{\"questions\": []}";
+        mvc.perform(put("/quizzes/{id}", 1L).contentType(MediaType.APPLICATION_JSON).content(content))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.questions", hasSize(0)));
+    }
 }

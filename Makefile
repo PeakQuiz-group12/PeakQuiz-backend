@@ -4,3 +4,12 @@ run:
 build:
 	mvn clean package
 	docker build -t peakquiz-backend .
+
+test:
+	mvn clean test
+
+format:
+	mvn formatter:format
+
+install:
+	mvn clean install

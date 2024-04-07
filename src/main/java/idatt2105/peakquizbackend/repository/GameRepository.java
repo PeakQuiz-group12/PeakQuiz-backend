@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface GameRepository extends JpaRepository<Game, Game.GameId> {
 
-  public List<Game> findByUserId(Long userId);
+    public List<Game> findByUserId(Long userId);
 
-  public List<Game> findByQuizId(Long quizId);
+    public List<Game> findByQuizId(Long quizId);
 
 }

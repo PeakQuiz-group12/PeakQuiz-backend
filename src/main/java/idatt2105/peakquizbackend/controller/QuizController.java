@@ -44,212 +44,177 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @AllArgsConstructor
 @CrossOrigin
 @RequestMapping("/quizzes")
 public class QuizController {
 
-  private final QuizService quizService;
-  private final CategoryService categoryService;
-  private final QuestionService questionService;
+    private final QuizService quizService;
+    private final CategoryService categoryService;
+    private final QuestionService questionService;
 
-  @Autowired
-  private final QuizMapper quizMapper;
+    @Autowired
+    private final QuizMapper quizMapper;
 
-  @Autowired
-  private final QuestionMapper questionMapper;
+    @Autowired
+    private final QuestionMapper questionMapper;
 
-  @Autowired
-  private final GameMapper gameMapper;
+    @Autowired
+    private final GameMapper gameMapper;
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(QuizController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(QuizController.class);
 
-  @Operation(
-      summary = "Get quizzes",
-      description = "Gets all quizzes, allowing for pagination and sorting"
-  )
-  @GetMapping
-  public ResponseEntity<Page<QuizResponseDTO>> getQuizzes(
-      @Parameter(description = "Page number")
-      @RequestParam(defaultValue = "0", required = false) int page,
+    @Operation(summary = "Get quizzes", description = "Gets all quizzes, allowing for pagination and sorting")
+    @GetMapping
+    public ResponseEntity<Page<QuizResponseDTO>> getQuizzes(
+            @Parameter(description = "Page number") @RequestParam(defaultValue = "0", required = false) int page,
 
-      @Parameter(description = "Page size")
-      @RequestParam(defaultValue = "6", required = false) int size,
+            @Parameter(description = "Page size") @RequestParam(defaultValue = "6", required = false) int size,
 
-      @Parameter(description = "Sorting column and ordering direction")
-      @RequestParam(defaultValue = "id:asc", required = false) String[] sort,
+            @Parameter(description = "Sorting column and ordering direction") @RequestParam(defaultValue = "id:asc", required = false) String[] sort,
 
-      @Parameter(description = "Boolean that decides whether to filter by templates")
-      @RequestParam(defaultValue = "false", required = false) boolean isTemplate,
+            @Parameter(description = "Boolean that decides whether to filter by templates") @RequestParam(defaultValue = "false", required = false) boolean isTemplate,
 
-      @Parameter(description = "Quiz difficulty")
-      @RequestParam(required = false) Byte difficulty,
+            @Parameter(description = "Quiz difficulty") @RequestParam(required = false) Byte difficulty,
 
-      @Parameter(description = "Categories")
-      @RequestParam(required = false) List<String> categoryNames
-  ) {
-    LOGGER.info("Received get-request for quizzes");
+            @Parameter(description = "Categories") @RequestParam(required = false) List<String> categoryNames) {
+        LOGGER.info("Received get-request for quizzes");
 
-    Sort sortCriteria = Sort.by(SortingService.convertToOrder(sort));
-    Pageable pageable = PageRequest.of(page, size, sortCriteria);
+        Sort sortCriteria = Sort.by(SortingService.convertToOrder(sort));
+        Pageable pageable = PageRequest.of(page, size, sortCriteria);
 
-    Page<Quiz> quizzes;
-    if (isTemplate) {
-      quizzes = quizService.findAllTemplates(pageable);
-    } else if (categoryNames != null) {
-      List<Long> categoryIds = categoryNames.stream().map(name -> categoryService.findCategoryByName(name).getId()).toList();
-      quizzes = quizService.findQuizzesWithFilters(categoryIds, pageable);
-    } else {
-      quizzes = quizService.findAllQuizzes(pageable);
+        Page<Quiz> quizzes;
+        if (isTemplate) {
+            quizzes = quizService.findAllTemplates(pageable);
+        } else if (categoryNames != null) {
+            List<Long> categoryIds = categoryNames.stream()
+                    .map(name -> categoryService.findCategoryByName(name).getId()).toList();
+            quizzes = quizService.findQuizzesWithFilters(categoryIds, pageable);
+        } else {
+            quizzes = quizService.findAllQuizzes(pageable);
+        }
+
+        Page<QuizResponseDTO> quizResponseDTOS = quizzes.map(quizMapper::toDTO);
+        LOGGER.info("Successfully found quizzes");
+
+        return ResponseEntity.ok(quizResponseDTOS);
     }
-
-    Page<QuizResponseDTO> quizResponseDTOS = quizzes.map(quizMapper::toDTO);
-    LOGGER.info("Successfully found quizzes");
-
-    return ResponseEntity.ok(quizResponseDTOS);
-  }
 
   @Operation(
           summary = "Get quiz",
           description = "Get quiz based on its id"
   )
   @GetMapping("/{id}")
-  public ResponseEntity<Quiz> getQuiz(
+  public ResponseEntity<QuizResponseDTO> getQuiz(
            @PathVariable Long id
   ) {
     LOGGER.info("Received request for quiz with id: " + id);
     Quiz quiz = quizService.findQuizById(id);
 
     LOGGER.info("Successfully returned quiz");
-    return ResponseEntity.ok(quiz);
+    return ResponseEntity.ok(quizMapper.toDTO(quiz));
   }
 
-    @Operation(
-          summary = "Get quiz",
-          description = "Get quiz based on its id"
-  )
-  @PostMapping
-  public ResponseEntity<QuizResponseDTO> createQuiz(
-      @RequestBody @NonNull QuizCreateDTO quizCreateDTO
-  )
-  {
-    LOGGER.info("Received post request for quiz: {}", quizCreateDTO);
-    Quiz quiz = quizMapper.fromQuizCreateDTOtoEntity(quizCreateDTO);
-    quiz.getCategories().forEach(c -> c.addQuiz(quiz));
-    QuizResponseDTO quizResponseDTO = quizMapper.toDTO(quizService.saveQuiz(quiz));
-    System.out.println(quiz);
+    @Operation(summary = "Get quiz", description = "Get quiz based on its id")
+    @PostMapping
+    public ResponseEntity<QuizResponseDTO> createQuiz(@RequestBody @NonNull QuizCreateDTO quizCreateDTO) {
+        LOGGER.info("Received post request for quiz: {}", quizCreateDTO);
+        Quiz quiz = quizMapper.fromQuizCreateDTOtoEntity(quizCreateDTO);
+        quiz.getCategories().forEach(c -> c.addQuiz(quiz));
+        QuizResponseDTO quizResponseDTO = quizMapper.toDTO(quizService.saveQuiz(quiz));
+        System.out.println(quiz);
 
-    LOGGER.info("Successfully saved quiz");
-    return ResponseEntity.ok(quizResponseDTO);
-  }
+        LOGGER.info("Successfully saved quiz");
+        return ResponseEntity.ok(quizResponseDTO);
+    }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<QuizResponseDTO> editQuiz(@PathVariable Long id,
+            @RequestBody QuizResponseDTO quizResponseDTO) {
+        LOGGER.info("Received put request for quiz: " + quizResponseDTO);
+        Quiz quiz = quizService.findQuizById(id);
+        QuizMapper.INSTANCE.updateQuizFromDTO(quizResponseDTO, quiz);
 
-  @PutMapping("/{id}")
-  public ResponseEntity<QuizResponseDTO> editQuiz(
-      @PathVariable Long id,
-      @RequestBody QuizResponseDTO quizResponseDTO
-  )
-  {
-    LOGGER.info("Received put request for quiz: " + quizResponseDTO);
-    Quiz quiz = quizService.findQuizById(id);
-    QuizMapper.INSTANCE.updateQuizFromDTO(quizResponseDTO, quiz);
+        // Does nothing to categories and questions if you don't send it
+        System.out.println("updating categoreis");
+        updateQuizCategories(quiz, quizResponseDTO.getCategories());
 
-    // Does nothing to categories and questions if you don't send it
-    System.out.println("updating categoreis");
-    updateQuizCategories(quiz, quizResponseDTO.getCategories());
+        System.out.println("updating updateing question");
+        updateQuestions(quiz, quizResponseDTO.getQuestions());
 
-    System.out.println("updating updateing question");
-    updateQuestions(quiz, quizResponseDTO.getQuestions());
+        System.out.println("Done");
+        System.out.println(quiz.getQuestions());
 
-    System.out.println("Done");
-    System.out.println(quiz.getQuestions());
+        Quiz newQuiz = (quizService.saveQuiz(quiz));
+        System.out.println(newQuiz);
 
-    Quiz newQuiz = (quizService.saveQuiz(quiz));
-    System.out.println(newQuiz);
+        LOGGER.info("Successfully updated quiz");
+        return ResponseEntity.ok(QuizMapper.INSTANCE.toDTO(quiz));
+    }
 
-    LOGGER.info("Successfully updated quiz");
-    return ResponseEntity.ok(QuizMapper.INSTANCE.toDTO(quiz));
-  }
+    @GetMapping("/games/{id}")
+    public ResponseEntity<Set<GameDTO>> getGames(@PathVariable Long id) {
+        LOGGER.info("Received request fo games by quiz with id: " + id);
+        // List<Game> games = gameService.findGamesByQuizId(id);
+        Set<Game> games = quizService.findQuizById(id).getGames();
 
-  @GetMapping("/games/{id}")
-  public ResponseEntity<Set<GameDTO>> getGames(
-          @PathVariable Long id
-  )
-  {
-    LOGGER.info("Received request fo games by quiz with id: " + id);
-    // List<Game> games = gameService.findGamesByQuizId(id);
-    Set<Game> games = quizService.findQuizById(id).getGames();
+        LOGGER.info("Successfully found games");
 
-    LOGGER.info("Successfully found games");
+        Set<GameDTO> gameDTOs = gameMapper.toDTOs(games);
 
-    Set<GameDTO> gameDTOs = gameMapper.toDTOs(games);
+        return ResponseEntity.ok(gameDTOs);
+    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteQuiz(@PathVariable Long id) {
+        LOGGER.info("Received delete request for quiz_id: " + id);
 
-    return ResponseEntity.ok(gameDTOs);
-  }
+        quizService.deleteQuizById(id);
 
+        return ResponseEntity.noContent().build();
+    }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Void> deleteQuiz(
-      @PathVariable Long id) {
-    LOGGER.info("Received delete request for quiz_id: " + id);
+    private void updateQuizCategories(Quiz quiz, Set<String> categoryNames) {
 
-    quizService.deleteQuizById(id);
+        if (categoryNames == null)
+            return;
 
-    return ResponseEntity.noContent().build();
-  }
+        // Fetch the existing list of categories associated with the quiz
+        Set<String> existingNames = quiz.getCategories().stream().map(Category::getName).collect(Collectors.toSet());
 
-  private void updateQuizCategories(Quiz quiz, Set<String> categoryNames) {
-
-    if (categoryNames == null)
-      return;
-
-    // Fetch the existing list of categories associated with the quiz
-    Set<String> existingNames = quiz.getCategories().stream()
-        .map(Category::getName)
-        .collect(Collectors.toSet());
-
-    // Remove categories from the join table that are present in the existing list but not in the updated list
-    existingNames.stream()
-        .filter(name -> !categoryNames.contains(name))
-        .forEach(name -> {
-          Category category = categoryService.findCategoryByName(name);
-          categoryService.findCategoriesByQuizId(quiz.getId());
-          category.removeQuiz(quiz);
+        // Remove categories from the join table that are present in the existing list but not in the updated list
+        existingNames.stream().filter(name -> !categoryNames.contains(name)).forEach(name -> {
+            Category category = categoryService.findCategoryByName(name);
+            categoryService.findCategoriesByQuizId(quiz.getId());
+            category.removeQuiz(quiz);
         });
 
-    // Add new categories from the updated list that are not present in the existing list to the join table
-    categoryNames.stream()
-        .filter(name -> !existingNames.contains(name))
-        .forEach(name -> {
-          Category category = categoryService.findCategoryByName(name);
-          category.addQuiz(quiz);
+        // Add new categories from the updated list that are not present in the existing list to the join table
+        categoryNames.stream().filter(name -> !existingNames.contains(name)).forEach(name -> {
+            Category category = categoryService.findCategoryByName(name);
+            category.addQuiz(quiz);
         });
-  }
-  private void updateQuestions(Quiz quiz, Set<QuestionDTO> questionDTOs) {
-    if (questionDTOs == null) return;
+    }
 
-    Set<Question> questions = questionDTOs.stream().map(questionMapper::fromQuestionDTOtoEntity).collect(
-        Collectors.toSet());
-    Set<Question> existingQuestions = quiz.getQuestions();
-    List<Question> omittedQuestions = new ArrayList<>();
-    existingQuestions.stream()
-        .filter(question -> !questions.contains(question))
-        .forEach(question -> {
-          omittedQuestions.add(question);
-          questionService.deleteQuestion(question.getId());
+    private void updateQuestions(Quiz quiz, Set<QuestionDTO> questionDTOs) {
+        if (questionDTOs == null)
+            return;
+
+        Set<Question> questions = questionDTOs.stream().map(questionMapper::fromQuestionDTOtoEntity)
+                .collect(Collectors.toSet());
+        Set<Question> existingQuestions = quiz.getQuestions();
+        List<Question> omittedQuestions = new ArrayList<>();
+        existingQuestions.stream().filter(question -> !questions.contains(question)).forEach(question -> {
+            omittedQuestions.add(question);
+            questionService.deleteQuestion(question.getId());
         });
 
-    omittedQuestions.forEach(quiz.getQuestions()::remove);
+        omittedQuestions.forEach(quiz.getQuestions()::remove);
 
-    questions.stream()
-        .filter(question-> !existingQuestions.contains(question))
-        .forEach(question -> {
-          questionService.saveQuestion(question);
-          quiz.addQuestion(question);
+        questions.stream().filter(question -> !existingQuestions.contains(question)).forEach(question -> {
+            questionService.saveQuestion(question);
+            quiz.addQuestion(question);
         });
-  }
+    }
 }
-

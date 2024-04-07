@@ -17,34 +17,21 @@ import java.util.Set;
 @Data
 public class Tag {
 
-  @Id
-  @GeneratedValue(
-          generator = "tag_id_seq",
-          strategy = GenerationType.SEQUENCE
-  )
-  @SequenceGenerator(
-          name = "tag_id_seq",
-          sequenceName = "tag_id_seq"
-  )
-  private Long id;
+    @Id
+    @GeneratedValue(generator = "tag_id_seq", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "tag_id_seq", sequenceName = "tag_id_seq")
+    private Long id;
 
-  @NotNull
-  @Column(name = "TITLE", nullable = false)
-  @Size(
-          min = 2,
-          max = 30,
-          message = "Title is required, maximum 30 characters."
-  )
-  private String title;
+    @NotNull
+    @Column(nullable = false)
+    @Size(min = 2, max = 20, message = "Title is required, maximum 20 characters.")
+    private String title;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(
-          name = "USER_ID",
-          nullable = false
-  )
-  private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private User user;
 
-  // Unidirectional mapping between tag and question
+    // Unidirectional mapping between tag and question
 
   @ManyToMany(cascade = {
           CascadeType.DETACH,

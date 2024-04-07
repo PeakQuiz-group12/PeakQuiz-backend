@@ -22,52 +22,49 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public abstract class TagMapper {
 
-  @Autowired
-  private QuestionMapper questionMapper;
-  @Autowired
-  private UserService userService;
+    @Autowired
+    private QuestionMapper questionMapper;
+    @Autowired
+    private UserService userService;
 
-  public static TagMapper INSTANCE = Mappers.getMapper(TagMapper.class);
+    public static TagMapper INSTANCE = Mappers.getMapper(TagMapper.class);
 
-  @Mapping(target = "user", source = "username", qualifiedByName = "mapUser")
-  @Mapping(target = "title", source = "title")
-  @Mapping(target = "questions", source = "questions", qualifiedByName = "mapQuestions")
-  @Mapping(target = "id", source = "id")
-  public abstract Tag fromTagDTOtoEntity(TagDTO tagDTO);
+    @Mapping(target = "user", source = "username", qualifiedByName = "mapUser")
+    @Mapping(target = "title", source = "title")
+    @Mapping(target = "questions", source = "questions", qualifiedByName = "mapQuestions")
+    @Mapping(target = "id", source = "id")
+    public abstract Tag fromTagDTOtoEntity(TagDTO tagDTO);
 
-  @Mapping(target = "id", source = "id")
-  @Mapping(target = "title", source = "title")
-  @Mapping(target = "username", source = "user", qualifiedByName = "mapToUsername")
-  @Mapping(target = "questions", source = "questions", qualifiedByName = "mapToQuestionDTOs")
-  public abstract TagDTO toDTO(Tag tag);
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "title", source = "title")
+    @Mapping(target = "username", source = "user", qualifiedByName = "mapToUsername")
+    @Mapping(target = "questions", source = "questions", qualifiedByName = "mapToQuestionDTOs")
+    public abstract TagDTO toDTO(Tag tag);
 
+    @Mapping(target = "user", source = "username", qualifiedByName = "mapUser")
+    @Mapping(target = "title", source = "title")
+    @Mapping(target = "questions", source = "questions", qualifiedByName = "mapQuestions")
+    @Mapping(target = "id", source = "id")
+    public abstract void updateTagFromDTO(TagDTO tagDTO, @MappingTarget Tag tag);
 
-  @Mapping(target = "user", source = "username", qualifiedByName = "mapUser")
-  @Mapping(target = "title", source = "title")
-  @Mapping(target = "questions", source = "questions", qualifiedByName = "mapQuestions")
-  @Mapping(target = "id", source = "id")
-  public abstract void updateTagFromDTO(TagDTO tagDTO, @MappingTarget Tag tag);
+    @Named("mapToQuestionDTOs")
+    public Set<QuestionDTO> mapsToQuestionDTOs(Set<Question> questions) {
+        return questions.stream().map(questionMapper::toDTO).collect(Collectors.toSet());
+    }
 
-  @Named("mapToQuestionDTOs")
-  public Set<QuestionDTO> mapsToQuestionDTOs(Set<Question> questions) {
-    return questions.stream().map(QuestionMapper.INSTANCE::toDTO).collect(Collectors.toSet());
-  }
+    @Named("mapToUsername")
+    public String mapToUsername(User user) {
+        return user.getUsername();
+    }
 
-  @Named("mapToUsername")
-  public String mapToUsername(User user) {
-    return user.getUsername();
-  }
+    @Named("mapUser")
+    public User mapUser(String username) {
+        return userService.findUserByUsername(username);
+    }
 
-  @Named("mapUser")
-  public User mapUser(String username) {
-
-    return userService.findUserByUsername(username);
-  }
-
-  @Named("mapQuestions")
-  public Set<Question> mapQuestions(Set<QuestionDTO> questions) {
-    return questions.stream().map(questionMapper::fromQuestionResponseDTOtoEntity).collect(Collectors.toSet());
-  }
-
+    @Named("mapQuestions")
+    public Set<Question> mapQuestions(Set<QuestionDTO> questions) {
+        return questions.stream().map(questionMapper::fromQuestionDTOtoEntity).collect(Collectors.toSet());
+    }
 
 }

@@ -25,86 +25,84 @@ import static org.junit.jupiter.api.Assertions.*;
 @RunWith(SpringRunner.class)
 public class QuizServiceTest {
 
-  @TestConfiguration
-  static class QuizServiceTestConfiguration {
+    @TestConfiguration
+    static class QuizServiceTestConfiguration {
 
-    @Bean
-    public QuizService quizService(QuizRepository quizRepository) {
-      return new QuizService(quizRepository);
+        @Bean
+        public QuizService quizService(QuizRepository quizRepository) {
+            return new QuizService(quizRepository);
+        }
     }
-  }
 
-  @Autowired
-  private QuizService quizService;
+    @Autowired
+    private QuizService quizService;
 
-  @MockBean
-  private QuizRepository quizRepository;
+    @MockBean
+    private QuizRepository quizRepository;
 
-  Quiz existingQuiz;
+    Quiz existingQuiz;
 
-  Quiz nonExistingQuiz;
+    Quiz nonExistingQuiz;
 
-  @Before
-  public void setUp() {
+    @Before
+    public void setUp() {
 
-    existingQuiz = new Quiz();
-    existingQuiz.setId(1L);
+        existingQuiz = new Quiz();
+        existingQuiz.setId(1L);
 
-    when(quizRepository.save(existingQuiz)).thenReturn(existingQuiz);
-    when(quizRepository.findById(existingQuiz.getId())).thenReturn(Optional.of(existingQuiz));
-    doNothing().when(quizRepository).deleteById(existingQuiz.getId());
+        when(quizRepository.save(existingQuiz)).thenReturn(existingQuiz);
+        when(quizRepository.findById(existingQuiz.getId())).thenReturn(Optional.of(existingQuiz));
+        doNothing().when(quizRepository).deleteById(existingQuiz.getId());
 
-    nonExistingQuiz = new Quiz();
-    when(quizRepository.save(nonExistingQuiz)).thenReturn(nonExistingQuiz);
-    when(quizRepository.findById(nonExistingQuiz.getId())).thenReturn(Optional.empty());
-    doNothing().when(quizRepository).deleteById(nonExistingQuiz.getId());
+        nonExistingQuiz = new Quiz();
+        when(quizRepository.save(nonExistingQuiz)).thenReturn(nonExistingQuiz);
+        when(quizRepository.findById(nonExistingQuiz.getId())).thenReturn(Optional.empty());
+        doNothing().when(quizRepository).deleteById(nonExistingQuiz.getId());
 
-    List<Quiz> content = new ArrayList<>();
-    content.add(existingQuiz);
+        List<Quiz> content = new ArrayList<>();
+        content.add(existingQuiz);
 
+        when(quizRepository.findAll(PageRequest.of(0, 3))).thenReturn(new PageImpl<>(content, PageRequest.of(0, 3), 1));
 
-    when(quizRepository.findAll(PageRequest.of(0,3))).thenReturn(new PageImpl<>(content,PageRequest.of(0,3), 1));
-
-  }
-
-  @Test
-  public void testSaveQuiz() {
-    Quiz newQuiz = quizService.saveQuiz(nonExistingQuiz);
-
-    assertEquals(newQuiz, nonExistingQuiz);
-  }
-
-  @Test
-  public void testFindExistingQuizById() {
-    Quiz quiz = quizService.findQuizById(existingQuiz.getId());
-    assertEquals(existingQuiz, quiz);
-  }
-
-  @Test
-  public void testFindNonExistingQuizById() {
-    assertThrows(QuizNotFoundException.class, () -> quizService.findQuizById(nonExistingQuiz.getId()));
-  }
-
-  @Test
-  public void testFindAllQuizzes() {
-    assertEquals(1, quizService.findAllQuizzes(PageRequest.of(0,3)).getTotalElements());
-  }
-
-  @Test
-  public void testDeleteQuizById() {
-    try {
-      quizService.deleteQuizById(existingQuiz.getId());
-    } catch (Exception ex) {
-      fail();
     }
-  }
 
-  @Test
-  public void testNonExistentQuizById() {
-    assertThrows(QuizNotFoundException.class, () -> {
-      quizService.deleteQuizById(
-          nonExistingQuiz.getId());
-      fail();
-    });
-  }
+    @Test
+    public void testSaveQuiz() {
+        Quiz newQuiz = quizService.saveQuiz(nonExistingQuiz);
+
+        assertEquals(newQuiz, nonExistingQuiz);
+    }
+
+    @Test
+    public void testFindExistingQuizById() {
+        Quiz quiz = quizService.findQuizById(existingQuiz.getId());
+        assertEquals(existingQuiz, quiz);
+    }
+
+    @Test
+    public void testFindNonExistingQuizById() {
+        assertThrows(QuizNotFoundException.class, () -> quizService.findQuizById(nonExistingQuiz.getId()));
+    }
+
+    @Test
+    public void testFindAllQuizzes() {
+        assertEquals(1, quizService.findAllQuizzes(PageRequest.of(0, 3)).getTotalElements());
+    }
+
+    @Test
+    public void testDeleteQuizById() {
+        try {
+            quizService.deleteQuizById(existingQuiz.getId());
+        } catch (Exception ex) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testNonExistentQuizById() {
+        assertThrows(QuizNotFoundException.class, () -> {
+            quizService.deleteQuizById(nonExistingQuiz.getId());
+            fail();
+        });
+    }
 }
