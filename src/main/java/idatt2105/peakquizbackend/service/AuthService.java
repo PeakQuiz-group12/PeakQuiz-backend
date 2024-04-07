@@ -22,6 +22,11 @@ public class AuthService {
         return Pattern.compile(passwordPattern).matcher(password).matches();
     }
 
+    public boolean isEmailValid(String email) {
+        String emailPattern = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        return Pattern.compile(emailPattern).matcher(email).matches();
+    }
+
     public String encryptPassword(String password) {
         return bCryptPasswordEncoder.encode(password);
     }
