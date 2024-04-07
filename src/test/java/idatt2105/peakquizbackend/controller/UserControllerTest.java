@@ -24,76 +24,72 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest({UserController.class, SecurityConfig.class })
+@WebMvcTest({ UserController.class, SecurityConfig.class })
 public class UserControllerTest {
 
-  @MockBean
-  private UserService userService;
+    @MockBean
+    private UserService userService;
 
-  @MockBean
-  GameService gameService;
-  @MockBean
-  TagService tagService;
-  @MockBean
-  QuizService quizService;
-  @TestConfiguration
-  static class MapperTestConfiguration {
-    @Bean
-    public TagMapper tagMapper() {
-      return new TagMapperImpl();
+    @MockBean
+    GameService gameService;
+    @MockBean
+    TagService tagService;
+    @MockBean
+    QuizService quizService;
+
+    @TestConfiguration
+    static class MapperTestConfiguration {
+        @Bean
+        public TagMapper tagMapper() {
+            return new TagMapperImpl();
+        }
+
+        @Bean
+        public QuestionMapper questionMapper() {
+            return new QuestionMapperImpl();
+        }
+
+        @Bean
+        public GameMapper gameMapper() {
+            return new GameMapperImpl();
+        }
     }
 
-    @Bean
-    public QuestionMapper questionMapper() {
-      return new QuestionMapperImpl();
+    @Autowired
+    QuestionMapper questionMapper;
+
+    @Autowired
+    GameMapper gameMapper;
+
+    @Autowired
+    TagMapper tagMapper;
+
+    @Autowired
+    private MockMvc mvc;
+
+    @Test
+    @WithMockUser
+    public void testGetGames() throws Exception {
+        User user = new User();
+        user.setUsername("test");
+        user.setPassword("test");
+
+        user.setId(1L);
+        Quiz quiz = new Quiz();
+        quiz.setId(1L);
+
+        userService.saveUser(user);
+        quizService.saveQuiz(quiz);
+        Game game = new Game(2, (byte) 2, "Nice game!", user, quiz);
+
+        user.getGames().add(game);
+        userService.saveUser(user);
+        quizService.saveQuiz(quiz);
+
+        when(userService.findUserByUsername(user.getUsername())).thenReturn(user);
+
+        mvc.perform(get("/users/test/games").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].username").value("test"))
+                .andExpect(jsonPath("$[0].quizId").value(quiz.getId()));
     }
-
-    @Bean
-    public GameMapper gameMapper() {
-      return new GameMapperImpl();
-    }
-  }
-
-  @Autowired
-  QuestionMapper questionMapper;
-
-  @Autowired
-  GameMapper gameMapper;
-
-  @Autowired
-  TagMapper tagMapper;
-
-
-
-  @Autowired
-  private MockMvc mvc;
-
-  @Test
-  @WithMockUser
-  public void testGetGames() throws Exception {
-    User user = new User();
-    user.setUsername("test");
-    user.setPassword("test");
-
-    user.setId(1L);
-    Quiz quiz = new Quiz();
-    quiz.setId(1L);
-
-    userService.saveUser(user);
-    quizService.saveQuiz(quiz);
-    Game game = new Game(2, (byte) 2,"Nice game!", user, quiz);
-
-    user.getGames().add(game);
-    userService.saveUser(user);
-    quizService.saveQuiz(quiz);
-
-
-    when(userService.findUserByUsername(user.getUsername())).thenReturn(
-            user);
-
-    mvc.perform(get("/users/test/games").accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].username").value("test"))
-            .andExpect(jsonPath("$[0].quizId").value(quiz.getId()));
-  }
 }
