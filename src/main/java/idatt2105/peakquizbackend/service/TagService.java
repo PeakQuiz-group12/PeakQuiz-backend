@@ -20,6 +20,6 @@ public class TagService {
     }
 
     public boolean tagExists(Long userId, String title) {
-      return tagRepository.findTagByUserIdAndTitle(userId, title).isPresent();
+        return tagRepository.findTagByUserIdAndTitle(userId, title).isPresent();
     }
 }

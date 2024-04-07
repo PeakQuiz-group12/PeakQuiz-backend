@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 public interface TagRepository extends JpaRepository<Tag, Long> {
-  Optional<Tag> findTagByUserIdAndTitle(Long userId, String title);
+    Optional<Tag> findTagByUserIdAndTitle(Long userId, String title);
 }

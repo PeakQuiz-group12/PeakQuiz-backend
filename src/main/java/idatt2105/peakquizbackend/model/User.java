@@ -13,6 +13,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import org.hibernate.annotations.NaturalId;
 
 @Entity
 @Table(name = "USERS")
@@ -30,21 +31,20 @@ public class User {
     @SequenceGenerator(name = "user_id_seq", sequenceName = "user_id_seq")
     private Long id;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(nullable = false,
-          updatable = false)
-  @CreationTimestamp
-  private ZonedDateTime createdOn;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
+    private ZonedDateTime createdOn;
 
-  @NotNull
-  @Column(nullable = false, unique = true)
-  private String username;
+    @NotNull
+    @Column(nullable = false, unique = true)
+    @NaturalId
+    private String username;
 
     @Email(message = "Email should be valid")
     @NotNull
     @Column(nullable = false, unique = true)
     private String email;
-
 
     // Hash(password + salt) (probably not the appropriate datatype)
     @Getter
@@ -59,28 +59,26 @@ public class User {
     private Set<Game> games = new HashSet<>();
 
     @ToString.Include
-  private String getGamesToString() {
-    if (games == null) return "";
-    return games.stream().map(Game::getId).toString();
-  }
+    private String getGamesToString() {
+        if (games == null)
+            return "";
+        return games.stream().map(Game::getId).toString();
+    }
 
-  @Getter
+    @Getter
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<Collaboration> collaborations = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = {
-                  CascadeType.REMOVE,
-                  CascadeType.PERSIST,
-                  CascadeType.MERGE
-          }
-  )
-  @ToString.Exclude
-  @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE, CascadeType.PERSIST,
+            CascadeType.MERGE })
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     public Set<Tag> tags = new HashSet<>();
 
-  @ToString.Include
-  String getTagsToString() {
-    if (tags == null) return "";
-    return tags.stream().map(Tag::getId).toString();
-  }
+    @ToString.Include
+    String getTagsToString() {
+        if (tags == null)
+            return "";
+        return tags.stream().map(Tag::getId).toString();
+    }
 }
