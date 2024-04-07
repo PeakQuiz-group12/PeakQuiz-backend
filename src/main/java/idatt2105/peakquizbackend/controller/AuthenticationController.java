@@ -38,11 +38,19 @@ public class AuthenticationController {
     @CrossOrigin
     public ResponseEntity<?> registerUser(@RequestParam String username, @RequestParam String password,
             @RequestParam String mail) {
-        System.out.println(username + password);
 
-    if (userService.usernameExists(username)) {
-      throw new UserAlreadyExistsException();
-    }
+        if (userService.usernameExists(username)) {
+            throw new UserAlreadyExistsException();
+        }
+
+        if (!isEmailValid(mail)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid email format");
+        }
+
+        if (!isPasswordStrong(password)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    "Password must be at least 8 characters long, include numbers, upper and lower case letters, and at least one special character");
+        }
 
     if (!authService.isPasswordStrong(password)) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password must be at least 8 characters long, include numbers, upper and lower case letters, and at least one special character");
@@ -62,9 +70,20 @@ public class AuthenticationController {
         return ResponseEntity.ok(tokens);
     }
 
-  @PostMapping("/login")
-  @CrossOrigin
-  public ResponseEntity<?> loginUser(@RequestParam String username, @RequestParam String password) {
+    private boolean isEmailValid(String email) {
+        String emailPattern = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        return Pattern.compile(emailPattern).matcher(email).matches();
+    }
+
+    private boolean isPasswordStrong(String password) {
+        // Example criteria: at least 8 characters, including numbers, letters and at least one special character
+        String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
+        return Pattern.compile(passwordPattern).matcher(password).matches();
+    }
+
+    @PostMapping("/login")
+    @CrossOrigin
+    public ResponseEntity<?> loginUser(@RequestParam String username, @RequestParam String password) {
 
         User user = userService.findUserByUsername(username);
 
