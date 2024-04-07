@@ -34,7 +34,7 @@ public abstract class TagMapper {
     /**
      * INSTANCE variable for accessing the mapper instance.
      */
-    public static TagMapper INSTANCE = Mappers.getMapper(TagMapper.class);
+    public static final TagMapper INSTANCE = Mappers.getMapper(TagMapper.class);
 
     /**
      * Converts a TagDTO to a Tag entity.

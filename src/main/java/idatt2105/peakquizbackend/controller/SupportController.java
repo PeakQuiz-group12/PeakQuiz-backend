@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.MessagingException;
+
 @RestController
 @CrossOrigin
 public class SupportController {
@@ -28,7 +30,8 @@ public class SupportController {
     public ResponseEntity<String> handleSupportQuery(
             @Parameter(description = "Username of the user submitting the query", required = true, example = "john_doe") @RequestParam String username,
             @Parameter(description = "Subject of the query", required = true, example = "Issue with account activation") @RequestParam String subject,
-            @Parameter(description = "Content of the query message", required = true, example = "I'm having trouble activating my account. Can you assist me?") @RequestParam String message) {
+            @Parameter(description = "Content of the query message", required = true, example = "I'm having trouble activating my account. Can you assist me?") @RequestParam String message)
+            throws MessagingException {
         emailService.sendEmail(username, subject, message);
         return ResponseEntity.ok("Your query has been sent. We will respond shortly.");
     }
@@ -38,7 +41,8 @@ public class SupportController {
             @ApiResponse(responseCode = "400", description = "Bad request") })
     @PostMapping("/forgotPassword")
     public ResponseEntity<String> handleForgotPasswordRequest(
-            @Parameter(description = "Email address of the user requesting password reset", required = true, example = "user@example.com") @RequestParam String email) {
+            @Parameter(description = "Email address of the user requesting password reset", required = true, example = "user@example.com") @RequestParam String email)
+            throws MessagingException {
         emailService.forgotPassword(email);
         return ResponseEntity.ok("Your password has been sent to your email.");
     }

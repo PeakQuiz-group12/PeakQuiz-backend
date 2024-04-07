@@ -38,7 +38,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void testfindUserByUsername() {
+    public void testFindUserByUsername() {
         User user = new User("testUser", "test@example.com", "password");
         entityManager.persist(user);
         entityManager.flush();

@@ -23,7 +23,7 @@ public abstract class QuestionMapper {
     /**
      * INSTANCE variable for accessing the mapper instance.
      */
-    public static QuestionMapper INSTANCE = Mappers.getMapper(QuestionMapper.class);
+    public static final QuestionMapper INSTANCE = Mappers.getMapper(QuestionMapper.class);
 
     /**
      * Converts a QuestionDTO to a Question entity.
@@ -52,8 +52,6 @@ public abstract class QuestionMapper {
      *
      * @param questionDTO
      *            The QuestionDTO to convert
-     * @param question
-     *            The target Question entity to update
      */
     @Mapping(target = "quiz", ignore = true)
     public abstract Question fromQuestionResponseDTOtoEntity(QuestionDTO questionDTO);

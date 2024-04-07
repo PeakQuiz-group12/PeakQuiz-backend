@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.mail.MessagingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = { IllegalArgumentException.class, NullPointerException.class, BadInputException.class,
             MissingServletRequestParameterException.class, HttpRequestMethodNotSupportedException.class,
-            DataIntegrityViolationException.class })
+            DataIntegrityViolationException.class, MessagingException.class })
     public ResponseEntity<String> handleBadInputException(Exception ex) {
         logError(ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());

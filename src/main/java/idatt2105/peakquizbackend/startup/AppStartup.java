@@ -31,7 +31,8 @@ public class AppStartup implements CommandLineRunner {
     /**
      * Runs on application startup.
      *
-     * @param args Command line arguments
+     * @param args
+     *            Command line arguments
      */
     @Override
     public void run(String... args) {

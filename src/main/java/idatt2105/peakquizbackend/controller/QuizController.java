@@ -170,25 +170,20 @@ public class QuizController {
     public ResponseEntity<QuizResponseDTO> editQuiz(
             @Parameter(description = "ID of the quiz to be edited", required = true) @PathVariable Long id,
             @Parameter(description = "Updated quiz data", required = true) @RequestBody QuizResponseDTO quizResponseDTO) {
-        LOGGER.info("Received put request for quiz: " + quizResponseDTO);
+        LOGGER.info("Received put request for quiz: {}", quizResponseDTO);
         Quiz quiz = quizService.findQuizById(id);
         QuizMapper.INSTANCE.updateQuizFromDTO(quizResponseDTO, quiz);
 
-        // Does nothing to categories and questions if you don't send it
-        System.out.println("updating categoreis");
         updateQuizCategories(quiz, quizResponseDTO.getCategories());
 
-        System.out.println("updating updateing question");
         updateQuestions(quiz, quizResponseDTO.getQuestions());
 
-        System.out.println("Done");
         System.out.println(quiz.getQuestions());
 
-        Quiz newQuiz = (quizService.saveQuiz(quiz));
-        System.out.println(newQuiz);
+        Quiz newQuiz = quizService.saveQuiz(quiz);
 
         LOGGER.info("Successfully updated quiz");
-        return ResponseEntity.ok(QuizMapper.INSTANCE.toDTO(quiz));
+        return ResponseEntity.ok(QuizMapper.INSTANCE.toDTO(newQuiz));
     }
 
     /**
