@@ -59,11 +59,7 @@ public class AuthenticationControllerTest {
         when(authService.isEmailValid(email)).thenReturn(true);
         String password = "Aa11111!";
         when(authService.isPasswordStrong(password)).thenReturn(true);
-        mvc.perform(MockMvcRequestBuilders.post("/register?username=test"
-                + "&password="
-                + password
-                + "&mail="
-                + email)
+        mvc.perform(MockMvcRequestBuilders.post("/register?username=test" + "&password=" + password + "&mail=" + email)
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
     }
 
@@ -73,24 +69,20 @@ public class AuthenticationControllerTest {
         when(authService.isEmailValid(email)).thenReturn(true);
         String password = "123";
         when(authService.isPasswordStrong(password)).thenReturn(false);
-        mvc.perform(MockMvcRequestBuilders.post("/register?username=test"
-                + "&password="
-                + password
-                + "&mail="
-                + email)
-            .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+        mvc.perform(MockMvcRequestBuilders.post("/register?username=test" + "&password=" + password + "&mail=" + email)
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
     public void testRegisterWithInvalidEmail() throws Exception {
         String email = "testtest.com";
         when(authService.isEmailValid(email)).thenReturn(false);
-        mvc.perform(MockMvcRequestBuilders.post("/register?username=test"
-                + "&password=12345AA!"
-                + "&mail="
-                + email)
-            .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+        mvc.perform(MockMvcRequestBuilders.post("/register?username=test" + "&password=12345AA!" + "&mail=" + email)
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
+
     @Test
     public void testRegisterDuplicateUser() throws Exception {
         when(userService.findUserByUsername("test")).thenThrow(UserAlreadyExistsException.class);
@@ -109,8 +101,7 @@ public class AuthenticationControllerTest {
 
         when(authService.matches(password, password)).thenReturn(true);
 
-        mvc.perform(MockMvcRequestBuilders.post("/login?username=test"
-                + "&password=" + password)
+        mvc.perform(MockMvcRequestBuilders.post("/login?username=test" + "&password=" + password)
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
     }
 
@@ -118,7 +109,8 @@ public class AuthenticationControllerTest {
     public void testLoginWithWrongUsername() throws Exception {
         when(userService.findUserByUsername("test")).thenThrow(UserNotFoundException.class);
         mvc.perform(MockMvcRequestBuilders.post("/login?username=test&password=1BVdffdfdffdf!")
-                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -131,24 +123,25 @@ public class AuthenticationControllerTest {
 
         when(userService.findUserByUsername(username)).thenReturn(user);
         mvc.perform(MockMvcRequestBuilders.post("/login?username=test&password=1BVdffdfdffdf!")
-            .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isUnauthorized());
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
     public void testPostInvalidRefreshToken() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.post("/refreshToken?refreshToken=token").contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isUnauthorized());
+        mvc.perform(MockMvcRequestBuilders.post("/refreshToken?refreshToken=token")
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
     }
+
     @Test
     public void testPostValidRefreshToken() throws Exception {
         Algorithm algorithm = Algorithm.HMAC512("testsecrettestsecrettestsecrettestsecrettestsecret");
-        String refreshToken = JWT.create()
-            .withSubject("test")
-            .withExpiresAt(new Date(System.currentTimeMillis()+ 5*60*1000))
-            .sign(algorithm);
+        String refreshToken = JWT.create().withSubject("test")
+                .withExpiresAt(new Date(System.currentTimeMillis() + 5 * 60 * 1000)).sign(algorithm);
 
         when(jwtVerifier.verify(refreshToken)).thenReturn(decodedJWT);
-        mvc.perform(MockMvcRequestBuilders.post("/refreshToken?refreshToken=" + refreshToken).contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        mvc.perform(MockMvcRequestBuilders.post("/refreshToken?refreshToken=" + refreshToken)
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
     }
 }
