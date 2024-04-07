@@ -59,7 +59,7 @@ public class UserController {
 
     @GetMapping("/{username}/games")
     public ResponseEntity<Set<GameDTO>> getGames(@PathVariable String username) {
-        LOGGER.info("Received request for games by user: " + username);
+        LOGGER.info("Received request for games by user: {}", username);
         Set<Game> games = userService.findUserByUsername(username).getGames();
 
         LOGGER.info("Successfully found games");
@@ -104,10 +104,6 @@ public class UserController {
         LOGGER.info("Received post request for tag: {}", tagDTO);
         User user = userService.findUserByUsername(username);
         Tag tag = tagMapper.fromTagDTOtoEntity(tagDTO);
-
-        Tag createdTag = tagService.saveTag(tag);
-        user.getTags().add(createdTag);
-        // userService.saveUser(user);
 
         Tag persistedTag = tagService.saveTag(tag);
         user.getTags().add(persistedTag);
