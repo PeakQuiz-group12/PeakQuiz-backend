@@ -22,7 +22,8 @@ public class AppStartup implements CommandLineRunner {
     @Autowired
     CategoryService categoryService;
 
-    @Autowired QuizService quizService;
+    @Autowired
+    QuizService quizService;
 
     @Override
     public void run(String... args) {
@@ -36,19 +37,17 @@ public class AppStartup implements CommandLineRunner {
         categories.add("Music");
         categories.add("Math");
 
-        categories
-                .stream()
-                .filter(category -> !categoryService.categoryExists(category))
-                .forEach(category -> {
-                    Category newCategory = new Category();
-                    newCategory.setName(category);
-                    categoryService.saveCategory(newCategory);
-                });
+        categories.stream().filter(category -> !categoryService.categoryExists(category)).forEach(category -> {
+            Category newCategory = new Category();
+            newCategory.setName(category);
+            categoryService.saveCategory(newCategory);
+        });
     }
 
     private void prepareTemplates() {
         final int nrTemplates = 1;
-        if (quizService.findAllTemplates(PageRequest.of(0,3)).getTotalElements() == nrTemplates) return;
+        if (quizService.findAllTemplates(PageRequest.of(0, 3)).getTotalElements() == nrTemplates)
+            return;
 
         Quiz quiz = new Quiz();
         quiz.setTemplate(true);
@@ -66,5 +65,5 @@ public class AppStartup implements CommandLineRunner {
 
         quiz.addQuestion(question);
         quizService.saveQuiz(quiz);
-        }
+    }
 }

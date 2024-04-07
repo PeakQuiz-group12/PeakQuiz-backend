@@ -8,8 +8,8 @@ import org.mapstruct.factory.Mappers;
 @Mapper(componentModel = "spring")
 public interface CollaborationMapper {
 
-  CollaborationMapper INSTANCE = Mappers.getMapper(CollaborationMapper.class);
+    CollaborationMapper INSTANCE = Mappers.getMapper(CollaborationMapper.class);
 
-  CollaborationDTO toDTO(Collaboration collaboration);
+    CollaborationDTO toDTO(Collaboration collaboration);
 
 }

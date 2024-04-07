@@ -23,15 +23,11 @@ import java.util.Set;
 @Builder
 public class Question {
 
-  @Id
-  @EqualsAndHashCode.Exclude
-  @GeneratedValue(generator = "question_id_seq",
-          strategy = GenerationType.SEQUENCE)
-  @SequenceGenerator(
-          name = "question_id_seq",
-          sequenceName = "question_id_seq"
-  )
-  private Long id;
+    @Id
+    @EqualsAndHashCode.Exclude
+    @GeneratedValue(generator = "question_id_seq", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "question_id_seq", sequenceName = "question_id_seq")
+    private Long id;
 
   @Size(
           min = 2,
@@ -42,27 +38,27 @@ public class Question {
   @Column(nullable = false)
   private String text;
 
-  @NotNull
-  @Column(nullable = false)
-  @Enumerated(EnumType.STRING)
-  private QuestionType questionType;
+    @NotNull
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private QuestionType questionType;
 
-  @URL(regexp = "^(http|https).*")
-  private String media;
+    @URL(regexp = "^(http|https).*")
+    private String media;
 
-  @Min(value = 0, message = "Difficulty should not be less than 0")
-  @Max(value = 5, message = "Difficulty should not be greater than 5")
-  @NotNull
-  private Byte difficulty;
+    @Min(value = 0, message = "Difficulty should not be less than 0")
+    @Max(value = 5, message = "Difficulty should not be greater than 5")
+    @NotNull
+    private Byte difficulty;
 
-  private String explanation;
+    private String explanation;
 
-  @ElementCollection
-  @CollectionTable(name = "ANSWER")
-  private Set<Answer> answers = new HashSet<>();
+    @ElementCollection
+    @CollectionTable(name = "ANSWER")
+    private Set<Answer> answers = new HashSet<>();
 
-  @ManyToOne
-  @ToString.Exclude
-  @EqualsAndHashCode.Exclude
-  private Quiz quiz;
+    @ManyToOne
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Quiz quiz;
 }
