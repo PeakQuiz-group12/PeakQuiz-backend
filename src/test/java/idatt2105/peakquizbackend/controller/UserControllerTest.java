@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.jayway.jsonpath.JsonPath;
 import idatt2105.peakquizbackend.mapper.*;
 import idatt2105.peakquizbackend.model.Game;
 import idatt2105.peakquizbackend.model.Quiz;
