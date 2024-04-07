@@ -2,6 +2,7 @@ package idatt2105.peakquizbackend.dto;
 
 import idatt2105.peakquizbackend.model.enums.CollaboratorType;
 import lombok.Data;
+
 @Data
 public class CollaborationDTO {
 

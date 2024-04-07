@@ -23,9 +23,11 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .headers((headers) -> headers.frameOptions(FrameOptionsConfig::disable))
                 // .cors().and()
-                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/console/**", "/login", "/register", "/refreshToken", "/swagger-ui/**",
-                        "/v3/api-docs/**", "/v3/api-docs/", "swagger-ui.html", "/webjars/**, /forgotPassword")
-                        .permitAll().anyRequest().authenticated()).sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/console/**", "/login", "/register", "/refreshToken", "/swagger-ui/**",
+                                "/v3/api-docs/**", "/v3/api-docs/", "swagger-ui.html", "/webjars/**, /forgotPassword")
+                        .permitAll().anyRequest().authenticated())
+                .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
