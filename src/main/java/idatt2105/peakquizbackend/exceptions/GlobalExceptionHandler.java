@@ -34,9 +34,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getClass().getSimpleName());
     }
 
-    /*
-     * @ExceptionHandler(value = {Exception.class}) public ResponseEntity<String> handleRemainderExceptions(Exception
-     * ex) { logError(ex); return ResponseEntity .status(HttpStatus.INTERNAL_SERVER_ERROR)
-     * .body(ex.getClass().getSimpleName()); }
-     */
+  @ExceptionHandler(value = {Exception.class})
+  public ResponseEntity<String> handleRemainderExceptions(Exception ex) {
+    logError(ex);
+    return ResponseEntity
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(ex.getClass().getSimpleName());
+  }
 }
