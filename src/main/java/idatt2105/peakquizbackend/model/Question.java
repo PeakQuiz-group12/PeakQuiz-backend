@@ -11,7 +11,6 @@ import lombok.*;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.URL;
 
-import java.sql.Blob;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,8 +35,8 @@ public class Question {
 
   @Size(
           min = 2,
-          max = 20,
-          message = "Text is required, maximum 20 characters."
+          max = 100,
+          message = "Text is required, maximum 100 characters."
   )
   @NotNull
   @Column(nullable = false)

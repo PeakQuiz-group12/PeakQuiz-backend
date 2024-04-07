@@ -3,7 +3,6 @@ package idatt2105.peakquizbackend.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -39,11 +38,7 @@ public class User {
           updatable = false)
   @CreationTimestamp
   protected ZonedDateTime createdOn;
-  @Size(
-          min = 2,
-          max = 20,
-          message = "Username is required, maximum 20 characters."
-  )
+
   @NotNull
   @Column(nullable = false, unique = true)
   protected String username;
