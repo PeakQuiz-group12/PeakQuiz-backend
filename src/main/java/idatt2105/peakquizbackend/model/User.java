@@ -15,11 +15,21 @@ import java.util.HashSet;
 import java.util.Set;
 import org.hibernate.annotations.NaturalId;
 
+/**
+ * Represents a user in the system.
+ */
 @Entity
 @Table(name = "USERS")
 @NoArgsConstructor
 @Data
 public class User {
+    /**
+     * Constructs a new User object with the provided username, email, and password.
+     *
+     * @param username The username of the user.
+     * @param email The email of the user.
+     * @param password The password of the user.
+     */
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
@@ -46,7 +56,6 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    // Hash(password + salt) (probably not the appropriate datatype)
     @Getter
     @NotNull
     @Column(nullable = false)

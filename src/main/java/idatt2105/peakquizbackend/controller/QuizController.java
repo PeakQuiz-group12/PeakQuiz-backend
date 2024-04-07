@@ -103,17 +103,19 @@ public class QuizController {
 
     @Operation(summary = "Get quiz", description = "Get quiz based on its id")
     @GetMapping("/{id}")
-    public ResponseEntity<QuizResponseDTO> getQuiz(@PathVariable Long id) {
-      LOGGER.info("Received request for quiz with id: {}", id);
+    public ResponseEntity<QuizResponseDTO> getQuiz(
+            @Parameter(description = "ID of the quiz to be retrieved", required = true) @PathVariable Long id) {
+        LOGGER.info("Received request for quiz with id: {}", id);
         Quiz quiz = quizService.findQuizById(id);
 
         LOGGER.info("Successfully returned quiz");
         return ResponseEntity.ok(quizMapper.toDTO(quiz));
     }
 
-    @Operation(summary = "Get quiz", description = "Get quiz based on its id")
+    @Operation(summary = "Create quiz", description = "Create a new quiz")
     @PostMapping
-    public ResponseEntity<QuizResponseDTO> createQuiz(@RequestBody @NonNull QuizCreateDTO quizCreateDTO) {
+    public ResponseEntity<QuizResponseDTO> createQuiz(
+            @Parameter(description = "Quiz data to create", required = true) @RequestBody @NonNull QuizCreateDTO quizCreateDTO) {
         LOGGER.info("Received post request for quiz: {}", quizCreateDTO);
         Quiz quiz = quizMapper.fromQuizCreateDTOtoEntity(quizCreateDTO);
         quiz.getCategories().forEach(c -> c.addQuiz(quiz));
@@ -124,9 +126,11 @@ public class QuizController {
         return ResponseEntity.ok(quizResponseDTO);
     }
 
+    @Operation(summary = "Edit quiz", description = "Edit an existing quiz")
     @PutMapping("/{id}")
-    public ResponseEntity<QuizResponseDTO> editQuiz(@PathVariable Long id,
-            @RequestBody QuizResponseDTO quizResponseDTO) {
+    public ResponseEntity<QuizResponseDTO> editQuiz(
+            @Parameter(description = "ID of the quiz to be edited", required = true) @PathVariable Long id,
+            @Parameter(description = "Updated quiz data", required = true) @RequestBody QuizResponseDTO quizResponseDTO) {
         LOGGER.info("Received put request for quiz: " + quizResponseDTO);
         Quiz quiz = quizService.findQuizById(id);
         QuizMapper.INSTANCE.updateQuizFromDTO(quizResponseDTO, quiz);
@@ -148,10 +152,11 @@ public class QuizController {
         return ResponseEntity.ok(QuizMapper.INSTANCE.toDTO(quiz));
     }
 
+    @Operation(summary = "Get games by quiz ID", description = "Get all games associated with a quiz by its ID")
     @GetMapping("/games/{id}")
-    public ResponseEntity<Set<GameDTO>> getGames(@PathVariable Long id) {
-        LOGGER.info("Received request fo games by quiz with id: " + id);
-        // List<Game> games = gameService.findGamesByQuizId(id);
+    public ResponseEntity<Set<GameDTO>> getGames(
+            @Parameter(description = "ID of the quiz to retrieve games for", required = true) @PathVariable Long id) {
+        LOGGER.info("Received request for games by quiz with id: " + id);
         Set<Game> games = quizService.findQuizById(id).getGames();
 
         LOGGER.info("Successfully found games");
@@ -161,8 +166,10 @@ public class QuizController {
         return ResponseEntity.ok(gameDTOs);
     }
 
+    @Operation(summary = "Delete quiz", description = "Delete a quiz by its ID")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteQuiz(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteQuiz(
+            @Parameter(description = "ID of the quiz to be deleted", required = true) @PathVariable Long id) {
         LOGGER.info("Received delete request for quiz_id: " + id);
 
         quizService.deleteQuizById(id);

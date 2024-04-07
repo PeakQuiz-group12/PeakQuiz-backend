@@ -10,19 +10,31 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Configuration class for security settings.
+ */
 @Configuration
 public class SecurityConfig {
 
+    /**
+     * Bean for BCryptPasswordEncoder.
+     * @return BCryptPasswordEncoder bean
+     */
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Configures security filter chain.
+     * @param http HttpSecurity object
+     * @return SecurityFilterChain object
+     * @throws Exception If an error occurs during configuration
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .headers((headers) -> headers.frameOptions(FrameOptionsConfig::disable))
-                // .cors().and()
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/console/**", "/login", "/register", "/refreshToken", "/swagger-ui/**",
                                 "/v3/api-docs/**", "/v3/api-docs/", "swagger-ui.html", "/webjars/**, /forgotPassword")

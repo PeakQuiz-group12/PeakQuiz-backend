@@ -12,6 +12,8 @@ import idatt2105.peakquizbackend.service.CollaborationService;
 import idatt2105.peakquizbackend.service.QuizService;
 import idatt2105.peakquizbackend.service.SortingService;
 import idatt2105.peakquizbackend.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -43,9 +45,12 @@ public class CollaborationController {
         this.quizService = quizService;
     }
 
+    @Operation(summary = "Create collaboration", description = "Create a new collaboration between a user and a quiz")
     @PostMapping
-    public ResponseEntity<CollaborationDTO> createCollaboration(@RequestParam Long userId, @RequestParam Long quizId,
-            @RequestParam CollaboratorType collaborationType) {
+    public ResponseEntity<CollaborationDTO> createCollaboration(
+            @Parameter(description = "User ID") @RequestParam Long userId,
+            @Parameter(description = "Quiz ID") @RequestParam Long quizId,
+            @Parameter(description = "Collaborator type") @RequestParam CollaboratorType collaborationType) {
         User user = userService.findUserByUserId(userId);
         Quiz quiz = quizService.findQuizById(quizId);
 
@@ -54,12 +59,13 @@ public class CollaborationController {
         return ResponseEntity.ok(dto);
     }
 
-    // TODO: Consider to user quiz endpoint: /quizzes/{id}/collaborators
+    @Operation(summary = "Get collaborators", description = "Get collaborators of a quiz")
     @GetMapping("/user")
-    public ResponseEntity<?> getCollaborators(@RequestParam Long quizId,
-            @RequestParam(defaultValue = "0", required = false) int page,
-            @RequestParam(defaultValue = "5", required = false) int size,
-            @RequestParam(defaultValue = "username:asc", required = false) String[] sort) {
+    public ResponseEntity<?> getCollaborators(
+            @Parameter(description = "Quiz ID") @RequestParam Long quizId,
+            @Parameter(description = "Page number") @RequestParam(defaultValue = "0", required = false) int page,
+            @Parameter(description = "Page size") @RequestParam(defaultValue = "5", required = false) int size,
+            @Parameter(description = "Sorting criteria") @RequestParam(defaultValue = "username:asc", required = false) String[] sort) {
         LOGGER.info("Received get request for collaborators of quiz: " + quizId);
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(SortingService.convertToOrder(sort)));
@@ -74,12 +80,14 @@ public class CollaborationController {
         return ResponseEntity.ok(collaborators);
     }
 
-    // TODO: Consider move to user endpoint: user/{id}/collaborations
+    @Operation(summary = "Get user quizzes", description = "Get quizzes of a user with specified collaborator type")
     @GetMapping("/quiz")
-    public ResponseEntity<?> getUserQuizzes(@RequestParam Long userId, @RequestParam CollaboratorType collaboratorType,
-            @RequestParam(defaultValue = "0", required = false) int page,
-            @RequestParam(defaultValue = "5", required = false) int size,
-            @RequestParam(defaultValue = "createdOn:desc") String[] sort) {
+    public ResponseEntity<?> getUserQuizzes(
+            @Parameter(description = "User ID") @RequestParam Long userId,
+            @Parameter(description = "Collaborator type") @RequestParam CollaboratorType collaboratorType,
+            @Parameter(description = "Page number") @RequestParam(defaultValue = "0", required = false) int page,
+            @Parameter(description = "Page size") @RequestParam(defaultValue = "5", required = false) int size,
+            @Parameter(description = "Sorting criteria") @RequestParam(defaultValue = "createdOn:desc") String[] sort) {
         LOGGER.info("Received get request for quizzes of: " + userId + " with type: " + collaboratorType.toString());
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(SortingService.convertToOrder(sort)));

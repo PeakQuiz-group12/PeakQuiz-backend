@@ -10,6 +10,9 @@ import org.hibernate.envers.NotAudited;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Represents a tag associated with a user in the system.
+ */
 @Entity
 @Table(name = "TAG", uniqueConstraints = { @UniqueConstraint(columnNames = { "USER_ID", "TITLE" }) })
 @Data
