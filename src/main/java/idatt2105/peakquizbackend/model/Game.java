@@ -10,30 +10,37 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 @Entity
-@Getter
-@Builder
-@NoArgsConstructor
 @Immutable
+@Builder
+@Getter
+@NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Game {
   @Embeddable
   @EqualsAndHashCode
   @NoArgsConstructor
+  @ToString
+  @Setter
   public static class GameId implements Serializable {
+
     @Column(name = "USER_ID")
     private Long userId;
 
     @Column(name = "QUIZ_ID")
     private Long quizId;
 
-    public GameId(Long userId, Long quizId) {
+    @Column(name = "CREATED_ON")
+    private ZonedDateTime createdOn = ZonedDateTime.now();
+
+    public GameId(@NonNull Long userId, @NonNull Long quizId) {
       this.userId = userId;
       this.quizId = quizId;
     }
   }
 
   @EmbeddedId
-  private final GameId id = new GameId();
+  private GameId id = new GameId();
 
   @Column(updatable = false)
   @NotNull
@@ -46,24 +53,18 @@ public class Game {
   private String feedback;
 
   @Temporal(TemporalType.TIMESTAMP)
-  @Column(nullable = false,
-          updatable = false)
+  @Column(nullable = false, updatable = false)
   @CreationTimestamp
   private ZonedDateTime playedOn;
 
   // missing like, im unsure about what it signifies
 
   @ManyToOne
-  @JoinColumn(
-          name = "USER_ID",
-          insertable = false, updatable = false)
+  @JoinColumn(name = "USER_ID", insertable = false, updatable = false)
   private User user;
 
   @ManyToOne
-  @JoinColumn(
-          name = "QUIZ_ID",
-          insertable = false, updatable = false
-  )
+  @JoinColumn(name = "QUIZ_ID", insertable = false, updatable = false)
   private Quiz quiz;
 
   public Game(Integer correctAnswers, Byte rating, String feedback, User user, Quiz quiz) {
@@ -72,6 +73,7 @@ public class Game {
     this.feedback = feedback;
     this.user = user;
     this.quiz = quiz;
-    this.user.getGames().add(this);
+    this.id.quizId = quiz.getId();
+    this.id.userId = user.getId();
   }
 }

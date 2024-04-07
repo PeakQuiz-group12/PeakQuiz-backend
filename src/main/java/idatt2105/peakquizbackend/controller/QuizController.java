@@ -15,10 +15,8 @@ import idatt2105.peakquizbackend.service.CategoryService;
 import idatt2105.peakquizbackend.service.QuestionService;
 import idatt2105.peakquizbackend.service.QuizService;
 import idatt2105.peakquizbackend.service.SortingService;
-import idatt2105.peakquizbackend.service.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -67,10 +65,6 @@ public class QuizController {
   private final GameMapper gameMapper;
 
   private final static Logger LOGGER = LoggerFactory.getLogger(QuizController.class);
-  @Autowired
-  private GameService gameService;
-  @Autowired
-  private UserService userService;
 
   @Operation(
       summary = "Get quizzes",
@@ -85,13 +79,31 @@ public class QuizController {
       @RequestParam(defaultValue = "6", required = false) int size,
 
       @Parameter(description = "Sorting column and ordering direction")
-      @RequestParam(defaultValue = "id:asc", required = false) String[] sort
+      @RequestParam(defaultValue = "id:asc", required = false) String[] sort,
+
+      @Parameter(description = "Boolean that decides whether to filter by templates")
+      @RequestParam(defaultValue = "false", required = false) boolean isTemplate,
+
+      @Parameter(description = "Quiz difficulty")
+      @RequestParam(required = false) Byte difficulty,
+
+      @Parameter(description = "Categories")
+      @RequestParam(required = false) List<String> categoryNames
   ) {
     LOGGER.info("Received get-request for quizzes");
-    System.out.println(Arrays.toString(sort));
+
     Sort sortCriteria = Sort.by(SortingService.convertToOrder(sort));
     Pageable pageable = PageRequest.of(page, size, sortCriteria);
-    Page<Quiz> quizzes = quizService.findAllQuizzes(pageable);
+
+    Page<Quiz> quizzes;
+    if (isTemplate) {
+      quizzes = quizService.findAllTemplates(pageable);
+    } else if (categoryNames != null) {
+      List<Long> categoryIds = categoryNames.stream().map(name -> categoryService.findCategoryByName(name).getId()).toList();
+      quizzes = quizService.findQuizzesWithFilters(categoryIds, pageable);
+    } else {
+      quizzes = quizService.findAllQuizzes(pageable);
+    }
 
     Page<QuizResponseDTO> quizResponseDTOS = quizzes.map(quizMapper::toDTO);
     LOGGER.info("Successfully found quizzes");

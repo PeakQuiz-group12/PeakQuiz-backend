@@ -40,7 +40,8 @@ public class AuthenticationController {
 
   @PostMapping("/register")
   @CrossOrigin
-  public ResponseEntity<?> registerUser(@RequestParam String username, @RequestParam String password) {
+  public ResponseEntity<?> registerUser(@RequestParam String username, @RequestParam String password,
+  @RequestParam String mail) {
     System.out.println(username + password);
 
     if (userService.usernameExists(username)) {
@@ -58,7 +59,7 @@ public class AuthenticationController {
 
 
 
-    userService.saveUser(new User(username, "test@test.com", encodedPassword));
+    userService.saveUser(new User(username, mail, encodedPassword));
     System.out.println("New user registered");
 
     String accessToken = generateToken(username, Duration.ofMinutes(5));
@@ -86,8 +87,8 @@ public class AuthenticationController {
     String encodedPassword = user.getPassword();
 
     if(bCryptPasswordEncoder.matches(password, encodedPassword)) {
-      String accessToken = generateToken(username, Duration.ofMinutes(5));
-      String refreshToken = generateToken(username, Duration.ofMinutes(30));
+      String accessToken = generateToken(username, Duration.ofMinutes(120));
+      String refreshToken = generateToken(username, Duration.ofMinutes(120));
       Map<String, String> tokens = new HashMap<>();
       tokens.put("accessToken", accessToken);
       tokens.put("refreshToken", refreshToken);

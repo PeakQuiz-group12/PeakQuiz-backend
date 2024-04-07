@@ -2,12 +2,13 @@ package idatt2105.peakquizbackend.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Formula;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 
-import java.sql.Blob;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,9 +30,9 @@ public class Quiz {
 
   private String description;
 
-  // Blob is a class containing a stream of bytes. In this case the bytes represent an image.
-  // alternatively we can use String:filename if we have access to a filesystem
-  @URL(regexp = "^(http|https).*\\.(jpg|png)")
+  private boolean isTemplate = false;
+
+  @URL(regexp = "(?i)^(http|https):\\/\\/.+\\.(jpg|jpeg|png|gif)$", message = "Invalid image URL format")
   private String imageUrl;
 
   @Temporal(TemporalType.TIMESTAMP)
@@ -48,7 +49,9 @@ public class Quiz {
   private Integer playCount;
 
   @NotAudited
-  @OneToMany(mappedBy = "quiz", fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+  @ToString.Exclude
+  @EqualsAndHashCode.Exclude
+  @OneToMany(mappedBy = "quiz", fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
   private Set<Game> games = new HashSet<>();
 
   // Bidirectional mapping between quizzes and questions

@@ -3,6 +3,7 @@ package idatt2105.peakquizbackend.service;
 import idatt2105.peakquizbackend.exceptions.UserNotFoundException;
 import idatt2105.peakquizbackend.model.User;
 import idatt2105.peakquizbackend.repository.UserRepository;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,9 @@ public class UserService {
   public User findUserByUserId(Long id) {
     return userRepository.findById(id)
         .orElseThrow(UserNotFoundException::new);
+  }
+  public List<User> findAllUsers() {
+    return userRepository.findAll();
   }
 
 }

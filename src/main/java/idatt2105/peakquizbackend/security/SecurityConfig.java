@@ -1,9 +1,12 @@
 package idatt2105.peakquizbackend.security;
 
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -17,18 +20,24 @@ public class SecurityConfig {
     return new BCryptPasswordEncoder();
   }
 
-  // inject SecurityFilterChain and tell that all requests are authenticated
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
       .csrf(AbstractHttpConfigurer::disable)
-      //.cors().and()
+        .headers((headers) ->
+            headers
+                .frameOptions(FrameOptionsConfig::disable)
+        )
+    //.cors().and()
       .authorizeHttpRequests(
-              authorize -> authorize
-                      .requestMatchers("/login", "/register", "/refreshToken", "/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs/", "swagger-ui.html", "/webjars/**, /forgotPassword")
-                      .permitAll()
-                      .anyRequest()
-                      .authenticated()
+              authorize -> {
+                authorize.requestMatchers(toH2Console()).permitAll();
+                authorize
+                    .requestMatchers("/console/**", "/login", "/register", "/refreshToken", "/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs/", "swagger-ui.html", "/webjars/**, /forgotPassword")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated();
+              }
       )
       .sessionManagement(
               manager -> manager
