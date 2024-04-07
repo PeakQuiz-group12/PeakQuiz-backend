@@ -9,7 +9,6 @@ import org.hibernate.annotations.Formula;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 
-import java.sql.Blob;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,9 +32,7 @@ public class Quiz {
 
   private boolean isTemplate = false;
 
-  // Blob is a class containing a stream of bytes. In this case the bytes represent an image.
-  // alternatively we can use String:filename if we have access to a filesystem
-  @URL(regexp = "^(http|https).*\\.(jpg|png)")
+  @URL(regexp = "(?i)^(http|https):\\/\\/.+\\.(jpg|jpeg|png|gif)$", message = "Invalid image URL format")
   private String imageUrl;
 
   @Temporal(TemporalType.TIMESTAMP)
