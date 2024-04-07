@@ -20,6 +20,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collections;
 
+/**
+ * Filter to handle JWT token-based authorization.
+ */
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     private static final Logger LOGGER = LogManager.getLogger(JWTAuthorizationFilter.class);
@@ -60,6 +63,11 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    /**
+     * Validate the JWT token and retrieve the user ID from it.
+     * @param token The JWT token to validate
+     * @return The user ID extracted from the token if the token is valid, null otherwise
+     */
     public String validateTokenAndGetUserId(final String token) {
         try {
             final Algorithm hmac512 = Algorithm.HMAC512(AuthenticationController.keyStr);

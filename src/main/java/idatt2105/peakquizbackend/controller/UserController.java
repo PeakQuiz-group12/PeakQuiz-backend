@@ -16,6 +16,9 @@ import idatt2105.peakquizbackend.service.TagService;
 import idatt2105.peakquizbackend.service.UserService;
 import java.util.HashSet;
 import java.util.List;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.slf4j.Logger;
@@ -44,6 +47,7 @@ public class UserController {
     GameMapper gameMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
+    @Operation(summary = "Get users", description = "Get all users")
     @GetMapping
     public ResponseEntity<List<UserDTO>> getUsers() {
         List<User> users = userService.findAllUsers();
@@ -51,14 +55,10 @@ public class UserController {
         return ResponseEntity.ok(userDTOS);
     }
 
-    @GetMapping("/games")
-    public ResponseEntity<Set<GameDTO>> getAllGames() {
-        Set<GameDTO> games = gameMapper.toDTOs(new HashSet<>(gameService.findAllGames()));
-        return ResponseEntity.ok(games);
-    }
-
+    @Operation(summary = "Get games by username", description = "Get all games associated with a user by their username")
     @GetMapping("/{username}/games")
-    public ResponseEntity<Set<GameDTO>> getGames(@PathVariable String username) {
+    public ResponseEntity<Set<GameDTO>> getGames(
+            @Parameter(description = "Username of the user to retrieve games for", required = true) @PathVariable String username) {
         LOGGER.info("Received request for games by user: {}", username);
         Set<Game> games = userService.findUserByUsername(username).getGames();
 
@@ -69,8 +69,11 @@ public class UserController {
         return ResponseEntity.ok(gameDTOs);
     }
 
+    @Operation(summary = "Create game", description = "Create a new game for a user")
     @PostMapping("/{username}/games")
-    public ResponseEntity<GameDTO> createGame(@PathVariable String username, @RequestBody @NonNull GameDTO gameDTO) {
+    public ResponseEntity<GameDTO> createGame(
+            @Parameter(description = "Username of the user to create a game for", required = true) @PathVariable String username,
+            @Parameter(description = "Game data to create", required = true) @RequestBody @NonNull GameDTO gameDTO) {
         LOGGER.info("Received post request for game: {}", gameDTO);
 
         if (!username.equals(gameDTO.getUsername()))
@@ -91,16 +94,21 @@ public class UserController {
         return ResponseEntity.ok(gameMapper.toDTO(savedGame));
     }
 
+    @Operation(summary = "Get tags by username", description = "Get all tags associated with a user by their username")
     @GetMapping("/{username}/tags")
-    public ResponseEntity<Set<TagDTO>> getTags(@PathVariable String username) {
+    public ResponseEntity<Set<TagDTO>> getTags(
+            @Parameter(description = "Username of the user to retrieve tags for", required = true) @PathVariable String username) {
         LOGGER.info("Received get request for tags by user: {}", username);
         User user = userService.findUserByUsername(username);
         Set<TagDTO> tags = user.getTags().stream().map(tagMapper::toDTO).collect(Collectors.toSet());
         return ResponseEntity.ok(tags);
     }
 
+    @Operation(summary = "Create tag", description = "Create a new tag for a user")
     @PostMapping("/{username}/tags")
-    public ResponseEntity<TagDTO> createTag(@PathVariable String username, @RequestBody @NonNull TagDTO tagDTO) {
+    public ResponseEntity<TagDTO> createTag(
+            @Parameter(description = "Username of the user to create a tag for", required = true) @PathVariable String username,
+            @Parameter(description = "Tag data to create", required = true) @RequestBody @NonNull TagDTO tagDTO) {
         LOGGER.info("Received post request for tag: {}", tagDTO);
         User user = userService.findUserByUsername(username);
         Tag tag = tagMapper.fromTagDTOtoEntity(tagDTO);
@@ -111,8 +119,11 @@ public class UserController {
         return ResponseEntity.ok(tagMapper.toDTO(persistedTag));
     }
 
+    @Operation(summary = "Update tag", description = "Update an existing tag for a user")
     @PutMapping("/{username}/tags")
-    public ResponseEntity<TagDTO> updateTag(@PathVariable String username, @RequestBody TagDTO tagDTO) {
+    public ResponseEntity<TagDTO> updateTag(
+            @Parameter(description = "Username of the user to update a tag for", required = true) @PathVariable String username,
+            @Parameter(description = "Updated tag data", required = true) @RequestBody TagDTO tagDTO) {
         LOGGER.info("Received put request for tag: {}", tagDTO);
         Tag tag = tagService.findTagById(tagDTO.getId());
         tagMapper.updateTagFromDTO(tagDTO, tag);

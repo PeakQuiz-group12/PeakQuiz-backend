@@ -12,6 +12,9 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+/**
+ * Service class for sending emails and handling password resets.
+ */
 @Service
 public class EmailService {
 
@@ -24,6 +27,12 @@ public class EmailService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Sends an email.
+     * @param fromUsername The username of the sender
+     * @param subject The subject of the email
+     * @param messageToSend The message content of the email
+     */
     public void sendEmail(String fromUsername, String subject, String messageToSend) {
         System.out.println("Start sender mail");
 
@@ -74,6 +83,11 @@ public class EmailService {
         });
     }
 
+    /**
+     * Generates a temporary password.
+     * @param length The length of the temporary password to generate
+     * @return The generated temporary password
+     */
     private String generateTemporaryPassword(int length) {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         Random random = new Random();
@@ -84,6 +98,10 @@ public class EmailService {
         return tempPassword.toString();
     }
 
+    /**
+     * Sends a temporary password to the user's email address to reset their password.
+     * @param email The email address of the user requesting the password reset
+     */
     public void forgotPassword(String email) {
         if (email == null || email.trim().isEmpty()) {
             System.out.println("Email address is null or empty.");
