@@ -29,7 +29,8 @@ public class Quiz {
 
     private boolean isTemplate = false;
 
-    @URL(regexp = "(?i)^(http|https):\\/\\/.+\\.(jpg|jpeg|png|gif)$", message = "Invalid image URL format")
+    @Column(columnDefinition = "TEXT", length = 2048)
+    @URL(regexp = "(?i)^(http|https):\\/\\/.+\\.(jpg|jpeg|png|gif)$", message = "Invalid image URL format. Must start with http/https and be of type .jpg, .jpeg, .png or .gif")
     private String imageUrl;
 
     @Temporal(TemporalType.TIMESTAMP)
