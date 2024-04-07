@@ -35,7 +35,7 @@ public class UserControllerTest {
     @MockBean
     TagService tagService;
     @MockBean
-    QuizService quizService;
+    private QuizService quizService;
 
     @TestConfiguration
     static class MapperTestConfiguration {
