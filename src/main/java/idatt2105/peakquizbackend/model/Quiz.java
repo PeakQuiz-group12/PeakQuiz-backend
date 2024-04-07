@@ -31,7 +31,7 @@ public class Quiz {
 
   private String description;
 
-  private boolean isTemplate;
+  private boolean isTemplate = false;
 
   // Blob is a class containing a stream of bytes. In this case the bytes represent an image.
   // alternatively we can use String:filename if we have access to a filesystem

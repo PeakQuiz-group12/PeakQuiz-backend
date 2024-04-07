@@ -4,10 +4,12 @@ import idatt2105.peakquizbackend.model.Category;
 import idatt2105.peakquizbackend.model.Question;
 import idatt2105.peakquizbackend.model.Quiz;
 import idatt2105.peakquizbackend.model.embedded.Answer;
+import idatt2105.peakquizbackend.model.enums.QuestionType;
 import idatt2105.peakquizbackend.service.CategoryService;
 import idatt2105.peakquizbackend.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -45,22 +47,24 @@ public class AppStartup implements CommandLineRunner {
     }
 
     private void prepareTemplates() {
-        // todo: if test for whether the template exists
-        // todo: set id to 1L
+        final int nrTemplates = 1;
+        if (quizService.findAllTemplates(PageRequest.of(0,3)).getTotalElements() == nrTemplates) return;
+
         Quiz quiz = new Quiz();
         quiz.setTemplate(true);
 
-        // todo: might cause duplicate category issues
-        quiz.setCategories(Set.of(new Category("History")));
+        Category category = categoryService.findCategoryByName("History");
+        quiz.setCategories(Set.of(category));
         quiz.setTitle("Smash");
-        quiz.setDescription("This is a quiz about smash");
+        quiz.setDescription("This is a quiz");
 
         Question question = new Question();
-        question.setText("How many characters are there in Smash ultimate");
-        question.getAnswers().add(new Answer());
-        question.getAnswers().add(new Answer());
+        question.setText("How many");
+        question.setQuestionType(QuestionType.MULTIPLE_CHOICE);
+        question.setDifficulty((byte) 5);
+        question.setAnswers(Set.of(new Answer("76", false), new Answer("55", true)));
 
+        quiz.addQuestion(question);
         quizService.saveQuiz(quiz);
-        //quiz.setQuestions(Set.ofquestion);
         }
 }
