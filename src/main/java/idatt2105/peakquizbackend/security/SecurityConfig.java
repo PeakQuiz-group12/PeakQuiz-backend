@@ -31,7 +31,6 @@ public class SecurityConfig {
     //.cors().and()
       .authorizeHttpRequests(
               authorize -> {
-                authorize.requestMatchers(toH2Console()).permitAll();
                 authorize
                     .requestMatchers("/console/**", "/login", "/register", "/refreshToken", "/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs/", "swagger-ui.html", "/webjars/**, /forgotPassword")
                     .permitAll()
