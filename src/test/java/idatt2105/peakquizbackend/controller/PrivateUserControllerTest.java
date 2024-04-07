@@ -34,53 +34,47 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest({ PrivateUserControllerTest.class, SecurityConfig.class, JWTAuthorizationFilter.class})
+@WebMvcTest({ PrivateUserControllerTest.class, SecurityConfig.class, JWTAuthorizationFilter.class })
 public class PrivateUserControllerTest {
 
-  @Autowired
-  private MockMvc mvc;
+    @Autowired
+    private MockMvc mvc;
 
-  @MockBean
-  private UserService userService;
+    @MockBean
+    private UserService userService;
 
-  @MockBean
-  private AuthService authService;
+    @MockBean
+    private AuthService authService;
 
-  @MockBean
-  private Authentication authentication;
+    @MockBean
+    private Authentication authentication;
 
-  @MockBean
-  private SecurityContextHolder securityContextHolder;
+    @MockBean
+    private SecurityContextHolder securityContextHolder;
 
-  @Autowired
-  private UserMapper userMapper;
+    @Autowired
+    private UserMapper userMapper;
 
-  @TestConfiguration
-  static class MapperTestConfiguration {
-    @Bean
-    public UserMapper userMapper() {
-      return new UserMapperImpl();
+    @TestConfiguration
+    static class MapperTestConfiguration {
+        @Bean
+        public UserMapper userMapper() {
+            return new UserMapperImpl();
+        }
     }
-  }
 
-  @Test
-  public void testGetMeUnauthenticated() throws Exception {
-    mvc.perform(
-            MockMvcRequestBuilders.get("/users/me")
-                .accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isForbidden());
-  }
+    @Test
+    public void testGetMeUnauthenticated() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/users/me").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
 
-  @Test
-  public void testUpdateMeUnauthenticated() throws Exception {
+    @Test
+    public void testUpdateMeUnauthenticated() throws Exception {
 
-    String content = "{password=123}";
-    mvc.perform(
-            MockMvcRequestBuilders.put("/users/me")
-                .content(content)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isForbidden());
-  }
+        String content = "{password=123}";
+        mvc.perform(MockMvcRequestBuilders.put("/users/me").content(content).contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isForbidden());
+    }
 
 }

@@ -18,6 +18,7 @@ public class SecurityConfig {
 
     /**
      * Bean for BCryptPasswordEncoder.
+     * 
      * @return BCryptPasswordEncoder bean
      */
     @Bean
@@ -27,9 +28,12 @@ public class SecurityConfig {
 
     /**
      * Configures security filter chain.
-     * @param http HttpSecurity object
+     * 
+     * @param http
+     *            HttpSecurity object
      * @return SecurityFilterChain object
-     * @throws Exception If an error occurs during configuration
+     * @throws Exception
+     *             If an error occurs during configuration
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

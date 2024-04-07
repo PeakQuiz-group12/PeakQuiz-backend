@@ -25,9 +25,13 @@ public class CollaborationService {
 
     /**
      * Saves a collaboration between a user and a quiz.
-     * @param user The user involved in the collaboration
-     * @param quiz The quiz involved in the collaboration
-     * @param collaboratorType The type of collaboration
+     * 
+     * @param user
+     *            The user involved in the collaboration
+     * @param quiz
+     *            The quiz involved in the collaboration
+     * @param collaboratorType
+     *            The type of collaboration
      * @return The saved collaboration
      */
     public Collaboration saveCollaboration(User user, Quiz quiz, CollaboratorType collaboratorType) {
@@ -37,8 +41,11 @@ public class CollaborationService {
 
     /**
      * Finds collaborators by quiz ID.
-     * @param quizId The ID of the quiz to find collaborators for
-     * @param pageable Pagination information
+     * 
+     * @param quizId
+     *            The ID of the quiz to find collaborators for
+     * @param pageable
+     *            Pagination information
      * @return Page of user DTOs who are collaborators on the specified quiz
      */
     public Page<UserDTO> findCollaboratorsByQuizId(Long quizId, Pageable pageable) {
@@ -48,9 +55,13 @@ public class CollaborationService {
 
     /**
      * Finds quizzes by user ID and collaborator type.
-     * @param userId The ID of the user to find quizzes for
-     * @param collaboratorType The type of collaboration
-     * @param pageable Pagination information
+     * 
+     * @param userId
+     *            The ID of the user to find quizzes for
+     * @param collaboratorType
+     *            The type of collaboration
+     * @param pageable
+     *            Pagination information
      * @return Page of quiz response DTOs for quizzes associated with the specified user and collaborator type
      */
     public Page<QuizResponseDTO> findQuizzesByUserId(Long userId, CollaboratorType collaboratorType,

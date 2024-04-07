@@ -61,8 +61,7 @@ public class CollaborationController {
 
     @Operation(summary = "Get collaborators", description = "Get collaborators of a quiz")
     @GetMapping("/user")
-    public ResponseEntity<?> getCollaborators(
-            @Parameter(description = "Quiz ID") @RequestParam Long quizId,
+    public ResponseEntity<?> getCollaborators(@Parameter(description = "Quiz ID") @RequestParam Long quizId,
             @Parameter(description = "Page number") @RequestParam(defaultValue = "0", required = false) int page,
             @Parameter(description = "Page size") @RequestParam(defaultValue = "5", required = false) int size,
             @Parameter(description = "Sorting criteria") @RequestParam(defaultValue = "username:asc", required = false) String[] sort) {
@@ -82,8 +81,7 @@ public class CollaborationController {
 
     @Operation(summary = "Get user quizzes", description = "Get quizzes of a user with specified collaborator type")
     @GetMapping("/quiz")
-    public ResponseEntity<?> getUserQuizzes(
-            @Parameter(description = "User ID") @RequestParam Long userId,
+    public ResponseEntity<?> getUserQuizzes(@Parameter(description = "User ID") @RequestParam Long userId,
             @Parameter(description = "Collaborator type") @RequestParam CollaboratorType collaboratorType,
             @Parameter(description = "Page number") @RequestParam(defaultValue = "0", required = false) int page,
             @Parameter(description = "Page size") @RequestParam(defaultValue = "5", required = false) int size,

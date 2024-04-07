@@ -21,7 +21,9 @@ public class CategoryService {
 
     /**
      * Finds categories by quiz ID.
-     * @param quizId The ID of the quiz to find categories for
+     * 
+     * @param quizId
+     *            The ID of the quiz to find categories for
      * @return Set of categories associated with the specified quiz
      */
     public Set<Category> findCategoriesByQuizId(Long quizId) {
@@ -30,18 +32,22 @@ public class CategoryService {
 
     /**
      * Finds a category by its name.
-     * @param name The name of the category to find
+     * 
+     * @param name
+     *            The name of the category to find
      * @return The category with the specified name
-     * @throws CategoryNotFoundException if no category with the specified name is found
+     * @throws CategoryNotFoundException
+     *             if no category with the specified name is found
      */
     public Category findCategoryByName(String name) {
-        return categoryRepository.findCategoryByName(name)
-                .orElseThrow(CategoryNotFoundException::new);
+        return categoryRepository.findCategoryByName(name).orElseThrow(CategoryNotFoundException::new);
     }
 
     /**
      * Checks if a category exists by name.
-     * @param name The name of the category to check
+     * 
+     * @param name
+     *            The name of the category to check
      * @return true if the category exists, false otherwise
      */
     public boolean categoryExists(String name) {
@@ -50,7 +56,9 @@ public class CategoryService {
 
     /**
      * Saves a category.
-     * @param category The category to save
+     * 
+     * @param category
+     *            The category to save
      * @return The saved category
      */
     public Category saveCategory(Category category) {

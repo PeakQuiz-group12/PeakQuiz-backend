@@ -39,7 +39,8 @@ public abstract class TagMapper {
     /**
      * Converts a TagDTO to a Tag entity.
      *
-     * @param tagDTO The TagDTO to convert
+     * @param tagDTO
+     *            The TagDTO to convert
      * @return The corresponding Tag entity
      */
     @Mapping(target = "user", source = "username", qualifiedByName = "mapUser")
@@ -51,7 +52,8 @@ public abstract class TagMapper {
     /**
      * Converts a Tag entity to a TagDTO.
      *
-     * @param tag The Tag entity to convert
+     * @param tag
+     *            The Tag entity to convert
      * @return The corresponding TagDTO
      */
     @Mapping(target = "id", source = "id")
@@ -63,8 +65,10 @@ public abstract class TagMapper {
     /**
      * Updates a Tag entity from a TagDTO.
      *
-     * @param tagDTO The TagDTO to update from
-     * @param tag The target Tag entity to update
+     * @param tagDTO
+     *            The TagDTO to update from
+     * @param tag
+     *            The target Tag entity to update
      */
     @Mapping(target = "user", source = "username", qualifiedByName = "mapUser")
     @Mapping(target = "title", source = "title")
@@ -75,7 +79,8 @@ public abstract class TagMapper {
     /**
      * Maps a set of Question entities to a set of QuestionDTOs.
      *
-     * @param questions The set of Question entities to map
+     * @param questions
+     *            The set of Question entities to map
      * @return The set of corresponding QuestionDTOs
      */
     @Named("mapToQuestionDTOs")
@@ -86,7 +91,8 @@ public abstract class TagMapper {
     /**
      * Maps a User entity to its username.
      *
-     * @param user The User entity to map
+     * @param user
+     *            The User entity to map
      * @return The corresponding username
      */
     @Named("mapToUsername")
@@ -97,7 +103,8 @@ public abstract class TagMapper {
     /**
      * Maps a username to a User entity.
      *
-     * @param username The username to map
+     * @param username
+     *            The username to map
      * @return The corresponding User entity
      */
     @Named("mapUser")
@@ -108,7 +115,8 @@ public abstract class TagMapper {
     /**
      * Maps a set of QuestionDTOs to a set of Question entities.
      *
-     * @param questions The set of QuestionDTOs to map
+     * @param questions
+     *            The set of QuestionDTOs to map
      * @return The set of corresponding Question entities
      */
     @Named("mapQuestions")

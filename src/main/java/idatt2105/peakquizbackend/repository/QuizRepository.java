@@ -16,7 +16,9 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
 
     /**
      * Retrieves all templates with pagination.
-     * @param pageable Pagination information
+     * 
+     * @param pageable
+     *            Pagination information
      * @return Page of Quiz entities representing templates
      */
     @Query("SELECT q FROM Quiz q WHERE q.isTemplate = true")
@@ -24,12 +26,14 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
 
     /**
      * Retrieves quizzes based on filtering criteria with pagination.
-     * @param categoryIds List of category IDs to filter the quizzes
-     * @param pageable Pagination information
+     * 
+     * @param categoryIds
+     *            List of category IDs to filter the quizzes
+     * @param pageable
+     *            Pagination information
      * @return Page of Quiz entities filtered by category IDs
      */
-    @Query("SELECT q FROM Quiz q "
-            + "LEFT JOIN q.categories c "
+    @Query("SELECT q FROM Quiz q " + "LEFT JOIN q.categories c "
             + "WHERE (:categoryIds IS NULL OR c.id IN (:categoryIds)) ")
     Page<Quiz> findAllFiltered(@Param("categoryIds") List<Long> categoryIds, Pageable pageable);
 }

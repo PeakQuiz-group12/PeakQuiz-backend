@@ -29,9 +29,13 @@ public class EmailService {
 
     /**
      * Sends an email.
-     * @param fromUsername The username of the sender
-     * @param subject The subject of the email
-     * @param messageToSend The message content of the email
+     * 
+     * @param fromUsername
+     *            The username of the sender
+     * @param subject
+     *            The subject of the email
+     * @param messageToSend
+     *            The message content of the email
      */
     public void sendEmail(String fromUsername, String subject, String messageToSend) {
         System.out.println("Start sender mail");
@@ -85,7 +89,9 @@ public class EmailService {
 
     /**
      * Generates a temporary password.
-     * @param length The length of the temporary password to generate
+     * 
+     * @param length
+     *            The length of the temporary password to generate
      * @return The generated temporary password
      */
     private String generateTemporaryPassword(int length) {
@@ -100,7 +106,9 @@ public class EmailService {
 
     /**
      * Sends a temporary password to the user's email address to reset their password.
-     * @param email The email address of the user requesting the password reset
+     * 
+     * @param email
+     *            The email address of the user requesting the password reset
      */
     public void forgotPassword(String email) {
         if (email == null || email.trim().isEmpty()) {

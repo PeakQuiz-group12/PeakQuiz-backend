@@ -20,7 +20,9 @@ public class UserService {
 
     /**
      * Saves a user.
-     * @param user The user to save
+     * 
+     * @param user
+     *            The user to save
      * @return The saved user
      */
     public User saveUser(User user) {
@@ -29,18 +31,22 @@ public class UserService {
 
     /**
      * Finds a user by username.
-     * @param username The username of the user to find
+     * 
+     * @param username
+     *            The username of the user to find
      * @return The found user
-     * @throws UserNotFoundException if the user is not found
+     * @throws UserNotFoundException
+     *             if the user is not found
      */
     public User findUserByUsername(String username) {
-        return userRepository.findUserByUsername(username)
-                .orElseThrow(UserNotFoundException::new);
+        return userRepository.findUserByUsername(username).orElseThrow(UserNotFoundException::new);
     }
 
     /**
      * Checks if a username exists.
-     * @param username The username to check
+     * 
+     * @param username
+     *            The username to check
      * @return true if the username exists, false otherwise
      */
     public boolean usernameExists(String username) {
@@ -49,17 +55,20 @@ public class UserService {
 
     /**
      * Finds a user by user ID.
-     * @param id The ID of the user to find
+     * 
+     * @param id
+     *            The ID of the user to find
      * @return The found user
-     * @throws UserNotFoundException if the user is not found
+     * @throws UserNotFoundException
+     *             if the user is not found
      */
     public User findUserByUserId(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(UserNotFoundException::new);
+        return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
     /**
      * Retrieves all users.
+     * 
      * @return List of all users
      */
     public List<User> findAllUsers() {
