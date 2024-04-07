@@ -22,8 +22,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
-    @ExceptionHandler(value = { QuizNotFoundException.class, UserNotFoundException.class, TagAlreadyExistsException.class
-    })
+    @ExceptionHandler(value = { QuizNotFoundException.class, UserNotFoundException.class,
+            TagAlreadyExistsException.class })
     public ResponseEntity<String> handleObjectDoesNotExistException(Exception ex) {
         logError(ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
@@ -35,11 +35,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getClass().getSimpleName());
     }
 
-  @ExceptionHandler(value = {Exception.class})
-  public ResponseEntity<String> handleRemainderExceptions(Exception ex) {
-    logError(ex);
-    return ResponseEntity
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(ex.getClass().getSimpleName());
-  }
+    @ExceptionHandler(value = { Exception.class })
+    public ResponseEntity<String> handleRemainderExceptions(Exception ex) {
+        logError(ex);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getClass().getSimpleName());
+    }
 }
