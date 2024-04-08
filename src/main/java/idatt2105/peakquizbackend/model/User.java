@@ -88,7 +88,7 @@ public class User {
     public Set<Tag> tags = new HashSet<>();
 
     @ToString.Include
-    String getTagsToString() {
+    private String getTagsToString() {
         if (tags == null)
             return "";
         return tags.stream().map(Tag::getId).toString();
