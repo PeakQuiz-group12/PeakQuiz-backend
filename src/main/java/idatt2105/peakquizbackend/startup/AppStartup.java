@@ -68,8 +68,7 @@ public class AppStartup implements CommandLineRunner {
      *
      */
     private void prepareUser() {
-        final int nrTestUsers = 1;
-        if (userService.findAllUsers().size() == nrTestUsers)
+        if (userService.usernameExists("test"))
             return;
 
         User user = new User();
