@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class QuizSearchDAO2 {
+public class QuizSearchDAO {
   @PersistenceContext
   private EntityManager entityManager;
 
