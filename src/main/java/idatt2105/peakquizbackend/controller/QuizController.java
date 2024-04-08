@@ -294,4 +294,11 @@ public class QuizController {
      * 
      * LOGGER.info("Successfully returned collaborators."); return ResponseEntity.ok(collaborators); }
      */
+
+    @GetMapping("/search")
+    public ResponseEntity<List<QuizResponseDTO>> searchQuizzes(
+        @Parameter(description = "Keyword to search for") @RequestParam String searchWord
+    ) {
+        return ResponseEntity.ok(null);
+    }
 }

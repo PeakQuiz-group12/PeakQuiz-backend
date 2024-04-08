@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = { QuizAlreadyExistsException.class, UserAlreadyExistsException.class })
     public ResponseEntity<String> handleObjectAlreadyExistException(Exception ex) {
         logError(ex);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
     /**
