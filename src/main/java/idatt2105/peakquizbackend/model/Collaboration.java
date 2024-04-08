@@ -79,7 +79,7 @@ public class Collaboration {
     @JoinColumn(name = "USER_ID", insertable = false, updatable = false)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    protected User user;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "QUIZ_ID", insertable = false, updatable = false)
@@ -87,8 +87,6 @@ public class Collaboration {
     @ToString.Exclude
     private Quiz quiz;
 
-    // TODO: Unsure if this mapping will work.
-    // May have to make this mapping @ManyToOne and CascadeType.REMOVE.
     @ElementCollection
     @CollectionTable(name = "COMMENT")
     @EqualsAndHashCode.Exclude
