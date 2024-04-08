@@ -302,6 +302,14 @@ public class QuizController {
      * LOGGER.info("Successfully returned collaborators."); return ResponseEntity.ok(collaborators); }
      */
 
+    /**
+     * Searches for a quiz based on a keyword
+     * @param searchWord The keyword that is used to search with
+     * @return List of quiz DTOs where the quiz title, quiz description, question text or question explanation matches the keyword
+     */
+    @Operation(summary = "Search for keyword", description = "Searches for matching string in quiz title, description, question text and question explanation")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Return quizzes that match the keyword",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuizResponseDTO.class)))})
     @GetMapping("/search")
     public ResponseEntity<Set<QuizResponseDTO>> searchQuizzes(
         @Parameter(description = "Keyword to search for") @RequestParam String searchWord
