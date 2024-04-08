@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,6 +26,7 @@ public class Category {
     private Long id;
 
     @NotNull
+    @FullTextField(analyzer = "english")
     @Column(nullable = false, unique = true)
     @Size(min = 2, max = 20, message = "Name is required, maximum 20 characters.")
     private String name;

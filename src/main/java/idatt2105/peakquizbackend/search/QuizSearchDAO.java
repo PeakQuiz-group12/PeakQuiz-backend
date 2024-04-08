@@ -3,7 +3,6 @@ package idatt2105.peakquizbackend.search;
 import idatt2105.peakquizbackend.model.Quiz;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.hibernate.Session;
 import org.hibernate.search.engine.search.query.SearchResult;
 import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.session.SearchSession;
@@ -21,13 +20,13 @@ public class QuizSearchDAO {
 
     /**
      * Fuzzy finds a quiz using the quiz title, description, questions text and question answers
-     * 
+     *
      * @param text
      *            Keyword used to fuzzy find
      * @return List of fuzzy found quizzes
      */
     public List<Quiz> searchQuizFuzzyQuery(String text) {
-        SearchSession searchSession = Search.session((Session) entityManager);
+        SearchSession searchSession = Search.session(entityManager);
 
         SearchResult<Quiz> result = searchSession.search(Quiz.class).where(f -> f.match()
                 .fields("title", "description", "questions.text", "questions.explanation").matching(text).fuzzy(2))

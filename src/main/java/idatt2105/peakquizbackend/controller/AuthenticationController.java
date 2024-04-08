@@ -81,7 +81,6 @@ public class AuthenticationController {
         String encodedPassword = authService.encryptPassword(password);
 
         userService.saveUser(new User(username, mail, encodedPassword));
-        System.out.println("New user registered");
 
         String accessToken = authService.generateToken(username, Duration.ofMinutes(5), keyStr);
         String refreshToken = authService.generateToken(username, Duration.ofMinutes(30), keyStr);
@@ -148,11 +147,9 @@ public class AuthenticationController {
             JWTVerifier verifier = JWT.require(algorithm).build(); // Reuse the JWTVerifier
             DecodedJWT jwt = verifier.verify(refreshToken); // Verify the passed refresh token
             String userId = jwt.getSubject();
-            System.out.println(userId);
 
             // Assuming the refresh token is valid, issue a new access token
             String newAccessToken = authService.generateToken(userId, Duration.ofMinutes(5), keyStr);
-            System.out.println("newAccessToken: " + newAccessToken);
 
             return ResponseEntity.ok(newAccessToken);
         } catch (JWTVerificationException exception) {

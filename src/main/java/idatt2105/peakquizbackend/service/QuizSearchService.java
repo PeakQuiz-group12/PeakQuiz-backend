@@ -20,7 +20,7 @@ public class QuizSearchService {
 
     /**
      * Returns a set of quiz DTOs that were fuzzy found from the query of the keyword
-     * 
+     *
      * @param text
      *            Keyword for fuzzy finding
      * @return Set of quiz DTOs that were fuzzy found

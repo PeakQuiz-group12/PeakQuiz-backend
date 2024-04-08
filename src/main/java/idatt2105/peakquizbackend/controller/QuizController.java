@@ -152,8 +152,6 @@ public class QuizController {
         Quiz quiz = quizMapper.fromQuizCreateDTOtoEntity(quizCreateDTO);
         quiz.getCategories().forEach(c -> c.addQuiz(quiz));
         QuizResponseDTO quizResponseDTO = quizMapper.toDTO(quizService.saveQuiz(quiz));
-        System.out.println(quiz);
-
         LOGGER.info("Successfully saved quiz");
         return ResponseEntity.ok(quizResponseDTO);
     }
@@ -182,8 +180,6 @@ public class QuizController {
         updateQuizCategories(quiz, quizResponseDTO.getCategories());
 
         updateQuestions(quiz, quizResponseDTO.getQuestions());
-
-        System.out.println(quiz.getQuestions());
 
         Quiz newQuiz = quizService.saveQuiz(quiz);
 
@@ -304,7 +300,7 @@ public class QuizController {
 
     /**
      * Searches for a quiz based on a keyword
-     * 
+     *
      * @param searchWord
      *            The keyword that is used to search with
      * @return Page of quiz DTOs where the quiz title, quiz description, question text or question explanation matches

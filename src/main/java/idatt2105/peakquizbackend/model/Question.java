@@ -33,7 +33,7 @@ public class Question {
     @SequenceGenerator(name = "question_id_seq", sequenceName = "question_id_seq")
     private Long id;
 
-    @FullTextField
+    @FullTextField(analyzer = "english")
     @Size(min = 2, max = 100, message = "Text is required, maximum 100 characters.")
     @NotNull
     @Column(nullable = false)
