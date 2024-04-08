@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Random;
 import javax.mail.*;
@@ -112,11 +113,13 @@ public class EmailService {
         }
 
         Session session = createEmailSession();
-        User user = userRepository.findUserByEmail(email);
-        if (user == null) {
+        Optional<User> _user = userRepository.findUserByEmail(email);
+        if (_user.isEmpty()) {
             System.out.println("No user found with email: " + email);
             return; // Exit the method if no user is found
         }
+
+        User user = _user.get();
 
         String tempPassword = generateTemporaryPassword();
         String hashedPassword = bCryptPasswordEncoder.encode(tempPassword);

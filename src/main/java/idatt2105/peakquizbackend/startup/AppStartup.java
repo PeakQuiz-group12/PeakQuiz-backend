@@ -6,6 +6,7 @@ import idatt2105.peakquizbackend.model.Quiz;
 import idatt2105.peakquizbackend.model.User;
 import idatt2105.peakquizbackend.model.embedded.Answer;
 import idatt2105.peakquizbackend.model.enums.QuestionType;
+import idatt2105.peakquizbackend.service.AuthService;
 import idatt2105.peakquizbackend.service.CategoryService;
 import idatt2105.peakquizbackend.service.QuizService;
 import idatt2105.peakquizbackend.service.UserService;
@@ -30,6 +31,8 @@ public class AppStartup implements CommandLineRunner {
     private QuizService quizService;
 
     private UserService userService;
+
+    private AuthService authService;
 
     /**
      * Runs on application startup.
@@ -61,14 +64,16 @@ public class AppStartup implements CommandLineRunner {
     }
 
     /**
-     * Add test user - note that this users password is not hashed, nor salted for testing purposes, but all other users
-     * will
+     * Add test user with username "test"
      *
      */
     private void prepareUser() {
+        if (userService.usernameExists("test"))
+            return;
+
         User user = new User();
         user.setUsername("test");
-        user.setPassword("Aa12345!");
+        user.setPassword(authService.encryptPassword("Aa12345!"));
         user.setEmail("test@test.com");
         userService.saveUser(user);
     }

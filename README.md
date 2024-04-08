@@ -33,8 +33,29 @@ The application now runs on port 8080.
 
 ## Test data ##
 The database is populated with a test user. 
-- username is "test"
-- password is "Aa12345!"
+```
+- Username: test
+- Password: Aa12345!
+```
+
+## Accessing the database
+To log into the database, paste this URL into your browser
+```
+localhost:8080/console
+```
+Change the ```JDBC URL``` field to 
+```
+jdbc:h2:file:./data/myDB
+```
+Credentials: 
+```
+- Username: sa
+- Password: password
+```
 
 ## Documentation
 The API is documented with [swagger](https://swagger.io/tools/swagger-ui/). You can find more information about this and other documentation in the [wiki](https://github.com/PeakQuiz-group12/PeakQuiz-backend/wiki).
+
+## License
+Distributed under the MIT License. See ```LICENSE.txt``` for more information.
+

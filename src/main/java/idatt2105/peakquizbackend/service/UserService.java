@@ -52,6 +52,17 @@ public class UserService {
     }
 
     /**
+     * Checks if an email exists.
+     *
+     * @param email
+     *            The email to check
+     * @return true if the email exists, false otherwise
+     */
+    public boolean emailExists(String email) {
+        return userRepository.findUserByEmail(email).isPresent();
+    }
+
+    /**
      * Finds a user by user ID.
      * 
      * @param id

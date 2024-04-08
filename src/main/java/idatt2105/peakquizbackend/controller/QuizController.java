@@ -8,11 +8,10 @@ import idatt2105.peakquizbackend.model.Category;
 import idatt2105.peakquizbackend.model.Game;
 import idatt2105.peakquizbackend.model.Question;
 import idatt2105.peakquizbackend.model.Quiz;
-import idatt2105.peakquizbackend.service.CategoryService;
-import idatt2105.peakquizbackend.service.QuestionService;
-import idatt2105.peakquizbackend.service.QuizService;
-import idatt2105.peakquizbackend.service.SortingService;
+import idatt2105.peakquizbackend.service.*;
 
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -49,6 +48,7 @@ public class QuizController {
     private final QuizService quizService;
     private final CategoryService categoryService;
     private final QuestionService questionService;
+    private final QuizSearchService quizSearchService;
 
     @Autowired
     private final QuizMapper quizMapper;
@@ -79,7 +79,9 @@ public class QuizController {
      * @return ResponseEntity containing the page of quizzes
      */
     @Operation(summary = "Get quizzes", description = "Gets all quizzes, allowing for pagination and sorting")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully retrieved quizzes") })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved quizzes", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = QuizResponseDTO.class)) }) })
     @GetMapping
     public ResponseEntity<Page<QuizResponseDTO>> getQuizzes(
             @Parameter(description = "Page number") @RequestParam(defaultValue = "0", required = false) int page,
@@ -118,7 +120,8 @@ public class QuizController {
      * @return ResponseEntity containing the quiz
      */
     @Operation(summary = "Get quiz", description = "Get quiz based on its id")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully retrieved quiz"),
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully retrieved quiz", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = QuizResponseDTO.class)) }),
             @ApiResponse(responseCode = "404", description = "Quiz not found") })
     @GetMapping("/{id}")
     public ResponseEntity<QuizResponseDTO> getQuiz(
@@ -138,7 +141,8 @@ public class QuizController {
      * @return ResponseEntity containing the created quiz
      */
     @Operation(summary = "Create quiz", description = "Create a new quiz")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully created quiz") })
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully created quiz", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = QuizResponseDTO.class)) }) })
     @PostMapping
     public ResponseEntity<QuizResponseDTO> createQuiz(
             @Parameter(description = "Quiz data to create", required = true) @RequestBody @
@@ -164,7 +168,8 @@ public class QuizController {
      * @return ResponseEntity containing the updated quiz
      */
     @Operation(summary = "Edit quiz", description = "Edit an existing quiz")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully updated quiz"),
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully updated quiz", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = QuizResponseDTO.class)) }),
             @ApiResponse(responseCode = "404", description = "Quiz not found") })
     @PutMapping("/{id}")
     public ResponseEntity<QuizResponseDTO> editQuiz(
@@ -194,7 +199,9 @@ public class QuizController {
      * @return ResponseEntity containing the set of games
      */
     @Operation(summary = "Get games by quiz ID", description = "Get all games associated with a quiz by its ID")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully retrieved games"),
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved games", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = GameDTO.class)) }),
             @ApiResponse(responseCode = "404", description = "Quiz not found") })
     @GetMapping("/games/{id}")
     public ResponseEntity<Set<GameDTO>> getGames(
@@ -294,4 +301,33 @@ public class QuizController {
      * 
      * LOGGER.info("Successfully returned collaborators."); return ResponseEntity.ok(collaborators); }
      */
+
+    /**
+     * Searches for a quiz based on a keyword
+     * 
+     * @param searchWord
+     *            The keyword that is used to search with
+     * @return Page of quiz DTOs where the quiz title, quiz description, question text or question explanation matches
+     *         the keyword
+     */
+    @Operation(summary = "Get quizzes by keyword", description = "Searches for matching string in quiz title, description, question text and question explanation")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Return quizzes that match the keyword", content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuizResponseDTO.class))) })
+    @GetMapping("/search")
+    public ResponseEntity<Page<QuizResponseDTO>> searchQuizzes(
+            @Parameter(description = "Keyword to search for") @RequestParam String searchWord,
+            @Parameter(description = "Page number") @RequestParam(defaultValue = "0", required = false) int page,
+            @Parameter(description = "Page size") @RequestParam(defaultValue = "10", required = false) int size) {
+        Pageable pageRequest = PageRequest.of(page, size);
+        Set<QuizResponseDTO> foundQuizzes = quizSearchService.searchForQuiz(searchWord);
+
+        List<QuizResponseDTO> listOfQuizzes = new ArrayList<>(foundQuizzes);
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), listOfQuizzes.size());
+        List<QuizResponseDTO> pageContent = listOfQuizzes.subList(start, end);
+
+        Page<QuizResponseDTO> pageOfQuizzes = new PageImpl<>(pageContent, pageRequest, foundQuizzes.size());
+
+        return ResponseEntity.ok(pageOfQuizzes);
+    }
 }

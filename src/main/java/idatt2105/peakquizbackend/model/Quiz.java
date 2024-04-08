@@ -8,6 +8,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Formula;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 import org.hibernate.validator.constraints.URL;
 
 import java.time.ZonedDateTime;
@@ -20,14 +23,17 @@ import java.util.Set;
 @Entity
 @Audited
 @Data
+@Indexed
 public class Quiz {
     @Id
     @GeneratedValue(generator = "quiz_id_seq", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "quiz_id_seq", sequenceName = "quiz_id_seq")
     private Long id;
 
+    @FullTextField
     private String title;
 
+    @FullTextField
     private String description;
 
     private boolean isTemplate = false;
@@ -52,6 +58,7 @@ public class Quiz {
     private Set<Game> games = new HashSet<>();
 
     // Bidirectional mapping between quizzes and questions
+    @IndexedEmbedded
     @OneToMany(cascade = { CascadeType.PERSIST,
             CascadeType.REFRESH }, orphanRemoval = true, fetch = FetchType.EAGER, mappedBy = "quiz")
     private Set<Question> questions = new HashSet<>();
