@@ -21,11 +21,8 @@ import idatt2105.peakquizbackend.model.Category;
 import idatt2105.peakquizbackend.model.Question;
 import idatt2105.peakquizbackend.model.Quiz;
 import idatt2105.peakquizbackend.security.SecurityConfig;
-import idatt2105.peakquizbackend.service.CategoryService;
-import idatt2105.peakquizbackend.service.GameService;
-import idatt2105.peakquizbackend.service.QuestionService;
-import idatt2105.peakquizbackend.service.QuizService;
-import idatt2105.peakquizbackend.service.UserService;
+import idatt2105.peakquizbackend.service.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
@@ -86,6 +83,9 @@ public class QuizControllerTest {
 
     @MockBean
     private GameService gameService;
+
+    @MockBean
+    private QuizSearchService quizSearchService;
 
     @Autowired
     private QuestionMapper questionMapper;
