@@ -1,8 +1,11 @@
 package idatt2105.peakquizbackend.controller;
 
+import idatt2105.peakquizbackend.dto.CollaborationDTO;
 import idatt2105.peakquizbackend.service.EmailService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +27,9 @@ public class SupportController {
     }
 
     @Operation(summary = "Handle support query", description = "Send a support query via email")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Query sent successfully"),
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Query sent successfully", content = {
+                    @Content(mediaType = "application/json") }),
             @ApiResponse(responseCode = "400", description = "Bad request") })
     @PostMapping("/support")
     public ResponseEntity<String> handleSupportQuery(
@@ -37,7 +42,9 @@ public class SupportController {
     }
 
     @Operation(summary = "Handle forgot password request", description = "Send a password reset email to the specified email address")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Password reset email sent successfully"),
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Password reset email sent successfully", content = {
+                    @Content(mediaType = "application/json") }),
             @ApiResponse(responseCode = "400", description = "Bad request") })
     @PostMapping("/forgotPassword")
     public ResponseEntity<String> handleForgotPasswordRequest(

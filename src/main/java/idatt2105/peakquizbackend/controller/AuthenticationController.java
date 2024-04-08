@@ -9,6 +9,8 @@ import idatt2105.peakquizbackend.exceptions.UserAlreadyExistsException;
 import idatt2105.peakquizbackend.model.User;
 import idatt2105.peakquizbackend.service.UserService;
 import idatt2105.peakquizbackend.service.AuthService;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +51,8 @@ public class AuthenticationController {
      * @return ResponseEntity containing access and refresh tokens upon successful registration
      */
     @Operation(summary = "Register user", description = "Register a new user with a username, password, and email", responses = {
-            @ApiResponse(responseCode = "200", description = "Successfully registered user"),
+            @ApiResponse(responseCode = "200", description = "Successfully registered user", content = {
+                    @Content(mediaType = "application/json") }),
             @ApiResponse(responseCode = "400", description = "Invalid email format or weak password"),
             @ApiResponse(responseCode = "409", description = "Username already exists") })
     @PostMapping("/register")
@@ -96,7 +99,8 @@ public class AuthenticationController {
      * @return ResponseEntity containing access and refresh tokens upon successful login
      */
     @Operation(summary = "Login user", description = "Login an existing user with username and password", responses = {
-            @ApiResponse(responseCode = "200", description = "Successfully logged in"),
+            @ApiResponse(responseCode = "200", description = "Successfully logged in", content = {
+                    @Content(mediaType = "application/json") }),
             @ApiResponse(responseCode = "401", description = "Wrong username or password") })
     @PostMapping("/login")
     @CrossOrigin
@@ -129,7 +133,8 @@ public class AuthenticationController {
      * @return ResponseEntity containing a new access token
      */
     @Operation(summary = "Refresh token", description = "Refresh the access token using a valid refresh token", responses = {
-            @ApiResponse(responseCode = "200", description = "Successfully refreshed access token"),
+            @ApiResponse(responseCode = "200", description = "Successfully refreshed access token", content = {
+                    @Content(mediaType = "application/json") }),
             @ApiResponse(responseCode = "401", description = "Invalid refresh token") })
     @PostMapping("/refreshToken")
     @CrossOrigin
@@ -159,7 +164,8 @@ public class AuthenticationController {
      * @return ResponseEntity indicating whether the token is valid or not
      */
     @Operation(summary = "Validate token", description = "Validate the JWT access token", responses = {
-            @ApiResponse(responseCode = "200", description = "Token is valid"),
+            @ApiResponse(responseCode = "200", description = "Token is valid", content = {
+                    @Content(mediaType = "application/json") }),
             @ApiResponse(responseCode = "401", description = "Token is not valid") })
     @GetMapping("/validate-token")
     @PreAuthorize("isAuthenticated()")
