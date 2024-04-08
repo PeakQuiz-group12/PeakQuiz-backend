@@ -152,7 +152,6 @@ public class QuizController {
         Quiz quiz = quizMapper.fromQuizCreateDTOtoEntity(quizCreateDTO);
         quiz.getCategories().forEach(c -> c.addQuiz(quiz));
         QuizResponseDTO quizResponseDTO = quizMapper.toDTO(quizService.saveQuiz(quiz));
-        System.out.println(quiz);
         LOGGER.info("Successfully saved quiz");
         return ResponseEntity.ok(quizResponseDTO);
     }
@@ -181,8 +180,6 @@ public class QuizController {
         updateQuizCategories(quiz, quizResponseDTO.getCategories());
 
         updateQuestions(quiz, quizResponseDTO.getQuestions());
-
-        System.out.println(quiz.getQuestions());
 
         Quiz newQuiz = quizService.saveQuiz(quiz);
 
@@ -301,11 +298,32 @@ public class QuizController {
      * LOGGER.info("Successfully returned collaborators."); return ResponseEntity.ok(collaborators); }
      */
 
+    /**
+     * Searches for a quiz based on a keyword
+     *
+     * @param searchWord
+     *            The keyword that is used to search with
+     * @return Page of quiz DTOs where the quiz title, quiz description, question text or question explanation matches
+     *         the keyword
+     */
+    @Operation(summary = "Get quizzes by keyword", description = "Searches for matching string in quiz title, description, question text and question explanation")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Return quizzes that match the keyword", content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuizResponseDTO.class))) })
     @GetMapping("/search")
-    public ResponseEntity<Set<QuizResponseDTO>> searchQuizzes(
-            @Parameter(description = "Keyword to search for") @RequestParam String searchWord) {
+    public ResponseEntity<Page<QuizResponseDTO>> searchQuizzes(
+            @Parameter(description = "Keyword to search for") @RequestParam String searchWord,
+            @Parameter(description = "Page number") @RequestParam(defaultValue = "0", required = false) int page,
+            @Parameter(description = "Page size") @RequestParam(defaultValue = "10", required = false) int size) {
+        Pageable pageRequest = PageRequest.of(page, size);
         Set<QuizResponseDTO> foundQuizzes = quizSearchService.searchForQuiz(searchWord);
 
-        return ResponseEntity.ok(foundQuizzes);
+        List<QuizResponseDTO> listOfQuizzes = new ArrayList<>(foundQuizzes);
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), listOfQuizzes.size());
+        List<QuizResponseDTO> pageContent = listOfQuizzes.subList(start, end);
+
+        Page<QuizResponseDTO> pageOfQuizzes = new PageImpl<>(pageContent, pageRequest, foundQuizzes.size());
+
+        return ResponseEntity.ok(pageOfQuizzes);
     }
 }

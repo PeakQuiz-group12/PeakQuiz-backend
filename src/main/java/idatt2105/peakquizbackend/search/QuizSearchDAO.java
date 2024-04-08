@@ -10,26 +10,17 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Class for fuzzy finding quizzes that contain a keyword
+ */
 @Repository
 public class QuizSearchDAO {
     @PersistenceContext
     private EntityManager entityManager;
 
-    <<<<<<<
-    Updated upstream
-
-    public List<Quiz> searchQuizByTitleFuzzyQuery(String text) {
-        SearchSession searchSession = Search.session((Session) entityManager);
-
-        SearchResult<Quiz> result = searchSession.search(Quiz.class).where(f -> f.match()
-                .fields("title", "description", "questions.text", "questions.explanation").matching(text).fuzzy(2))
-                .fetch(10);
-        return result.hits();
-    }=======
-
     /**
      * Fuzzy finds a quiz using the quiz title, description, questions text and question answers
-     * 
+     *
      * @param text
      *            Keyword used to fuzzy find
      * @return List of fuzzy found quizzes
@@ -42,16 +33,4 @@ public class QuizSearchDAO {
                 .fetch(10);
         return result.hits();
     }
-
-    public void reIndex() throws InterruptedException {
-        SearchSession searchSession = Search.session(entityManager);
-        searchSession.massIndexer(Quiz.class).idFetchSize(150).batchSizeToLoadObjects(25).threadsToLoadObjects(12)
-                .startAndWait();
-    }
-
-    private SearchSession getSession() {
-        return Search.session(entityManager);
-    }>>>>>>>
-
-    Stashed changes
 }

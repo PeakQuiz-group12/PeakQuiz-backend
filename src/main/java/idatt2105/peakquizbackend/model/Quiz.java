@@ -77,10 +77,6 @@ public class Quiz {
         question.setQuiz(this);
     }
 
-    public void removeQuestion(Question question) {
-        this.questions.remove(question);
-    }
-
     /**
      * Removes all associating categories from the quiz before deleting it to prevent integrity errors
      */
