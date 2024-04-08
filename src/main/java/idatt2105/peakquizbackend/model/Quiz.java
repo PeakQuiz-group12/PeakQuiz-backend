@@ -30,10 +30,10 @@ public class Quiz {
     @SequenceGenerator(name = "quiz_id_seq", sequenceName = "quiz_id_seq")
     private Long id;
 
-    @FullTextField
+    @FullTextField(analyzer = "english")
     private String title;
 
-    @FullTextField
+    @FullTextField(analyzer = "english")
     private String description;
 
     private boolean isTemplate = false;
@@ -64,6 +64,7 @@ public class Quiz {
     private Set<Question> questions = new HashSet<>();
 
     @NotAudited
+    @IndexedEmbedded
     @ManyToMany(mappedBy = "quizzes", fetch = FetchType.EAGER)
     private Set<Category> categories = new HashSet<>();
 

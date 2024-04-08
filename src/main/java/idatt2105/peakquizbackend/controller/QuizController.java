@@ -153,7 +153,6 @@ public class QuizController {
         quiz.getCategories().forEach(c -> c.addQuiz(quiz));
         QuizResponseDTO quizResponseDTO = quizMapper.toDTO(quizService.saveQuiz(quiz));
         System.out.println(quiz);
-
         LOGGER.info("Successfully saved quiz");
         return ResponseEntity.ok(quizResponseDTO);
     }
