@@ -29,7 +29,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      *            The email address to search for
      * @return The user object if found, or null if not found
      */
-    User findUserByEmail(String email);
+    Optional<User> findUserByEmail(String email);
 
     /**
      * Update the password of a user specified by their email address.

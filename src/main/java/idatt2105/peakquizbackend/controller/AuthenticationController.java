@@ -69,6 +69,10 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid email format");
         }
 
+        if (userService.emailExists(mail)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email is taken");
+        }
+
         if (!authService.isPasswordStrong(password)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     "Password must be at least 8 characters long, include numbers, upper and lower case letters, and at least one special character");
