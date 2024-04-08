@@ -34,8 +34,8 @@ The application now runs on port 8080.
 ## Test data ##
 The database is populated with a test user. 
 ```
-- Username: sa
-- Password: password
+- Username: test
+- Password: Aa12345!
 ```
 
 ## Accessing the database
