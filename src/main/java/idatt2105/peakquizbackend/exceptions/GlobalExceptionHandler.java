@@ -104,9 +104,5 @@ public class GlobalExceptionHandler {
      *            The exception that is not explicitly handled.
      * @return ResponseEntity with an appropriate HTTP status code and error message.
      */
-    @ExceptionHandler(value = { Exception.class })
-    public ResponseEntity<String> handleRemainderExceptions(Exception ex) {
-        logError(ex);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getClass().getSimpleName());
-    }
+
 }
