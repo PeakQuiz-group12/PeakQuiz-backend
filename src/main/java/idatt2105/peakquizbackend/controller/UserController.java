@@ -14,6 +14,8 @@ import idatt2105.peakquizbackend.service.GameService;
 import idatt2105.peakquizbackend.service.TagService;
 import idatt2105.peakquizbackend.service.UserService;
 
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -57,6 +59,8 @@ public class UserController {
      * @return ResponseEntity containing a list of UserDTOs.
      */
     @Operation(summary = "Get all users", description = "Retrieves a list of all users.")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully retrieved users", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class)) }) })
     @GetMapping
     public ResponseEntity<List<UserDTO>> getUsers() {
         List<User> users = userService.findAllUsers();
@@ -72,6 +76,8 @@ public class UserController {
      * @return ResponseEntity containing a set of GameDTOs.
      */
     @Operation(summary = "Get user's games", description = "Retrieves games associated with a user.")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully retrieved games", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = GameDTO.class)) }) })
     @GetMapping("/{username}/games")
     public ResponseEntity<Set<GameDTO>> getGames(
             @Parameter(description = "Username of the user to retrieve games for", required = true) @PathVariable String username) {
@@ -94,6 +100,8 @@ public class UserController {
      * @return ResponseEntity containing the created GameDTO.
      */
     @Operation(summary = "Create game for user", description = "Creates a new game for a user.")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully created game", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = GameDTO.class)) }) })
     @PostMapping("/{username}/games")
     public ResponseEntity<GameDTO> createGame(
             @Parameter(description = "Username of the user to create a game for", required = true) @PathVariable String username,
@@ -126,6 +134,8 @@ public class UserController {
      * @return ResponseEntity containing a set of TagDTOs.
      */
     @Operation(summary = "Get user's tags", description = "Retrieves tags associated with a user.")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully retrieved tags", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = TagDTO.class)) }) })
     @GetMapping("/{username}/tags")
     public ResponseEntity<Set<TagDTO>> getTags(
             @Parameter(description = "Username of the user to retrieve tags for", required = true) @PathVariable String username) {
@@ -145,8 +155,10 @@ public class UserController {
      * @return ResponseEntity containing the created TagDTO.
      */
     @Operation(summary = "Create tag for user", description = "Creates a new tag for a user.")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Tag created successfully"),
-            @ApiResponse(responseCode = "400", description = "Bad request") })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tag created successfully", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = TagDTO.class)) }),
+            @ApiResponse(responseCode = "400", description = "Invalid tag format") })
     @PostMapping("/{username}/tags")
     public ResponseEntity<TagDTO> createTag(
             @Parameter(description = "Username of the user to create a tag for", required = true) @PathVariable String username,
@@ -171,6 +183,10 @@ public class UserController {
      * @return ResponseEntity containing the updated TagDTO.
      */
     @Operation(summary = "Update tag for user", description = "Updates an existing tag for a user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated tag", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = TagDTO.class)) }),
+            @ApiResponse(responseCode = "404", description = "Tag not found") })
     @PutMapping("/{username}/tags")
     public ResponseEntity<TagDTO> updateTag(
             @Parameter(description = "Username of the user to update a tag for", required = true) @PathVariable String username,

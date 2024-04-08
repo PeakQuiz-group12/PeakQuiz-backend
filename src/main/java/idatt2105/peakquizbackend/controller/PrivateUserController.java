@@ -14,6 +14,8 @@ import idatt2105.peakquizbackend.model.enums.CollaboratorType;
 import idatt2105.peakquizbackend.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -46,7 +48,8 @@ public class PrivateUserController {
      * @return ResponseEntity containing user information
      */
     @Operation(summary = "Get current user", description = "Retrieve information about the currently authenticated user", responses = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved current user") })
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved current user", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class)) }) })
     @GetMapping
     public ResponseEntity<UserDTO> getMe(
             @Parameter(description = "Authentication object representing the current user") Authentication authentication) {
@@ -63,7 +66,8 @@ public class PrivateUserController {
      * @return ResponseEntity indicating the result of the password update
      */
     @Operation(summary = "Update current user", description = "Update the password of the currently authenticated user", responses = {
-            @ApiResponse(responseCode = "200", description = "Successfully updated password"),
+            @ApiResponse(responseCode = "200", description = "Successfully updated password", content = {
+                    @Content(mediaType = "application/json") }),
             @ApiResponse(responseCode = "400", description = "Invalid password format") })
     @PutMapping
     public ResponseEntity<String> updateMe(
@@ -97,7 +101,8 @@ public class PrivateUserController {
      * @return ResponseEntity containing the created collaboration
      */
     @Operation(summary = "Create collaboration", description = "Create a new collaboration between a user and a quiz", responses = {
-            @ApiResponse(responseCode = "200", description = "Successfully created collaboration"),
+            @ApiResponse(responseCode = "200", description = "Successfully created collaboration", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = CollaborationDTO.class)) }),
             @ApiResponse(responseCode = "404", description = "Quiz not found") })
     @PostMapping("/collaborations")
     public ResponseEntity<CollaborationDTO> createCollaboration(
@@ -128,9 +133,10 @@ public class PrivateUserController {
      * @return ResponseEntity containing the page of quizzes
      */
     @Operation(summary = "Get users quizzes", description = "Get quizzes of a user with specified collaborator type", responses = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved user's quizzes") })
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved user's quizzes", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = QuizResponseDTO.class)) }) })
     @GetMapping("/quizzes")
-    public ResponseEntity<?> getUserQuizzes(
+    public ResponseEntity<Page<QuizResponseDTO>> getUserQuizzes(
             @Parameter(description = "Authentication object representing the current user") Authentication authentication,
             @Parameter(description = "Collaborator type") @RequestParam CollaboratorType collaboratorType,
             @Parameter(description = "Page number") @RequestParam(defaultValue = "0", required = false) int page,
