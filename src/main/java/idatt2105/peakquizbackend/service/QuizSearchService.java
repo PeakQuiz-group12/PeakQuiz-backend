@@ -13,16 +13,19 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class QuizSearchService {
 
-  private final QuizSearchDAO quizSearchDAO;
+    private final QuizSearchDAO quizSearchDAO;
 
-  public Set<QuizResponseDTO> searchForQuiz(String text) {
-    return quizSearchDAO.searchQuizByTitleFuzzyQuery(text).stream()
-            .map(QuizMapper.INSTANCE::toDTO).collect(Collectors.toSet());
-  }
+    public Set<QuizResponseDTO> searchForQuiz(String text) {
+        return quizSearchDAO.searchQuizByTitleFuzzyQuery(text).stream().map(QuizMapper.INSTANCE::toDTO)
+                .collect(Collectors.toSet());
+    }
 
-<<<<<<< Updated upstream
+    <<<<<<<
 
-=======
+    Updated upstream
+
+    =======
+
     /**
      * Returns a set of quiz DTOs that were fuzzy found from the query of the keyword
      * 
@@ -33,6 +36,7 @@ public class QuizSearchService {
     public Set<QuizResponseDTO> searchForQuiz(String text) {
         return quizSearchDAO.searchQuizFuzzyQuery(text).stream().map(QuizMapper.INSTANCE::toDTO)
                 .collect(Collectors.toSet());
-    }
->>>>>>> Stashed changes
+    }>>>>>>>
+
+    Stashed changes
 }

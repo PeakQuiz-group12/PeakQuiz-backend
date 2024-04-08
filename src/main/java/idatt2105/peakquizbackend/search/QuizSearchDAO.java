@@ -12,22 +12,21 @@ import java.util.List;
 
 @Repository
 public class QuizSearchDAO {
-  @PersistenceContext
-  private EntityManager entityManager;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-<<<<<<< Updated upstream
-  public List<Quiz> searchQuizByTitleFuzzyQuery(String text) {
-    SearchSession searchSession = Search.session((Session) entityManager);
+    <<<<<<<
+    Updated upstream
 
-    SearchResult<Quiz> result = searchSession.search(Quiz.class)
-            .where(f -> f.match()
-                    .fields("title", "description", "questions.text", "questions.explanation")
-                    .matching(text)
-                    .fuzzy(2))
-            .fetch(10);
-    return result.hits();
-  }
-=======
+    public List<Quiz> searchQuizByTitleFuzzyQuery(String text) {
+        SearchSession searchSession = Search.session((Session) entityManager);
+
+        SearchResult<Quiz> result = searchSession.search(Quiz.class).where(f -> f.match()
+                .fields("title", "description", "questions.text", "questions.explanation").matching(text).fuzzy(2))
+                .fetch(10);
+        return result.hits();
+    }=======
+
     /**
      * Fuzzy finds a quiz using the quiz title, description, questions text and question answers
      * 
@@ -46,15 +45,13 @@ public class QuizSearchDAO {
 
     public void reIndex() throws InterruptedException {
         SearchSession searchSession = Search.session(entityManager);
-        searchSession.massIndexer(Quiz.class)
-                .idFetchSize( 150 )
-                .batchSizeToLoadObjects( 25 )
-                .threadsToLoadObjects( 12 )
+        searchSession.massIndexer(Quiz.class).idFetchSize(150).batchSizeToLoadObjects(25).threadsToLoadObjects(12)
                 .startAndWait();
     }
 
     private SearchSession getSession() {
         return Search.session(entityManager);
-    }
->>>>>>> Stashed changes
+    }>>>>>>>
+
+    Stashed changes
 }

@@ -303,8 +303,7 @@ public class QuizController {
 
     @GetMapping("/search")
     public ResponseEntity<Set<QuizResponseDTO>> searchQuizzes(
-        @Parameter(description = "Keyword to search for") @RequestParam String searchWord
-    ) {
+            @Parameter(description = "Keyword to search for") @RequestParam String searchWord) {
         Set<QuizResponseDTO> foundQuizzes = quizSearchService.searchForQuiz(searchWord);
 
         return ResponseEntity.ok(foundQuizzes);
