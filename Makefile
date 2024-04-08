@@ -2,7 +2,7 @@
 .PHONY: help run build test format install
 
 run:
-	docker run --rm --name peakquizApp -p 7878:8080 peakquiz-backend
+	docker run --rm --name peakquizApp -p 8080:8080 peakquiz-backend
 
 build:
 	mvn clean package
