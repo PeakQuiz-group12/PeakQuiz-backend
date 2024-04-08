@@ -10,6 +10,8 @@ import idatt2105.peakquizbackend.model.Question;
 import idatt2105.peakquizbackend.model.Quiz;
 import idatt2105.peakquizbackend.service.*;
 
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -77,7 +79,9 @@ public class QuizController {
      * @return ResponseEntity containing the page of quizzes
      */
     @Operation(summary = "Get quizzes", description = "Gets all quizzes, allowing for pagination and sorting")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully retrieved quizzes") })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved quizzes", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = QuizResponseDTO.class)) }) })
     @GetMapping
     public ResponseEntity<Page<QuizResponseDTO>> getQuizzes(
             @Parameter(description = "Page number") @RequestParam(defaultValue = "0", required = false) int page,
@@ -116,7 +120,8 @@ public class QuizController {
      * @return ResponseEntity containing the quiz
      */
     @Operation(summary = "Get quiz", description = "Get quiz based on its id")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully retrieved quiz"),
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully retrieved quiz", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = QuizResponseDTO.class)) }),
             @ApiResponse(responseCode = "404", description = "Quiz not found") })
     @GetMapping("/{id}")
     public ResponseEntity<QuizResponseDTO> getQuiz(
@@ -136,7 +141,8 @@ public class QuizController {
      * @return ResponseEntity containing the created quiz
      */
     @Operation(summary = "Create quiz", description = "Create a new quiz")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully created quiz") })
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully created quiz", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = QuizResponseDTO.class)) }) })
     @PostMapping
     public ResponseEntity<QuizResponseDTO> createQuiz(
             @Parameter(description = "Quiz data to create", required = true) @RequestBody @
@@ -162,7 +168,8 @@ public class QuizController {
      * @return ResponseEntity containing the updated quiz
      */
     @Operation(summary = "Edit quiz", description = "Edit an existing quiz")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully updated quiz"),
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully updated quiz", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = QuizResponseDTO.class)) }),
             @ApiResponse(responseCode = "404", description = "Quiz not found") })
     @PutMapping("/{id}")
     public ResponseEntity<QuizResponseDTO> editQuiz(
@@ -192,7 +199,9 @@ public class QuizController {
      * @return ResponseEntity containing the set of games
      */
     @Operation(summary = "Get games by quiz ID", description = "Get all games associated with a quiz by its ID")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully retrieved games"),
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved games", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = GameDTO.class)) }),
             @ApiResponse(responseCode = "404", description = "Quiz not found") })
     @GetMapping("/games/{id}")
     public ResponseEntity<Set<GameDTO>> getGames(
