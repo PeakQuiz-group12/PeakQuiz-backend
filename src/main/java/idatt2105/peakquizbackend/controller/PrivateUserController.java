@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/users/me")
 @AllArgsConstructor
+@CrossOrigin
 public class PrivateUserController {
 
     private final QuizService quizService;
