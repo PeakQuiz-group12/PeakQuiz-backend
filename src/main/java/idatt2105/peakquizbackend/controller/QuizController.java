@@ -8,10 +8,7 @@ import idatt2105.peakquizbackend.model.Category;
 import idatt2105.peakquizbackend.model.Game;
 import idatt2105.peakquizbackend.model.Question;
 import idatt2105.peakquizbackend.model.Quiz;
-import idatt2105.peakquizbackend.service.CategoryService;
-import idatt2105.peakquizbackend.service.QuestionService;
-import idatt2105.peakquizbackend.service.QuizService;
-import idatt2105.peakquizbackend.service.SortingService;
+import idatt2105.peakquizbackend.service.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +46,7 @@ public class QuizController {
     private final QuizService quizService;
     private final CategoryService categoryService;
     private final QuestionService questionService;
+    private final QuizSearchService quizSearchService;
 
     @Autowired
     private final QuizMapper quizMapper;
@@ -296,9 +294,11 @@ public class QuizController {
      */
 
     @GetMapping("/search")
-    public ResponseEntity<List<QuizResponseDTO>> searchQuizzes(
+    public ResponseEntity<Set<QuizResponseDTO>> searchQuizzes(
         @Parameter(description = "Keyword to search for") @RequestParam String searchWord
     ) {
-        return ResponseEntity.ok(null);
+        Set<QuizResponseDTO> foundQuizzes = quizSearchService.searchForQuiz(searchWord);
+
+        return ResponseEntity.ok(foundQuizzes);
     }
 }

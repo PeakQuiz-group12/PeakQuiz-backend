@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.validator.constraints.URL;
 
 import java.util.HashSet;
@@ -32,6 +33,7 @@ public class Question {
     @SequenceGenerator(name = "question_id_seq", sequenceName = "question_id_seq")
     private Long id;
 
+    @FullTextField
     @Size(min = 2, max = 100, message = "Text is required, maximum 100 characters.")
     @NotNull
     @Column(nullable = false)
@@ -51,6 +53,7 @@ public class Question {
     @NotNull
     private Byte difficulty;
 
+    @FullTextField
     private String explanation;
 
     @ElementCollection
