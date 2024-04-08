@@ -120,8 +120,6 @@ public class UserController {
 
         Game savedGame = gameService.saveGame(game);
 
-        System.out.println("Added game to quiz and user");
-
         LOGGER.info("Successfully saved game");
         return ResponseEntity.ok(gameMapper.toDTO(savedGame));
     }

@@ -44,7 +44,6 @@ public class EmailService {
      *            The message content of the email
      */
     public void sendEmail(String fromUsername, String subject, String messageToSend) throws MessagingException {
-        System.out.println("Start sender mail");
 
         Properties prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");
@@ -108,14 +107,12 @@ public class EmailService {
      */
     public void forgotPassword(String email) throws MessagingException {
         if (email == null || email.trim().isEmpty()) {
-            System.out.println("Email address is null or empty.");
             return; // Exit the method if no valid email is provided
         }
 
         Session session = createEmailSession();
         Optional<User> _user = userRepository.findUserByEmail(email);
         if (_user.isEmpty()) {
-            System.out.println("No user found with email: " + email);
             return; // Exit the method if no user is found
         }
 

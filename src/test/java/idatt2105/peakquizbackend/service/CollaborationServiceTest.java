@@ -55,9 +55,6 @@ public class CollaborationServiceTest {
         quiz.setId(1L);
 
         existingCollaboration = new Collaboration(user, quiz, CollaboratorType.CREATOR);
-        System.out.println(existingCollaboration.getUser());
-        System.out.println("----------");
-        System.out.println(existingCollaboration.getId());
 
         when(collaborationRepository.save(existingCollaboration)).thenReturn(existingCollaboration);
         when(collaborationRepository.findAllByQuizId(existingCollaboration.getQuiz().getId(), PageRequest.of(0, 3)))
@@ -80,12 +77,6 @@ public class CollaborationServiceTest {
                 existingCollaboration.getQuiz(), existingCollaboration.getCollaboratorType());
         assertEquals(existingCollaboration, collaboration);
     }
-
-    /*
-     * @Test public void testFindCollaboratorsByQuizId() { System.out.println(existingCollaboration.getQuiz().getId());
-     * assertEquals(1, collaborationService .findCollaboratorsByQuizId( existingCollaboration.getQuiz().getId(),
-     * PageRequest.of(0,3)) .getTotalElements()); }
-     */
 
     @Test
     public void testFindCollaboratorsWithUnusedQuizId() {
