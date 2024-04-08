@@ -10,7 +10,6 @@ import idatt2105.peakquizbackend.model.User;
 import idatt2105.peakquizbackend.service.UserService;
 import idatt2105.peakquizbackend.service.AuthService;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
