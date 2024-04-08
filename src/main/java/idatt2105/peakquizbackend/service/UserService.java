@@ -62,7 +62,6 @@ public class UserService {
         return userRepository.findUserByEmail(email).isPresent();
     }
 
-
     /**
      * Finds a user by user ID.
      * 
